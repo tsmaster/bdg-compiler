@@ -4,6 +4,8 @@ This README would normally document whatever steps are necessary to get your app
 
 DWL: there are three directories, the pong one is probably a dead end.
 
+The [Wiki](https://bitbucket.org/tsmaster/bdgrt/wiki/Home) probably has the most useful stuff.
+
 ### What is this repository for? ###
 
 * Quick summary
