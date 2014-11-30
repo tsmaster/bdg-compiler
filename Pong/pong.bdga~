@@ -1,0 +1,104 @@
+CONSTS 
+INT2 WIDTH = 640
+INT2 HEIGHT = 480
+INT2 BSIZE = 8
+INT1 BGR = 100
+INT1 BGG = 0
+INT1 BGB = 200
+INT1 BALLR = 200
+INT1 BALLG = 100
+INT1 BALLB = 0
+
+VARS
+INT2 VX [0]
+INT2 VY [2]
+INT2 BLEFT [4]
+INT2 BRIGHT [6]
+INT2 BTOP [8]
+INT2 BBOT [10]
+
+INIT
+0000  LITERAL.INT.2 2            01 0002
+0003  STORE [0]                  02 00
+0005  LITERAL.INT.2 3            01 0003
+0008  STORE [2]                  02 02
+0010  LITERAL.INT.2 0            01 0000
+0013  DUP                        05 
+0014  STORE [4]                  02 04
+0016  LITERAL.INT.2 8            01 0008
+0019  ADD                        04
+0020  STORE [6]                  02 06
+0022  LITERAL.INT.2 0            01 0000
+0025  DUP                        05
+0026  STORE [8]                  02 08
+0028  LITERAL.INT.2 8            01 0008
+0031  ADD                        04
+0032  STORE [10]                 02 10
+
+MAIN
+0000  LOAD [0]                   03 00
+0002  DUP                        05
+0004  LOAD [4]                   03 04
+0006  ADD                        04
+0007  STORE [4]                  02 04
+0009  LOAD [6]                   03 06
+0010  ADD                        04
+0011  STORE [6]                  02 06
+0013  LOAD [2]                   03 02
+0014  DUP                        05
+0015  LOAD [8]                   03 08
+0017  ADD                        04
+0018  STORE [8]                  02 08
+0020  LOAD [10]                  03 10
+0021  ADD                        04
+0022  STORE [10]                 02 10
+
+  :CHECKX
+0024  LITERAL.INT.2 0            01 0000
+0027  LOAD [4]                   03 04
+0029  JUMPGT FLIPX (11)          06 11
+0031  LOAD [6]                   03 06
+0033  LITERAL.INT.2 640          01 0640
+0036  JUMPGT FLIPX (4)           06 04
+0038  JUMP CHECKY (10)           07 10
+
+  :FLIPX
+0040  LITERAL.INT.2 -1           01 -0001
+0043  LOAD [0]                   03 00
+0045  MUL.INT.2                  08
+0046  STORE [0]                  02 00
+
+  :CHECKY
+0048  LITERAL.INT.2 0            01 0000
+0051  LOAD [8]                   03 08
+0053  JUMPGT FLIPY (11)          06 11
+0055  LOAD [10]                  03 10
+0057  LITERAL.INT.2 480          01 0480
+0060  JUMPGT FLIPY (4)           06 04
+0062  JUMP DRAW (10)             07 10
+
+  :FLIPY
+0064  LITERAL.INT.2 -1           01 -0001
+0067  LOAD [2]                   03 02
+0069  MUL.INT.2                  08
+0070  STORE [2]                  02 02
+
+  :DRAW
+0072  LITERAL.INT.2 0            01 0000
+0075  LITERAL.INT.2 0            01 0000
+0078  LITERAL.INT.2 640          01 0640
+0081  LITERAL.INT.2 480          01 0480
+0084  LITERAL.UINT.1 100         09 100
+0086  LITERAL.UINT.1 0           09 000
+0088  LITERAL.UINT.1 200         09 200
+0090  DRAWRECT                   10
+0091  LOAD [4]                   03 04
+0093  LOAD [8]                   03 08
+0095  LOAD [6]                   03 06
+0097  LOAD [10]                  03 10
+0099  LITERAL.UINT.1 200         09 200
+0101  LITERAL.UINT.1 100         09 100
+0103  LITERAL.UINT.1 0           09 000
+0105  DRAWRECT                   10
+
+

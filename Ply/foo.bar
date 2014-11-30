@@ -1,0 +1,71 @@
+	.file	"test.bc"
+	.text
+	.globl	fib
+	.align	16, 0x90
+	.type	fib,@function
+fib:                                    # @fib
+	.cfi_startproc
+# BB#0:                                 # %entry
+	pushq	%rbp
+.Ltmp3:
+	.cfi_def_cfa_offset 16
+	pushq	%rbx
+.Ltmp4:
+	.cfi_def_cfa_offset 24
+	pushq	%rax
+.Ltmp5:
+	.cfi_def_cfa_offset 32
+.Ltmp6:
+	.cfi_offset %rbx, -24
+.Ltmp7:
+	.cfi_offset %rbp, -16
+	movl	%edi, %ebx
+	testl	%ebx, %ebx
+	js	.LBB0_1
+# BB#3:                                 # %testblock1
+	je	.LBB0_4
+# BB#5:                                 # %testblock2
+	cmpl	$1, %ebx
+	jne	.LBB0_6
+.LBB0_4:                                # %thenblock1
+	movl	$1, %eax
+	jmp	.LBB0_2
+.LBB0_1:                                # %thenblock0
+	xorl	%eax, %eax
+	jmp	.LBB0_2
+.LBB0_6:                                # %finalelse
+	leal	-1(%rbx), %edi
+	callq	fib
+	movl	%eax, %ebp
+	addl	$-2, %ebx
+	movl	%ebx, %edi
+	callq	fib
+	addl	%ebp, %eax
+.LBB0_2:                                # %thenblock0
+	addq	$8, %rsp
+	popq	%rbx
+	popq	%rbp
+	ret
+.Ltmp8:
+	.size	fib, .Ltmp8-fib
+	.cfi_endproc
+
+	.globl	main
+	.align	16, 0x90
+	.type	main,@function
+main:                                   # @main
+	.cfi_startproc
+# BB#0:                                 # %entry
+	pushq	%rax
+.Ltmp10:
+	.cfi_def_cfa_offset 16
+	movl	$5, %edi
+	callq	fib
+	popq	%rdx
+	ret
+.Ltmp11:
+	.size	main, .Ltmp11-main
+	.cfi_endproc
+
+
+	.section	".note.GNU-stack","",@progbits

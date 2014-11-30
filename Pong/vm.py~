@@ -1,0 +1,14 @@
+
+
+initProg = open("init_prog.bdgc", "rb").read()
+mainProg = open("main_prog.bdgc", "rb").read()
+
+def interpret_bytecode(prog):
+    pc = 0
+    while pc < len(prog):
+        b = prog[pc]
+        opcode = struct.unpack('B', b)
+        print pc, opcode
+
+        pc += 1
+
