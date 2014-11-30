@@ -1,5 +1,0 @@
-#include <stdio.h>
-
-int putchari(int x) {
-   putchar((char)x); return 0;
-}
