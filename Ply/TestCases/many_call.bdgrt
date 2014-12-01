@@ -1,0 +1,63 @@
+void print_integer(int num);
+void print_line();
+
+int fib(int x) {
+  if (x < 0) {
+    return 0;
+  } elif (x == 0) {
+    return 1;
+  } elif (x == 1) {
+    return 1;
+  } else {
+    return fib(x-1) + fib(x-2);
+  }
+}
+
+int fact(int x) {
+  if (x==1) {
+    return 1;
+  } elif (x == 0) {
+    return 0;
+  } else {
+    return x * fact(x-1);
+  }
+}
+
+int main() {
+  print_integer(fib(0));
+  print_line();
+  print_integer(fib(1));
+  print_line();
+  print_integer(fib(2));
+  print_line();
+  print_integer(fib(3));
+  print_line();
+  print_integer(fib(4));
+  print_line();
+  print_integer(fib(5));
+  print_line();
+  print_integer(fib(6));
+  print_line();
+  print_integer(fib(7));
+  print_line();
+
+  print_line();
+
+  print_integer(fact(0));
+  print_line();
+  print_integer(fact(1));
+  print_line();
+  print_integer(fact(2));
+  print_line();
+  print_integer(fact(3));
+  print_line();
+  print_integer(fact(4));
+  print_line();
+  print_integer(fact(5));
+  print_line();
+  print_integer(fact(6));
+  print_line();
+  print_integer(fact(7));
+  print_line();
+  return 0;
+}

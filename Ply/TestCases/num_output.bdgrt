@@ -1,0 +1,13 @@
+void print_integer(int num);
+void print_char(int ascii);
+void print_line();
+
+int main() {
+  print_integer(12);
+  print_char(32);
+  print_integer(10);
+  print_char(32);
+  print_integer(2014);
+  print_line();
+  return 0;
+}
