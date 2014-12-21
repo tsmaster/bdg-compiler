@@ -6,8 +6,6 @@ gNamedValues = {}
 
 funcDefs = {}
 
-PHASE_DECLARATIONS, PHASE_DEFINITIONS = range(2)
-gParsePhase = None
 
 class ASTNode(object):
     def __init__(self, linenum, typename):
@@ -17,7 +15,10 @@ class ASTNode(object):
 
     def generateCode(self):
         print "going to raise",self
-        raise Exception("bleh")
+        raise Exception("No Code Generated (must subclass)")
+
+    def generateDecl(self):
+        return None
 
     def __str__(self):
         return self.typename
@@ -29,27 +30,6 @@ def makeType(typedesc):
         return llvm.core.Type.void()
     print "making unknown type:",typedesc
     raise ValueError
-
-"""
-my old decl
-class FuncDeclNode(ASTNode):
-    def __init__(self, rettype, name, arglist, linenum):
-        super(FuncDeclNode, self).__init__(linenum)
-        self.rettypestr = rettype
-        self.rettype = makeType(rettype)
-        self.name = name
-        self.arglist = arglist
-        
-    def generateCode(self):
-        arglist = []
-        # TODO add arguments here
-        if self.arglist:
-            for arg in self.arglist:
-                print "considering arg:",arg
-
-        return llvm.core.Type.function(self.rettype, arglist)
-
-"""
 
 class FuncDeclNode(ASTNode):
     def __init__(self, rettype, name, arglist, linenum):
@@ -63,7 +43,7 @@ class FuncDeclNode(ASTNode):
             self.arglist = []
 
     def generateCode(self):
-        #print "generating code for funcdecl",self.arglist
+        print "generating code for funcdecl",self.arglist
         argtypelist = []
         argnamelist = []
         for arg in self.arglist:
@@ -73,7 +53,7 @@ class FuncDeclNode(ASTNode):
         functype = llvm.core.Type.function(self.rettype, argtypelist)
         #funcobj = llvm.core.Function.new(gLlvmModule, functype, self.name)
         funcobj = llvm.core.Function.get_or_insert(gLlvmModule, functype, self.name)
-        #print "made a function declaration for name:", self.name
+        print "made a function declaration for name:", self.name
 
         self.llvmNode = funcobj
         if funcobj.name != self.name:
@@ -95,50 +75,9 @@ class FuncDeclNode(ASTNode):
             arg.name = argName
             gNamedValues[argName] = arg
         return funcobj
-                
 
-"""
-decl
-
-# This class represents the "prototype" for a function, which captures its name,
-# and its argument names (thus implicitly the number of arguments the function
-# takes).
-class PrototypeNode(object):
-
-   def __init__(self, name, args):
-      self.name = name
-      self.args = args
-
-   def CodeGen(self):
-      # Make the function type, eg. double(double,double).
-      funct_type = Type.function(
-         Type.double(), [Type.double()] * len(self.args), False)
-
-      function = Function.new(g_llvm_module, funct_type, self.name)
-
-      # If the name conflicted, there was already something with the same name.
-      # If it has a body, don't allow redefinition or reextern.
-      if function.name != self.name:
-         function.delete()
-         function = g_llvm_module.get_function_named(self.name)
-
-         # If the function already has a body, reject this.
-         if not function.is_declaration:
-            raise RuntimeError('Redefinition of function.')
-
-         # If F took a different number of args, reject.
-         if len(callee.args) != len(self.args):
-            raise RuntimeError('Redeclaration of a function with different number '
-                               'of args.')
-
-      # Set names for all arguments and add them to the variables symbol table.
-      for arg, arg_name in zip(function.args, self.args):
-         arg.name = arg_name
-         # Add arguments to variable symbol table.
-         g_named_values[arg_name] = arg
-
-      return function
-"""
+    def generateDecl(self):
+        return self.generateCode()                
 
 
 class RValueVar(ASTNode):
@@ -154,90 +93,6 @@ class RValueVar(ASTNode):
         # todo: lookup variable
         #return llvm.core.Constant.int(llvm.core.Type.int(), 93)
 
-
-"""
-old funcdef
-
-
-class FuncDefNode(ASTNode):
-    def __init__(self, rettype, name, arglist, body, linenum):
-        super(FuncDefNode, self).__init__(linenum)
-        self.rettype = rettype
-        self.name = name
-        self.arglist = arglist
-        self.linenum = linenum
-        self.body = body
-
-        gNamedValues.clear()
-
-
-    def makeProto(self):
-        prototype = FuncDeclNode(self.rettype, self.name, self.arglist, self.linenum)
-        functionProto = prototype.generateCode()
-        function = llvm.core.Function.new(gLlvmModule, functionProto, self.name)            
-        self.llvmNode = function
-        funcDefs[self.name]=self.llvmNode
-
-    def generateCode(self):
-        print "generating code for funcdef: ", self.name
-
-        self.makeProto()
-
-        block = self.llvmNode.append_basic_block('entry')
-        global gLlvmBuilder
-        gLlvmBuilder = llvm.core.Builder.new(block)
-        try:
-            self.body.generateCode(self.llvmNode)
-            self.llvmNode.verify()
-        except:
-            self.llvmNode.delete()
-            raise
-
-        return self.llvmNode        
-
-    def __str__(self):
-        header = "func %s (%s) -> %s\n" % (self.name, self.arglist, self.rettype)
-        bodystring = str(self.body)
-        return header+bodystring
-"""
-
-
-"""
-tutorial funcdef
-
-# This class represents a function definition itself.
-class FunctionNode(object):
-
-   def __init__(self, prototype, body):
-      self.prototype = prototype
-      self.body = body
-
-   def CodeGen(self):
-      # Clear scope.
-      g_named_values.clear()
-
-      # Create a function object.
-      function = self.prototype.CodeGen()
-
-      # Create a new basic block to start insertion into.
-      block = function.append_basic_block('entry')
-      global g_llvm_builder
-      g_llvm_builder = Builder.new(block)
-
-      # Finish off the function.
-      try:
-         return_value = self.body.CodeGen()
-         g_llvm_builder.ret(return_value)
-
-         # Validate the generated code, checking for consistency.
-         function.verify()
-      except:
-         function.delete()
-         raise
-
-      return function
-
-"""
 
 class FuncDefNode(ASTNode):
     def __init__(self, prototype, funcname, body, linenum):
@@ -272,7 +127,6 @@ class FuncDefNode(ASTNode):
         return funcobj
 
 
-
 class IfElse:
     def __init__(self, conditional, body, eliflist, elsebody):
         self.conditional = conditional
@@ -280,7 +134,7 @@ class IfElse:
         self.eliflist = eliflist
         self.elsebody = elsebody
 
-        print "ifelse thingy"
+        print "ifelse block"
         print "conditional:", self.conditional
         print "body:", self.body
         print "eliflist:", self.eliflist
@@ -293,8 +147,6 @@ class IfElse:
             self.conditions.append(cond)
             self.bodies.append(body)
         
-        
-
     def __str__(self):
         return "IF {%s}\nTHEN{%s}\nELIF{%s}\nELSE{%s}" % (str(self.conditional),
                                                           str(self.body),
@@ -427,17 +279,6 @@ class FunctionCall:
         #print "arglist:", self.arglist
         #print type(self.arglist)
         name = None
-        """
-        if functionObj.name == self.name:
-            name = self.name
-            funcObj = functionObj
-        else:
-            name = functionObj.name
-            if self.name in funcDefs:
-                funcObj = funcDefs[self.name]
-            else:
-                raise Exception("undefined function: " + self.name)
-        """
         callee = gLlvmModule.get_function_named(self.name)
         #print self.name
         #print callee
@@ -509,6 +350,7 @@ class BinaryExprNode(ASTNode):
 class topLevelGroup(ASTNode):
     def __init__(self, funcdeflist):
         print "top level group: ",funcdeflist
+
     
 class argDeclNode(ASTNode):
     def __init__(self, typestr, argname):

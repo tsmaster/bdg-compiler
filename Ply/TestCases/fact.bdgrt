@@ -1,15 +1,18 @@
 void print_integer(int num);
+void print_line();
 
 int fact(int x) {
-  if (x==1) {
+  if (x == 1) {
     return 1;
-  } elif (x==0) {
+  } elif (x == 0) {
     return 0;
   } else {
-    return x * fact(x-1);
+    return x * fact(x - 1);
   }
 }
 
 int main() {
   print_integer(fact(6));
+  print_line();
+  return 0;
 }

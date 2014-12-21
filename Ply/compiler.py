@@ -259,6 +259,7 @@ def p_ifelse_if(t):
 def p_error(t):
     print("Syntax error at %s" % t.value)
     print t
+
 yacc.yacc(start = 'toplevelgroup')
 
 def load_file(filename):
@@ -280,34 +281,45 @@ def compile(filename, basename, outname):
         tok = lexer.token()
         if not tok:
             break
-        print tok
+        #print tok
 
     print "parsing:"
-    for linenum, line in enumerate(sourcecode.split('\n')):
-        print "%03d : %s " % (linenum+1, line)
+    #for linenum, line in enumerate(sourcecode.split('\n')):
+    #    print "%03d : %s " % (linenum+1, line)
 
-    ast.gParsePhase = ast.PHASE_DECLARATIONS
     tree = yacc.parse(sourcecode)
 
     topLevelObjs = []
 
+    print "about to generate code"
     if tree:
+        for tlt in tree:
+            print "making decl for",tlt.name
+            tlt.generateDecl()
         for tlt in tree:
             topLevelObjs.append(tlt.generateCode())
             print
-
+    
     for tlo in topLevelObjs:
+        print "tlo:",tlo.name
+
+    makeObj(outname, None)
+    """
+    for tlo in topLevelObjs:
+        print "visiting",tlo.name
         #print tlo.name
-        print tlo
-        if tlo.name == 'main':
+        #print tlo
+        if True or tlo.name == 'main':
+            print "making object for",tlo.name
             objname = outname
             makeObj(objname, tlo)
             break
+    """
 
 def make_module_name(filename):
     path, basename = os.path.split(filename)
     root, ext = os.path.splitext(basename)
-    return root
+    return root+"_module"
 
 def make_obj_filename(module_name):
     return module_name + '.o'

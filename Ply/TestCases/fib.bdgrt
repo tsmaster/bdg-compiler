@@ -1,4 +1,5 @@
 void print_integer(int num);
+void print_line();
 
 int fib(int x) {
   if (x < 0) {
@@ -14,4 +15,6 @@ int fib(int x) {
 
 int main() {
   print_integer(fib(5));
+  print_line();
+  return 0;
 }
