@@ -12,6 +12,9 @@ tokens = (
     'ELIF',
     'ELSE',
     'RETURN',
+    'LOOP',
+    'WHILE',
+    'BREAK',
     'LPAREN',
     'RPAREN',
     'ASSIGN',
@@ -59,7 +62,9 @@ reserved = {
     'float' : 'FLOAT', 
     'void' : 'VOID',
     'string' : 'STRING',
-    
+    'loop' : 'LOOP',
+    'while' : 'WHILE',
+    'break' : 'BREAK'    
 }
 
 def t_IDENTIFIER(t):
@@ -149,7 +154,7 @@ def p_argdecllist_empty(t):
 
 def p_argdecllist_one(t):
     '''argdecllist : argdecl'''
-    t[0] = t[1]
+    t[0] = [t[1]]
 
 def p_argdecllist_many(t):
     '''argdecllist : argdecl COMMA argdecllist'''
@@ -157,7 +162,7 @@ def p_argdecllist_many(t):
 
 def p_argdecl(t):
     '''argdecl : type IDENTIFIER'''
-    t[0] = [ast.argDeclNode(t[1], t[2])]
+    t[0] = ast.argDeclNode(t[1], t[2])
 
 def p_empty(t):
     'empty :'
@@ -173,7 +178,7 @@ def p_arglist_single(t):
 
 def p_arglist_many(t):
     'arglist : expression COMMA arglist'
-    t[0] = [t[1]] + t[2]
+    t[0] = [t[1]] + t[3]
 
 def p_statementlist_empty(t):
     'statementlist : empty'
@@ -197,6 +202,18 @@ def p_statement_ifelse(t):
 def p_statement_return(t):
     '''statement : RETURN expression SEMICOLON'''
     t[0] = ast.ReturnStatement(t[2])
+
+def p_statement_loop(t):
+    '''statement : LOOP LBRACE statementlist RBRACE'''
+    t[0] = ast.LoopStatement(t[3])
+
+def p_statement_break(t):
+    '''statement : BREAK SEMICOLON'''
+    t[0] = ast.BreakStatement()
+
+def p_statement_while_loop(t):
+    '''statement : WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE'''
+    t[0] = ast.WhileLoop(t[3], t[6])
 
 def p_statement_assign(t):
     '''statement : IDENTIFIER ASSIGN expression'''

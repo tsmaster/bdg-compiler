@@ -1,0 +1,31 @@
+int open_window(int width, int height);
+void clear_window(int red, int green, int blue);
+void flip();
+void sdl_tick_input();
+int sdl_quit_signalled();
+void sdl_draw_rect(int left, int top, int width, int height, int r, int g, int b);
+void srand_from_time();
+int rand_int(int max);
+void delay(int ms);
+
+int main() {
+  srand_from_time();
+  open_window(640, 480);
+  clear_window(rand_int(256), 
+               rand_int(256),
+	       rand_int(256));
+  loop {
+    sdl_tick_input();
+    if (sdl_quit_signalled() == 1) {
+      break;
+    }
+    clear_window(rand_int(64), rand_int(256), rand_int(64));
+    sdl_draw_rect(32, 240 - 128/2, 32, 128, 200, 128, 128);
+    sdl_draw_rect(640 - 64, 240 - 128/2, 32, 128, 128, 128, 200);
+    sdl_draw_rect(320 - 16, 240 - 16, 32, 32, 200, 200, 200);
+    delay(20);
+    flip();    
+  }
+  delay(1000);
+  return 0;
+}

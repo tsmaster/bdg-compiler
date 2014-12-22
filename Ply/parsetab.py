@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = '\x0eN\xb0\xff0\x1a\xff\x97t\x01\x88[u\xec\x06)'
+_lr_signature = '\x87\x06\xfd\x8ek\x97\xeb\x19\x96\x127\xae\xa7ck\xb5'
     
-_lr_action_items = {'ELIF':([65,80,],[66,66,]),'RETURN':([23,26,28,29,34,44,51,55,57,58,59,63,65,67,68,71,72,74,77,78,80,81,],[25,-29,-22,25,-28,-21,-23,-24,-27,-26,-25,25,-15,-37,-15,-41,-39,25,25,-40,-15,-38,]),'VOID':([0,2,5,14,20,22,36,],[8,8,8,8,8,-4,-5,]),'NUMBER':([23,25,26,28,29,34,38,39,40,41,42,43,44,45,46,47,48,49,50,51,55,57,58,59,60,63,65,67,68,69,71,72,74,77,78,80,81,],[26,26,-29,-22,26,-28,26,26,26,26,26,-36,-21,-35,-31,-33,-30,-32,-34,-23,-24,-27,-26,-25,26,26,-15,-37,-15,26,-41,-39,26,26,-40,-15,-38,]),'LESSTHAN':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,46,-28,46,46,46,46,46,46,-25,46,]),'MORETHAN':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,49,-28,49,49,49,49,49,49,-25,49,]),'MINUS':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,50,-28,50,50,50,50,50,50,-25,50,]),'STRING':([0,2,5,14,20,22,36,],[10,10,10,10,10,-4,-5,]),'RPAREN':([14,15,16,18,20,21,24,26,34,38,52,53,54,56,57,58,59,60,62,73,],[-15,19,-12,-11,-15,-14,-13,-29,-28,-15,59,-17,-16,61,-27,-26,-25,-15,-18,75,]),'SEMICOLON':([19,26,30,33,34,35,57,58,59,],[22,-29,-28,44,-28,51,-27,-26,-25,]),'PLUS':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,47,-28,47,47,47,47,47,47,-25,47,]),'COMMA':([16,21,26,34,53,57,58,59,],[20,-14,-29,-28,60,-27,-26,-25,]),'IDENTIFIER':([0,1,2,4,5,6,7,8,10,14,17,20,22,23,25,26,28,29,34,36,38,39,40,41,42,43,44,45,46,47,48,49,50,51,55,57,58,59,60,63,65,67,68,69,71,72,74,77,78,80,81,],[6,-6,6,-7,6,-10,13,-9,-8,6,21,6,-4,30,34,-29,-22,30,-28,-5,34,34,34,34,34,-36,-21,-35,-31,-33,-30,-32,-34,-23,-24,-27,-26,-25,34,30,-15,-37,-15,34,-41,-39,30,30,-40,-15,-38,]),'ASSIGN':([30,],[39,]),'$end':([0,2,3,5,9,11,12,22,36,],[-15,-15,0,-15,-3,-1,-2,-4,-5,]),'DIVIDE':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,43,-28,43,43,43,43,43,43,-25,43,]),'RBRACE':([23,26,27,28,29,31,34,37,44,51,55,57,58,59,63,64,65,67,68,71,72,74,76,77,78,79,80,81,],[-15,-29,36,-22,-15,-19,-28,-20,-21,-23,-24,-27,-26,-25,-15,65,-15,-37,-15,-41,-39,-15,78,-15,-40,80,-15,-38,]),'TIMES':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,45,-28,45,45,45,45,45,45,-25,45,]),'LPAREN':([13,30,32,34,66,],[14,38,40,38,69,]),'ELSE':([65,67,68,80,81,],[-15,-37,70,-15,-38,]),'IF':([23,26,28,29,34,44,51,55,57,58,59,63,65,67,68,71,72,74,77,78,80,81,],[32,-29,-22,32,-28,-21,-23,-24,-27,-26,-25,32,-15,-37,-15,-41,-39,32,32,-40,-15,-38,]),'LBRACE':([19,61,70,75,],[23,63,74,77,]),'INT':([0,2,5,14,20,22,36,],[1,1,1,1,1,-4,-5,]),'FLOAT':([0,2,5,14,20,22,36,],[4,4,4,4,4,-4,-5,]),'ISEQUAL':([26,30,33,34,35,53,55,56,57,58,59,73,],[-29,-28,48,-28,48,48,48,48,48,48,-25,48,]),}
+_lr_action_items = {'ELIF':([78,93,],[79,79,]),'RETURN':([23,26,29,30,37,45,49,56,57,62,64,65,68,71,72,74,77,78,80,81,84,85,87,90,91,93,94,],[25,-32,-22,25,-31,-25,-21,25,-23,-27,-30,-29,-28,-24,25,25,-26,-15,-40,-15,-44,-42,25,25,-43,-15,-41,]),'VOID':([0,2,5,14,20,22,39,],[8,8,8,8,8,-4,-5,]),'NUMBER':([23,25,26,29,30,37,40,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,62,64,65,68,69,71,72,74,77,78,80,81,82,84,85,87,90,91,93,94,],[26,26,-32,-22,26,-31,26,26,26,26,-25,26,26,-39,-21,-38,-34,-36,-33,-35,-37,26,-23,-27,-30,-29,-28,26,-24,26,26,-26,-15,-40,-15,26,-44,-42,26,26,-43,-15,-41,]),'LESSTHAN':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,51,-31,51,51,51,51,51,51,51,-28,51,]),'MORETHAN':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,54,-31,54,54,54,54,54,54,54,-28,54,]),'MINUS':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,55,-31,55,55,55,55,55,55,55,-28,55,]),'STRING':([0,2,5,14,20,22,39,],[10,10,10,10,10,-4,-5,]),'RPAREN':([14,15,16,18,20,21,24,26,37,42,58,59,60,61,63,64,65,68,69,73,86,],[-15,19,-12,-11,-15,-14,-13,-32,-31,-15,67,68,-17,-16,70,-30,-29,-28,-15,-18,88,]),'SEMICOLON':([19,26,31,34,35,37,38,64,65,68,],[22,-32,-31,45,49,-31,57,-30,-29,-28,]),'PLUS':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,52,-31,52,52,52,52,52,52,52,-28,52,]),'COMMA':([16,21,26,37,60,64,65,68,],[20,-14,-32,-31,69,-30,-29,-28,]),'IDENTIFIER':([0,1,2,4,5,6,7,8,10,14,17,20,22,23,25,26,29,30,37,39,40,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,62,64,65,68,69,71,72,74,77,78,80,81,82,84,85,87,90,91,93,94,],[6,-6,6,-7,6,-10,13,-9,-8,6,21,6,-4,31,37,-32,-22,31,-31,-5,37,37,37,37,-25,37,37,-39,-21,-38,-34,-36,-33,-35,-37,31,-23,-27,-30,-29,-28,37,-24,31,31,-26,-15,-40,-15,37,-44,-42,31,31,-43,-15,-41,]),'ASSIGN':([31,],[43,]),'$end':([0,2,3,5,9,11,12,22,39,],[-15,-15,0,-15,-3,-1,-2,-4,-5,]),'DIVIDE':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,48,-31,48,48,48,48,48,48,48,-28,48,]),'RBRACE':([23,26,27,29,30,32,37,41,45,49,56,57,62,64,65,66,68,71,72,74,75,76,77,78,80,81,84,85,87,89,90,91,92,93,94,],[-15,-32,39,-22,-15,-19,-31,-20,-25,-21,-15,-23,-27,-30,-29,71,-28,-24,-15,-15,77,78,-26,-15,-40,-15,-44,-42,-15,91,-15,-43,93,-15,-41,]),'TIMES':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,50,-31,50,50,50,50,50,50,50,-28,50,]),'LPAREN':([13,28,31,33,37,79,],[14,40,42,44,42,82,]),'ELSE':([78,80,81,93,94,],[-15,-40,83,-15,-41,]),'IF':([23,26,29,30,37,45,49,56,57,62,64,65,68,71,72,74,77,78,80,81,84,85,87,90,91,93,94,],[33,-32,-22,33,-31,-25,-21,33,-23,-27,-30,-29,-28,-24,33,33,-26,-15,-40,-15,-44,-42,33,33,-43,-15,-41,]),'LBRACE':([19,36,67,70,83,88,],[23,56,72,74,87,90,]),'INT':([0,2,5,14,20,22,39,],[1,1,1,1,1,-4,-5,]),'FLOAT':([0,2,5,14,20,22,39,],[4,4,4,4,4,-4,-5,]),'WHILE':([23,26,29,30,37,45,49,56,57,62,64,65,68,71,72,74,77,78,80,81,84,85,87,90,91,93,94,],[28,-32,-22,28,-31,-25,-21,28,-23,-27,-30,-29,-28,-24,28,28,-26,-15,-40,-15,-44,-42,28,28,-43,-15,-41,]),'BREAK':([23,26,29,30,37,45,49,56,57,62,64,65,68,71,72,74,77,78,80,81,84,85,87,90,91,93,94,],[34,-32,-22,34,-31,-25,-21,34,-23,-27,-30,-29,-28,-24,34,34,-26,-15,-40,-15,-44,-42,34,34,-43,-15,-41,]),'ISEQUAL':([26,31,35,37,38,58,60,62,63,64,65,68,86,],[-32,-31,53,-31,53,53,53,53,53,53,53,-28,53,]),'LOOP':([23,26,29,30,37,45,49,56,57,62,64,65,68,71,72,74,77,78,80,81,84,85,87,90,91,93,94,],[36,-32,-22,36,-31,-25,-21,36,-23,-27,-30,-29,-28,-24,36,36,-26,-15,-40,-15,-44,-42,36,36,-43,-15,-41,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'arithop':([33,35,53,55,56,57,58,73,],[41,41,41,41,41,41,41,41,]),'compare':([33,35,53,55,56,57,58,73,],[42,42,42,42,42,42,42,42,]),'argdecllist':([14,20,],[15,24,]),'argdecl':([14,20,],[16,16,]),'expression':([23,25,29,38,39,40,41,42,60,63,69,74,77,],[33,35,33,53,55,56,57,58,53,33,73,33,33,]),'funcdecl':([0,2,5,],[2,2,2,]),'toplevelgroup':([0,2,5,],[3,11,12,]),'statementlist':([23,29,63,74,77,],[27,37,64,76,79,]),'optelse':([68,],[71,]),'ifelse':([23,29,63,74,77,],[28,28,28,28,28,]),'elifgroup':([65,80,],[68,81,]),'statement':([23,29,63,74,77,],[29,29,29,29,29,]),'funcdef':([0,2,5,],[5,5,5,]),'arglist':([38,60,],[52,62,]),'type':([0,2,5,14,20,],[7,7,7,17,17,]),'empty':([0,2,5,14,20,23,29,38,60,63,65,68,74,77,80,],[9,9,9,18,18,31,31,54,54,31,67,72,31,31,67,]),}
+_lr_goto_items = {'arithop':([35,38,58,60,62,63,64,65,86,],[46,46,46,46,46,46,46,46,46,]),'compare':([35,38,58,60,62,63,64,65,86,],[47,47,47,47,47,47,47,47,47,]),'argdecllist':([14,20,],[15,24,]),'argdecl':([14,20,],[16,16,]),'expression':([23,25,30,40,42,43,44,46,47,56,69,72,74,82,87,90,],[35,38,35,58,60,62,63,64,65,35,60,35,35,86,35,35,]),'funcdecl':([0,2,5,],[2,2,2,]),'toplevelgroup':([0,2,5,],[3,11,12,]),'statementlist':([23,30,56,72,74,87,90,],[27,41,66,75,76,89,92,]),'optelse':([81,],[84,]),'ifelse':([23,30,56,72,74,87,90,],[29,29,29,29,29,29,29,]),'elifgroup':([78,93,],[81,94,]),'statement':([23,30,56,72,74,87,90,],[30,30,30,30,30,30,30,]),'funcdef':([0,2,5,],[5,5,5,]),'arglist':([42,69,],[59,73,]),'type':([0,2,5,14,20,],[7,7,7,17,17,]),'empty':([0,2,5,14,20,23,30,42,56,69,72,74,78,81,87,90,93,],[9,9,9,18,18,32,32,61,32,61,32,32,80,85,32,32,80,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -26,45 +26,48 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> toplevelgroup","S'",1,None,None,None),
-  ('toplevelgroup -> funcdecl toplevelgroup','toplevelgroup',2,'p_toplevelgroup_funcdecl','parser.py',90),
-  ('toplevelgroup -> funcdef toplevelgroup','toplevelgroup',2,'p_toplevelgroup_funcdef','parser.py',94),
-  ('toplevelgroup -> empty','toplevelgroup',1,'p_toplevelgroup_empty','parser.py',98),
-  ('funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON','funcdecl',6,'p_funcdecl','parser.py',102),
-  ('funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE','funcdef',8,'p_funcdef','parser.py',127),
-  ('type -> INT','type',1,'p_type','parser.py',138),
-  ('type -> FLOAT','type',1,'p_type','parser.py',139),
-  ('type -> STRING','type',1,'p_type','parser.py',140),
-  ('type -> VOID','type',1,'p_type','parser.py',141),
-  ('type -> IDENTIFIER','type',1,'p_type','parser.py',142),
-  ('argdecllist -> empty','argdecllist',1,'p_argdecllist_empty','parser.py',147),
-  ('argdecllist -> argdecl','argdecllist',1,'p_argdecllist_one','parser.py',151),
-  ('argdecllist -> argdecl COMMA argdecllist','argdecllist',3,'p_argdecllist_many','parser.py',155),
-  ('argdecl -> type IDENTIFIER','argdecl',2,'p_argdecl','parser.py',159),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',163),
-  ('arglist -> empty','arglist',1,'p_arglist_empty','parser.py',167),
-  ('arglist -> expression','arglist',1,'p_arglist_single','parser.py',171),
-  ('arglist -> expression COMMA arglist','arglist',3,'p_arglist_many','parser.py',175),
-  ('statementlist -> empty','statementlist',1,'p_statementlist_empty','parser.py',179),
-  ('statementlist -> statement statementlist','statementlist',2,'p_statementlist_bootstrap','parser.py',183),
-  ('statement -> expression SEMICOLON','statement',2,'p_statement_expression','parser.py',190),
-  ('statement -> ifelse','statement',1,'p_statement_ifelse','parser.py',194),
-  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statement_return','parser.py',198),
-  ('statement -> IDENTIFIER ASSIGN expression','statement',3,'p_statement_assign','parser.py',202),
-  ('expression -> IDENTIFIER LPAREN arglist RPAREN','expression',4,'p_expression_functioncall','parser.py',206),
-  ('expression -> expression compare expression','expression',3,'p_expression_binaryop','parser.py',210),
-  ('expression -> expression arithop expression','expression',3,'p_expression_binaryop','parser.py',211),
-  ('expression -> IDENTIFIER','expression',1,'p_expression_variable','parser.py',216),
-  ('expression -> NUMBER','expression',1,'p_expression_number','parser.py',221),
-  ('compare -> ISEQUAL','compare',1,'p_compare','parser.py',225),
-  ('compare -> LESSTHAN','compare',1,'p_compare','parser.py',226),
-  ('compare -> MORETHAN','compare',1,'p_compare','parser.py',227),
-  ('arithop -> PLUS','arithop',1,'p_arithop','parser.py',231),
-  ('arithop -> MINUS','arithop',1,'p_arithop','parser.py',232),
-  ('arithop -> TIMES','arithop',1,'p_arithop','parser.py',233),
-  ('arithop -> DIVIDE','arithop',1,'p_arithop','parser.py',234),
-  ('elifgroup -> empty','elifgroup',1,'p_elifgroup_empty','parser.py',239),
-  ('elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup','elifgroup',8,'p_elifgroup_many','parser.py',243),
-  ('optelse -> empty','optelse',1,'p_optelse_empty','parser.py',250),
-  ('optelse -> ELSE LBRACE statementlist RBRACE','optelse',4,'p_optelse_single','parser.py',254),
-  ('ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse','ifelse',9,'p_ifelse_if','parser.py',258),
+  ('toplevelgroup -> funcdecl toplevelgroup','toplevelgroup',2,'p_toplevelgroup_funcdecl','compiler.py',95),
+  ('toplevelgroup -> funcdef toplevelgroup','toplevelgroup',2,'p_toplevelgroup_funcdef','compiler.py',99),
+  ('toplevelgroup -> empty','toplevelgroup',1,'p_toplevelgroup_empty','compiler.py',103),
+  ('funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON','funcdecl',6,'p_funcdecl','compiler.py',107),
+  ('funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE','funcdef',8,'p_funcdef','compiler.py',132),
+  ('type -> INT','type',1,'p_type','compiler.py',143),
+  ('type -> FLOAT','type',1,'p_type','compiler.py',144),
+  ('type -> STRING','type',1,'p_type','compiler.py',145),
+  ('type -> VOID','type',1,'p_type','compiler.py',146),
+  ('type -> IDENTIFIER','type',1,'p_type','compiler.py',147),
+  ('argdecllist -> empty','argdecllist',1,'p_argdecllist_empty','compiler.py',152),
+  ('argdecllist -> argdecl','argdecllist',1,'p_argdecllist_one','compiler.py',156),
+  ('argdecllist -> argdecl COMMA argdecllist','argdecllist',3,'p_argdecllist_many','compiler.py',160),
+  ('argdecl -> type IDENTIFIER','argdecl',2,'p_argdecl','compiler.py',164),
+  ('empty -> <empty>','empty',0,'p_empty','compiler.py',168),
+  ('arglist -> empty','arglist',1,'p_arglist_empty','compiler.py',172),
+  ('arglist -> expression','arglist',1,'p_arglist_single','compiler.py',176),
+  ('arglist -> expression COMMA arglist','arglist',3,'p_arglist_many','compiler.py',180),
+  ('statementlist -> empty','statementlist',1,'p_statementlist_empty','compiler.py',184),
+  ('statementlist -> statement statementlist','statementlist',2,'p_statementlist_bootstrap','compiler.py',188),
+  ('statement -> expression SEMICOLON','statement',2,'p_statement_expression','compiler.py',195),
+  ('statement -> ifelse','statement',1,'p_statement_ifelse','compiler.py',199),
+  ('statement -> RETURN expression SEMICOLON','statement',3,'p_statement_return','compiler.py',203),
+  ('statement -> LOOP LBRACE statementlist RBRACE','statement',4,'p_statement_loop','compiler.py',207),
+  ('statement -> BREAK SEMICOLON','statement',2,'p_statement_break','compiler.py',211),
+  ('statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE','statement',7,'p_statement_while_loop','compiler.py',215),
+  ('statement -> IDENTIFIER ASSIGN expression','statement',3,'p_statement_assign','compiler.py',219),
+  ('expression -> IDENTIFIER LPAREN arglist RPAREN','expression',4,'p_expression_functioncall','compiler.py',223),
+  ('expression -> expression compare expression','expression',3,'p_expression_binaryop','compiler.py',227),
+  ('expression -> expression arithop expression','expression',3,'p_expression_binaryop','compiler.py',228),
+  ('expression -> IDENTIFIER','expression',1,'p_expression_variable','compiler.py',233),
+  ('expression -> NUMBER','expression',1,'p_expression_number','compiler.py',238),
+  ('compare -> ISEQUAL','compare',1,'p_compare','compiler.py',242),
+  ('compare -> LESSTHAN','compare',1,'p_compare','compiler.py',243),
+  ('compare -> MORETHAN','compare',1,'p_compare','compiler.py',244),
+  ('arithop -> PLUS','arithop',1,'p_arithop','compiler.py',248),
+  ('arithop -> MINUS','arithop',1,'p_arithop','compiler.py',249),
+  ('arithop -> TIMES','arithop',1,'p_arithop','compiler.py',250),
+  ('arithop -> DIVIDE','arithop',1,'p_arithop','compiler.py',251),
+  ('elifgroup -> empty','elifgroup',1,'p_elifgroup_empty','compiler.py',256),
+  ('elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup','elifgroup',8,'p_elifgroup_many','compiler.py',260),
+  ('optelse -> empty','optelse',1,'p_optelse_empty','compiler.py',264),
+  ('optelse -> ELSE LBRACE statementlist RBRACE','optelse',4,'p_optelse_single','compiler.py',268),
+  ('ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse','ifelse',9,'p_ifelse_if','compiler.py',272),
 ]

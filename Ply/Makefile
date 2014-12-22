@@ -4,6 +4,9 @@ all: fact.exe fib.exe fact_decl.exe many_call.exe num_output.exe
 support.o: support.c
 	gcc -g -c support.c
 
+sdl_wrapper.o: sdl_wrapper.c
+	gcc -g -c sdl_wrapper.c
+
 fact.o: TestCases/fact.bdgrt
 	python compiler.py TestCases/fact.bdgrt fact.o
 
@@ -19,6 +22,9 @@ many_call.o: TestCases/many_call.bdgrt
 num_output.o: TestCases/num_output.bdgrt  
 	python compiler.py TestCases/num_output.bdgrt num_output.o
 
+pong.o : TestCases/pong.bdgrt
+	python compiler.py TestCases/pong.bdgrt pong.o
+
 fact.exe: fact.o support.o
 	gcc -o fact.exe support.o fact.o
 
@@ -33,6 +39,9 @@ many_call.exe: many_call.o support.o
 
 num_output.exe: num_output.o support.o
 	gcc -o num_output.exe support.o num_output.o
+
+pong.exe: pong.o sdl_wrapper.o
+	gcc -o pong.exe pong.o sdl_wrapper.o -lSDL2
 
 
 clean:

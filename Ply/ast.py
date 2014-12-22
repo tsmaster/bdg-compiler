@@ -13,7 +13,7 @@ class ASTNode(object):
         self.llvmNode = None
         self.typename = typename
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         print "going to raise",self
         raise Exception("No Code Generated (must subclass)")
 
@@ -42,7 +42,7 @@ class FuncDeclNode(ASTNode):
             print "arglist is none in FuncDeclNode"
             self.arglist = []
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         print "generating code for funcdecl",self.arglist
         argtypelist = []
         argnamelist = []
@@ -77,7 +77,7 @@ class FuncDeclNode(ASTNode):
         return funcobj
 
     def generateDecl(self):
-        return self.generateCode()                
+        return self.generateCode(None)                
 
 
 class RValueVar(ASTNode):
@@ -85,7 +85,7 @@ class RValueVar(ASTNode):
         super(RValueVar, self).__init__(linenum, "RValueVar")
         self.name = name
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         if self.name in gNamedValues:
             return gNamedValues[self.name]
         else:
@@ -102,17 +102,17 @@ class FuncDefNode(ASTNode):
         self.body = body
         self.name = funcname
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         gNamedValues.clear()
 
-        funcobj = self.prototype.generateCode()
+        funcobj = self.prototype.generateCode(breakBlock)
 
         block = funcobj.append_basic_block('entry')
         global gLlvmBuilder
         gLlvmBuilder = llvm.core.Builder.new(block)
 
         try:
-            retval = self.body.generateCode()
+            retval = self.body.generateCode(breakBlock)
             print "generated code for func def: %s" % self.name, retval
             print funcobj
 
@@ -154,7 +154,7 @@ class IfElse:
                                                           str(self.elsebody))
 
     def generateCondition(self, condition, funcObj):
-        condCode = condition.generateCode()
+        condCode = condition.generateCode(None)
         if (condCode.type.kind == llvm.core.TYPE_INTEGER):
             condition_bool = condCode
         elif (condCode.type.kind == llvm.core.TYPE_FLOAT):
@@ -165,7 +165,7 @@ class IfElse:
         return condition_bool
         
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         funcObj = gLlvmBuilder.basic_block.function
 
         print "generating code for condition"
@@ -210,7 +210,7 @@ class IfElse:
             print body
             print "in block"
             print gLlvmBuilder.basic_block
-            body.generateCode()
+            body.generateCode(breakBlock)
 
         print "about to make an else"
         # emit else
@@ -221,8 +221,8 @@ class IfElse:
         print self.elsebody
         print "positioning at end of test block", elseBlock
         gLlvmBuilder.position_at_end(elseBlock)
-        
-        else_value = self.elsebody.generateCode()
+        if self.elsebody:
+            else_value = self.elsebody.generateCode(breakBlock)
         return None
 
                              
@@ -242,8 +242,37 @@ class ReturnStatement:
     def __str__(self):
         return "RETURN {%s}" % str(self.expr)
 
-    def generateCode(self):
-        gLlvmBuilder.ret(self.expr.generateCode())
+    def generateCode(self, breakBlock=None):
+        gLlvmBuilder.ret(self.expr.generateCode(None))
+
+class BreakStatement:
+    def __init__(self):
+        pass
+
+    def __str__(self):
+        return "BRK"
+
+    def generateCode(self, breakBlock):
+        gLlvmBuilder.branch(breakBlock)
+
+class LoopStatement:
+    def __init__(self, statementList):
+        self.statements = statementList
+
+    def __str__(self):
+        return "LOOP {\n"+str(self.statements)+"\n}"
+    
+    def generateCode(self, breakBlock=None):
+        outsideBlock = gLlvmBuilder.basic_block
+        funcObj = gLlvmBuilder.basic_block.function
+        loopBlock = funcObj.append_basic_block('loopblock')
+        endOfLoopBlock = funcObj.append_basic_block('endofloopblock')
+        gLlvmBuilder.branch(loopBlock)
+        gLlvmBuilder.position_at_end(loopBlock)
+        self.statements.generateCode(breakBlock=endOfLoopBlock)
+        gLlvmBuilder.branch(loopBlock)
+        gLlvmBuilder.position_at_end(endOfLoopBlock)        
+        return None
 
 class StatementList:
     def __init__(self, statements):
@@ -256,10 +285,10 @@ class StatementList:
         s += "---\n"
         return s
 
-    def generateCode(self):
+    def generateCode(self, breakBlock):
         retval = None
         for s in self.statements:
-            retval = s.generateCode()
+            retval = s.generateCode(breakBlock)
         return retval
 
 class FunctionCall:
@@ -271,19 +300,9 @@ class FunctionCall:
         s = "CALL {%s} {%s}" % (self.name, str(self.arglist))
         return s
 
-    def generateCode(self):
-        #print "generating code for call"
-        #print "called func:", self.name
-        # print functionObj
-        #print "fo name:", functionObj.name
-        #print "arglist:", self.arglist
-        #print type(self.arglist)
+    def generateCode(self, breakBlock):
         name = None
         callee = gLlvmModule.get_function_named(self.name)
-        #print self.name
-        #print callee
-        #print callee.args
-        #print self.arglist
         calleeArgLen = len(callee.args)
         if self.arglist is None:
             self.arglist = []
@@ -293,7 +312,7 @@ class FunctionCall:
             print "error in call to",self.name 
             raise RuntimeError('Incorrect number of arguments in call to '+self.name)
 
-        evaluatedArguments = map(lambda x: x.generateCode(), self.arglist)
+        evaluatedArguments = map(lambda x: x.generateCode(None), self.arglist)
         return gLlvmBuilder.call(callee, evaluatedArguments)
 
 
@@ -308,7 +327,7 @@ class ConstantIntegerNode(ASTNode):
     def __str__(self):
         return str(self.llvmNode)
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         return self.llvmNode
 
 
@@ -321,10 +340,10 @@ class BinaryExprNode(ASTNode):
     def __str__(self):
         return '['+str(self.nodes[0])+str(self.opstr)+str(self.nodes[1])+']'
 
-    def generateCode(self):
+    def generateCode(self, breakBlock=None):
         #print "making binexpr", self.opstr
-        code0 = self.nodes[0].generateCode()
-        code1 = self.nodes[1].generateCode()
+        code0 = self.nodes[0].generateCode(None)
+        code1 = self.nodes[1].generateCode(None)
         #print code0
         #print code1
         if self.opstr == '+':
@@ -334,7 +353,7 @@ class BinaryExprNode(ASTNode):
         elif self.opstr == '*':
             return gLlvmBuilder.mul(code0, code1, "multmp")
         elif self.opstr == '/':
-            return gLlvmBuilder.idiv(code0, code1, "divtmp")
+            return gLlvmBuilder.sdiv(code0, code1, "divtmp")
         elif self.opstr == '==':
             return gLlvmBuilder.icmp(llvm.core.ICMP_EQ, code0, code1, "cmptmp")
         elif self.opstr == '<':
