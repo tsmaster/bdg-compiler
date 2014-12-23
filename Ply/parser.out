@@ -5,98 +5,101 @@ Grammar
 Rule 0     S' -> toplevelgroup
 Rule 1     toplevelgroup -> funcdecl toplevelgroup
 Rule 2     toplevelgroup -> funcdef toplevelgroup
-Rule 3     toplevelgroup -> empty
-Rule 4     funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
-Rule 5     funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
-Rule 6     type -> INT
-Rule 7     type -> FLOAT
-Rule 8     type -> STRING
-Rule 9     type -> VOID
-Rule 10    type -> IDENTIFIER
-Rule 11    argdecllist -> empty
-Rule 12    argdecllist -> argdecl
-Rule 13    argdecllist -> argdecl COMMA argdecllist
-Rule 14    argdecl -> type IDENTIFIER
-Rule 15    empty -> <empty>
-Rule 16    arglist -> empty
-Rule 17    arglist -> expression
-Rule 18    arglist -> expression COMMA arglist
-Rule 19    statementlist -> empty
-Rule 20    statementlist -> statement statementlist
-Rule 21    statement -> expression SEMICOLON
-Rule 22    statement -> ifelse
-Rule 23    statement -> RETURN expression SEMICOLON
-Rule 24    statement -> LOOP LBRACE statementlist RBRACE
-Rule 25    statement -> BREAK SEMICOLON
-Rule 26    statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-Rule 27    statement -> IDENTIFIER ASSIGN expression
-Rule 28    expression -> IDENTIFIER LPAREN arglist RPAREN
-Rule 29    expression -> expression compare expression
-Rule 30    expression -> expression arithop expression
-Rule 31    expression -> IDENTIFIER
-Rule 32    expression -> NUMBER
-Rule 33    compare -> ISEQUAL
-Rule 34    compare -> LESSTHAN
-Rule 35    compare -> MORETHAN
-Rule 36    arithop -> PLUS
-Rule 37    arithop -> MINUS
-Rule 38    arithop -> TIMES
-Rule 39    arithop -> DIVIDE
-Rule 40    elifgroup -> empty
-Rule 41    elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
-Rule 42    optelse -> empty
-Rule 43    optelse -> ELSE LBRACE statementlist RBRACE
-Rule 44    ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+Rule 3     toplevelgroup -> globalvardecl toplevelgroup
+Rule 4     toplevelgroup -> empty
+Rule 5     funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+Rule 6     funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+Rule 7     type -> INT
+Rule 8     type -> FLOAT
+Rule 9     type -> STRING
+Rule 10    type -> VOID
+Rule 11    type -> IDENTIFIER
+Rule 12    argdecllist -> empty
+Rule 13    argdecllist -> argdecl
+Rule 14    argdecllist -> argdecl COMMA argdecllist
+Rule 15    argdecl -> type IDENTIFIER
+Rule 16    empty -> <empty>
+Rule 17    arglist -> empty
+Rule 18    arglist -> expression
+Rule 19    arglist -> expression COMMA arglist
+Rule 20    globalvardecl -> type IDENTIFIER SEMICOLON
+Rule 21    statementlist -> empty
+Rule 22    statementlist -> statement statementlist
+Rule 23    statement -> expression SEMICOLON
+Rule 24    statement -> ifelse
+Rule 25    statement -> RETURN expression SEMICOLON
+Rule 26    statement -> LOOP LBRACE statementlist RBRACE
+Rule 27    statement -> BREAK SEMICOLON
+Rule 28    statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+Rule 29    statement -> IDENTIFIER ASSIGN expression SEMICOLON
+Rule 30    expression -> IDENTIFIER LPAREN arglist RPAREN
+Rule 31    expression -> expression compare expression
+Rule 32    expression -> expression arithop expression
+Rule 33    expression -> IDENTIFIER
+Rule 34    expression -> NUMBER
+Rule 35    compare -> ISEQUAL
+Rule 36    compare -> LESSTHAN
+Rule 37    compare -> MORETHAN
+Rule 38    arithop -> PLUS
+Rule 39    arithop -> MINUS
+Rule 40    arithop -> TIMES
+Rule 41    arithop -> DIVIDE
+Rule 42    elifgroup -> empty
+Rule 43    elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+Rule 44    optelse -> empty
+Rule 45    optelse -> ELSE LBRACE statementlist RBRACE
+Rule 46    ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
 Terminals, with rules where they appear
 
-ASSIGN               : 27
-BREAK                : 25
-COMMA                : 13 18
-DIVIDE               : 39
-ELIF                 : 41
-ELSE                 : 43
-FLOAT                : 7
-IDENTIFIER           : 4 5 10 14 27 28 31
-IF                   : 44
-INT                  : 6
-ISEQUAL              : 33
-LBRACE               : 5 24 26 41 43 44
-LESSTHAN             : 34
-LOOP                 : 24
-LPAREN               : 4 5 26 28 41 44
-MINUS                : 37
-MORETHAN             : 35
-NUMBER               : 32
-PLUS                 : 36
-RBRACE               : 5 24 26 41 43 44
-RETURN               : 23
-RPAREN               : 4 5 26 28 41 44
-SEMICOLON            : 4 21 23 25
-STRING               : 8
-TIMES                : 38
-VOID                 : 9
-WHILE                : 26
+ASSIGN               : 29
+BREAK                : 27
+COMMA                : 14 19
+DIVIDE               : 41
+ELIF                 : 43
+ELSE                 : 45
+FLOAT                : 8
+IDENTIFIER           : 5 6 11 15 20 29 30 33
+IF                   : 46
+INT                  : 7
+ISEQUAL              : 35
+LBRACE               : 6 26 28 43 45 46
+LESSTHAN             : 36
+LOOP                 : 26
+LPAREN               : 5 6 28 30 43 46
+MINUS                : 39
+MORETHAN             : 37
+NUMBER               : 34
+PLUS                 : 38
+RBRACE               : 6 26 28 43 45 46
+RETURN               : 25
+RPAREN               : 5 6 28 30 43 46
+SEMICOLON            : 5 20 23 25 27 29
+STRING               : 9
+TIMES                : 40
+VOID                 : 10
+WHILE                : 28
 error                : 
 
 Nonterminals, with rules where they appear
 
-argdecl              : 12 13
-argdecllist          : 4 5 13
-arglist              : 18 28
-arithop              : 30
-compare              : 29
-elifgroup            : 41 44
-empty                : 3 11 16 19 40 42
-expression           : 17 18 21 23 26 27 29 29 30 30 41 44
+argdecl              : 13 14
+argdecllist          : 5 6 14
+arglist              : 19 30
+arithop              : 32
+compare              : 31
+elifgroup            : 43 46
+empty                : 4 12 17 21 42 44
+expression           : 18 19 23 25 28 29 31 31 32 32 43 46
 funcdecl             : 1
 funcdef              : 2
-ifelse               : 22
-optelse              : 44
-statement            : 20
-statementlist        : 5 20 24 26 41 43 44
-toplevelgroup        : 1 2 0
-type                 : 4 5 14
+globalvardecl        : 3
+ifelse               : 24
+optelse              : 46
+statement            : 22
+statementlist        : 6 22 26 28 43 45 46
+toplevelgroup        : 1 2 3 0
+type                 : 5 6 15 20
 
 Parsing method: LALR
 
@@ -105,34 +108,37 @@ state 0
     (0) S' -> . toplevelgroup
     (1) toplevelgroup -> . funcdecl toplevelgroup
     (2) toplevelgroup -> . funcdef toplevelgroup
-    (3) toplevelgroup -> . empty
-    (4) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
-    (5) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
-    (15) empty -> .
-    (6) type -> . INT
-    (7) type -> . FLOAT
-    (8) type -> . STRING
-    (9) type -> . VOID
-    (10) type -> . IDENTIFIER
+    (3) toplevelgroup -> . globalvardecl toplevelgroup
+    (4) toplevelgroup -> . empty
+    (5) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> . type IDENTIFIER SEMICOLON
+    (16) empty -> .
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    $end            reduce using rule 15 (empty -> .)
+    $end            reduce using rule 16 (empty -> .)
     INT             shift and go to state 1
     FLOAT           shift and go to state 4
-    STRING          shift and go to state 10
-    VOID            shift and go to state 8
-    IDENTIFIER      shift and go to state 6
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
     funcdecl                       shift and go to state 2
     toplevelgroup                  shift and go to state 3
-    funcdef                        shift and go to state 5
-    type                           shift and go to state 7
-    empty                          shift and go to state 9
+    funcdef                        shift and go to state 6
+    type                           shift and go to state 8
+    globalvardecl                  shift and go to state 9
+    empty                          shift and go to state 10
 
 state 1
 
-    (6) type -> INT .
+    (7) type -> INT .
 
-    IDENTIFIER      reduce using rule 6 (type -> INT .)
+    IDENTIFIER      reduce using rule 7 (type -> INT .)
 
 
 state 2
@@ -140,28 +146,31 @@ state 2
     (1) toplevelgroup -> funcdecl . toplevelgroup
     (1) toplevelgroup -> . funcdecl toplevelgroup
     (2) toplevelgroup -> . funcdef toplevelgroup
-    (3) toplevelgroup -> . empty
-    (4) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
-    (5) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
-    (15) empty -> .
-    (6) type -> . INT
-    (7) type -> . FLOAT
-    (8) type -> . STRING
-    (9) type -> . VOID
-    (10) type -> . IDENTIFIER
+    (3) toplevelgroup -> . globalvardecl toplevelgroup
+    (4) toplevelgroup -> . empty
+    (5) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> . type IDENTIFIER SEMICOLON
+    (16) empty -> .
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    $end            reduce using rule 15 (empty -> .)
+    $end            reduce using rule 16 (empty -> .)
     INT             shift and go to state 1
     FLOAT           shift and go to state 4
-    STRING          shift and go to state 10
-    VOID            shift and go to state 8
-    IDENTIFIER      shift and go to state 6
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
     funcdecl                       shift and go to state 2
-    toplevelgroup                  shift and go to state 11
-    funcdef                        shift and go to state 5
-    type                           shift and go to state 7
-    empty                          shift and go to state 9
+    toplevelgroup                  shift and go to state 12
+    funcdef                        shift and go to state 6
+    type                           shift and go to state 8
+    globalvardecl                  shift and go to state 9
+    empty                          shift and go to state 10
 
 state 3
 
@@ -171,903 +180,886 @@ state 3
 
 state 4
 
-    (7) type -> FLOAT .
+    (8) type -> FLOAT .
 
-    IDENTIFIER      reduce using rule 7 (type -> FLOAT .)
+    IDENTIFIER      reduce using rule 8 (type -> FLOAT .)
 
 
 state 5
 
-    (2) toplevelgroup -> funcdef . toplevelgroup
-    (1) toplevelgroup -> . funcdecl toplevelgroup
-    (2) toplevelgroup -> . funcdef toplevelgroup
-    (3) toplevelgroup -> . empty
-    (4) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
-    (5) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
-    (15) empty -> .
-    (6) type -> . INT
-    (7) type -> . FLOAT
-    (8) type -> . STRING
-    (9) type -> . VOID
-    (10) type -> . IDENTIFIER
+    (10) type -> VOID .
 
-    $end            reduce using rule 15 (empty -> .)
-    INT             shift and go to state 1
-    FLOAT           shift and go to state 4
-    STRING          shift and go to state 10
-    VOID            shift and go to state 8
-    IDENTIFIER      shift and go to state 6
+    IDENTIFIER      reduce using rule 10 (type -> VOID .)
 
-    funcdecl                       shift and go to state 2
-    toplevelgroup                  shift and go to state 12
-    funcdef                        shift and go to state 5
-    type                           shift and go to state 7
-    empty                          shift and go to state 9
 
 state 6
 
-    (10) type -> IDENTIFIER .
+    (2) toplevelgroup -> funcdef . toplevelgroup
+    (1) toplevelgroup -> . funcdecl toplevelgroup
+    (2) toplevelgroup -> . funcdef toplevelgroup
+    (3) toplevelgroup -> . globalvardecl toplevelgroup
+    (4) toplevelgroup -> . empty
+    (5) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> . type IDENTIFIER SEMICOLON
+    (16) empty -> .
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    IDENTIFIER      reduce using rule 10 (type -> IDENTIFIER .)
+    $end            reduce using rule 16 (empty -> .)
+    INT             shift and go to state 1
+    FLOAT           shift and go to state 4
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
+    funcdecl                       shift and go to state 2
+    toplevelgroup                  shift and go to state 13
+    funcdef                        shift and go to state 6
+    type                           shift and go to state 8
+    globalvardecl                  shift and go to state 9
+    empty                          shift and go to state 10
 
 state 7
 
-    (4) funcdecl -> type . IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
-    (5) funcdef -> type . IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (11) type -> IDENTIFIER .
 
-    IDENTIFIER      shift and go to state 13
+    IDENTIFIER      reduce using rule 11 (type -> IDENTIFIER .)
 
 
 state 8
 
-    (9) type -> VOID .
+    (5) funcdecl -> type . IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> type . IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> type . IDENTIFIER SEMICOLON
 
-    IDENTIFIER      reduce using rule 9 (type -> VOID .)
+    IDENTIFIER      shift and go to state 14
 
 
 state 9
 
-    (3) toplevelgroup -> empty .
+    (3) toplevelgroup -> globalvardecl . toplevelgroup
+    (1) toplevelgroup -> . funcdecl toplevelgroup
+    (2) toplevelgroup -> . funcdef toplevelgroup
+    (3) toplevelgroup -> . globalvardecl toplevelgroup
+    (4) toplevelgroup -> . empty
+    (5) funcdecl -> . type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> . type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> . type IDENTIFIER SEMICOLON
+    (16) empty -> .
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    $end            reduce using rule 3 (toplevelgroup -> empty .)
+    $end            reduce using rule 16 (empty -> .)
+    INT             shift and go to state 1
+    FLOAT           shift and go to state 4
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
+    funcdecl                       shift and go to state 2
+    toplevelgroup                  shift and go to state 15
+    funcdef                        shift and go to state 6
+    type                           shift and go to state 8
+    globalvardecl                  shift and go to state 9
+    empty                          shift and go to state 10
 
 state 10
 
-    (8) type -> STRING .
+    (4) toplevelgroup -> empty .
 
-    IDENTIFIER      reduce using rule 8 (type -> STRING .)
+    $end            reduce using rule 4 (toplevelgroup -> empty .)
 
 
 state 11
+
+    (9) type -> STRING .
+
+    IDENTIFIER      reduce using rule 9 (type -> STRING .)
+
+
+state 12
 
     (1) toplevelgroup -> funcdecl toplevelgroup .
 
     $end            reduce using rule 1 (toplevelgroup -> funcdecl toplevelgroup .)
 
 
-state 12
+state 13
 
     (2) toplevelgroup -> funcdef toplevelgroup .
 
     $end            reduce using rule 2 (toplevelgroup -> funcdef toplevelgroup .)
 
 
-state 13
-
-    (4) funcdecl -> type IDENTIFIER . LPAREN argdecllist RPAREN SEMICOLON
-    (5) funcdef -> type IDENTIFIER . LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
-
-    LPAREN          shift and go to state 14
-
-
 state 14
 
-    (4) funcdecl -> type IDENTIFIER LPAREN . argdecllist RPAREN SEMICOLON
-    (5) funcdef -> type IDENTIFIER LPAREN . argdecllist RPAREN LBRACE statementlist RBRACE
-    (11) argdecllist -> . empty
-    (12) argdecllist -> . argdecl
-    (13) argdecllist -> . argdecl COMMA argdecllist
-    (15) empty -> .
-    (14) argdecl -> . type IDENTIFIER
-    (6) type -> . INT
-    (7) type -> . FLOAT
-    (8) type -> . STRING
-    (9) type -> . VOID
-    (10) type -> . IDENTIFIER
+    (5) funcdecl -> type IDENTIFIER . LPAREN argdecllist RPAREN SEMICOLON
+    (6) funcdef -> type IDENTIFIER . LPAREN argdecllist RPAREN LBRACE statementlist RBRACE
+    (20) globalvardecl -> type IDENTIFIER . SEMICOLON
 
-    RPAREN          reduce using rule 15 (empty -> .)
-    INT             shift and go to state 1
-    FLOAT           shift and go to state 4
-    STRING          shift and go to state 10
-    VOID            shift and go to state 8
-    IDENTIFIER      shift and go to state 6
+    LPAREN          shift and go to state 17
+    SEMICOLON       shift and go to state 16
 
-    argdecllist                    shift and go to state 15
-    type                           shift and go to state 17
-    empty                          shift and go to state 18
-    argdecl                        shift and go to state 16
 
 state 15
 
-    (4) funcdecl -> type IDENTIFIER LPAREN argdecllist . RPAREN SEMICOLON
-    (5) funcdef -> type IDENTIFIER LPAREN argdecllist . RPAREN LBRACE statementlist RBRACE
+    (3) toplevelgroup -> globalvardecl toplevelgroup .
 
-    RPAREN          shift and go to state 19
+    $end            reduce using rule 3 (toplevelgroup -> globalvardecl toplevelgroup .)
 
 
 state 16
 
-    (12) argdecllist -> argdecl .
-    (13) argdecllist -> argdecl . COMMA argdecllist
+    (20) globalvardecl -> type IDENTIFIER SEMICOLON .
 
-    RPAREN          reduce using rule 12 (argdecllist -> argdecl .)
-    COMMA           shift and go to state 20
+    INT             reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
+    FLOAT           reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
+    STRING          reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
+    VOID            reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
+    IDENTIFIER      reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
+    $end            reduce using rule 20 (globalvardecl -> type IDENTIFIER SEMICOLON .)
 
 
 state 17
 
-    (14) argdecl -> type . IDENTIFIER
+    (5) funcdecl -> type IDENTIFIER LPAREN . argdecllist RPAREN SEMICOLON
+    (6) funcdef -> type IDENTIFIER LPAREN . argdecllist RPAREN LBRACE statementlist RBRACE
+    (12) argdecllist -> . empty
+    (13) argdecllist -> . argdecl
+    (14) argdecllist -> . argdecl COMMA argdecllist
+    (16) empty -> .
+    (15) argdecl -> . type IDENTIFIER
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 21
+    RPAREN          reduce using rule 16 (empty -> .)
+    INT             shift and go to state 1
+    FLOAT           shift and go to state 4
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
+    argdecllist                    shift and go to state 18
+    type                           shift and go to state 20
+    empty                          shift and go to state 21
+    argdecl                        shift and go to state 19
 
 state 18
 
-    (11) argdecllist -> empty .
+    (5) funcdecl -> type IDENTIFIER LPAREN argdecllist . RPAREN SEMICOLON
+    (6) funcdef -> type IDENTIFIER LPAREN argdecllist . RPAREN LBRACE statementlist RBRACE
 
-    RPAREN          reduce using rule 11 (argdecllist -> empty .)
+    RPAREN          shift and go to state 22
 
 
 state 19
 
-    (4) funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN . SEMICOLON
-    (5) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN . LBRACE statementlist RBRACE
+    (13) argdecllist -> argdecl .
+    (14) argdecllist -> argdecl . COMMA argdecllist
 
-    SEMICOLON       shift and go to state 22
-    LBRACE          shift and go to state 23
+    RPAREN          reduce using rule 13 (argdecllist -> argdecl .)
+    COMMA           shift and go to state 23
 
 
 state 20
 
-    (13) argdecllist -> argdecl COMMA . argdecllist
-    (11) argdecllist -> . empty
-    (12) argdecllist -> . argdecl
-    (13) argdecllist -> . argdecl COMMA argdecllist
-    (15) empty -> .
-    (14) argdecl -> . type IDENTIFIER
-    (6) type -> . INT
-    (7) type -> . FLOAT
-    (8) type -> . STRING
-    (9) type -> . VOID
-    (10) type -> . IDENTIFIER
+    (15) argdecl -> type . IDENTIFIER
 
-    RPAREN          reduce using rule 15 (empty -> .)
-    INT             shift and go to state 1
-    FLOAT           shift and go to state 4
-    STRING          shift and go to state 10
-    VOID            shift and go to state 8
-    IDENTIFIER      shift and go to state 6
+    IDENTIFIER      shift and go to state 24
 
-    argdecllist                    shift and go to state 24
-    type                           shift and go to state 17
-    empty                          shift and go to state 18
-    argdecl                        shift and go to state 16
 
 state 21
 
-    (14) argdecl -> type IDENTIFIER .
+    (12) argdecllist -> empty .
 
-    COMMA           reduce using rule 14 (argdecl -> type IDENTIFIER .)
-    RPAREN          reduce using rule 14 (argdecl -> type IDENTIFIER .)
+    RPAREN          reduce using rule 12 (argdecllist -> empty .)
 
 
 state 22
 
-    (4) funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .
+    (5) funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN . SEMICOLON
+    (6) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN . LBRACE statementlist RBRACE
 
-    INT             reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
-    FLOAT           reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
-    STRING          reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
-    VOID            reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
-    IDENTIFIER      reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
-    $end            reduce using rule 4 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    SEMICOLON       shift and go to state 25
+    LBRACE          shift and go to state 26
 
 
 state 23
 
-    (5) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE . statementlist RBRACE
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (14) argdecllist -> argdecl COMMA . argdecllist
+    (12) argdecllist -> . empty
+    (13) argdecllist -> . argdecl
+    (14) argdecllist -> . argdecl COMMA argdecllist
+    (16) empty -> .
+    (15) argdecl -> . type IDENTIFIER
+    (7) type -> . INT
+    (8) type -> . FLOAT
+    (9) type -> . STRING
+    (10) type -> . VOID
+    (11) type -> . IDENTIFIER
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    RPAREN          reduce using rule 16 (empty -> .)
+    INT             shift and go to state 1
+    FLOAT           shift and go to state 4
+    STRING          shift and go to state 11
+    VOID            shift and go to state 5
+    IDENTIFIER      shift and go to state 7
 
-    expression                     shift and go to state 35
-    statementlist                  shift and go to state 27
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    empty                          shift and go to state 32
+    argdecllist                    shift and go to state 27
+    type                           shift and go to state 20
+    empty                          shift and go to state 21
+    argdecl                        shift and go to state 19
 
 state 24
 
-    (13) argdecllist -> argdecl COMMA argdecllist .
+    (15) argdecl -> type IDENTIFIER .
 
-    RPAREN          reduce using rule 13 (argdecllist -> argdecl COMMA argdecllist .)
+    COMMA           reduce using rule 15 (argdecl -> type IDENTIFIER .)
+    RPAREN          reduce using rule 15 (argdecl -> type IDENTIFIER .)
 
 
 state 25
 
-    (23) statement -> RETURN . expression SEMICOLON
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (5) funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    INT             reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    FLOAT           reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    STRING          reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    VOID            reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    IDENTIFIER      reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
+    $end            reduce using rule 5 (funcdecl -> type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON .)
 
-    expression                     shift and go to state 38
 
 state 26
 
-    (32) expression -> NUMBER .
+    (6) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE . statementlist RBRACE
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    RPAREN          reduce using rule 32 (expression -> NUMBER .)
-    ISEQUAL         reduce using rule 32 (expression -> NUMBER .)
-    LESSTHAN        reduce using rule 32 (expression -> NUMBER .)
-    MORETHAN        reduce using rule 32 (expression -> NUMBER .)
-    PLUS            reduce using rule 32 (expression -> NUMBER .)
-    MINUS           reduce using rule 32 (expression -> NUMBER .)
-    TIMES           reduce using rule 32 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 32 (expression -> NUMBER .)
-    SEMICOLON       reduce using rule 32 (expression -> NUMBER .)
-    COMMA           reduce using rule 32 (expression -> NUMBER .)
-    RETURN          reduce using rule 32 (expression -> NUMBER .)
-    LOOP            reduce using rule 32 (expression -> NUMBER .)
-    BREAK           reduce using rule 32 (expression -> NUMBER .)
-    WHILE           reduce using rule 32 (expression -> NUMBER .)
-    IDENTIFIER      reduce using rule 32 (expression -> NUMBER .)
-    NUMBER          reduce using rule 32 (expression -> NUMBER .)
-    IF              reduce using rule 32 (expression -> NUMBER .)
-    RBRACE          reduce using rule 32 (expression -> NUMBER .)
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
+    expression                     shift and go to state 38
+    statementlist                  shift and go to state 30
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    empty                          shift and go to state 35
 
 state 27
 
-    (5) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist . RBRACE
+    (14) argdecllist -> argdecl COMMA argdecllist .
 
-    RBRACE          shift and go to state 39
+    RPAREN          reduce using rule 14 (argdecllist -> argdecl COMMA argdecllist .)
 
 
 state 28
 
-    (26) statement -> WHILE . LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (25) statement -> RETURN . expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    LPAREN          shift and go to state 40
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
+    expression                     shift and go to state 41
 
 state 29
 
-    (22) statement -> ifelse .
+    (34) expression -> NUMBER .
 
-    RETURN          reduce using rule 22 (statement -> ifelse .)
-    LOOP            reduce using rule 22 (statement -> ifelse .)
-    BREAK           reduce using rule 22 (statement -> ifelse .)
-    WHILE           reduce using rule 22 (statement -> ifelse .)
-    IDENTIFIER      reduce using rule 22 (statement -> ifelse .)
-    NUMBER          reduce using rule 22 (statement -> ifelse .)
-    IF              reduce using rule 22 (statement -> ifelse .)
-    RBRACE          reduce using rule 22 (statement -> ifelse .)
+    SEMICOLON       reduce using rule 34 (expression -> NUMBER .)
+    ISEQUAL         reduce using rule 34 (expression -> NUMBER .)
+    LESSTHAN        reduce using rule 34 (expression -> NUMBER .)
+    MORETHAN        reduce using rule 34 (expression -> NUMBER .)
+    PLUS            reduce using rule 34 (expression -> NUMBER .)
+    MINUS           reduce using rule 34 (expression -> NUMBER .)
+    TIMES           reduce using rule 34 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 34 (expression -> NUMBER .)
+    RPAREN          reduce using rule 34 (expression -> NUMBER .)
+    COMMA           reduce using rule 34 (expression -> NUMBER .)
 
 
 state 30
 
-    (20) statementlist -> statement . statementlist
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (6) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist . RBRACE
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    RBRACE          shift and go to state 42
 
-    statementlist                  shift and go to state 41
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
 
 state 31
 
-    (27) statement -> IDENTIFIER . ASSIGN expression
-    (28) expression -> IDENTIFIER . LPAREN arglist RPAREN
-    (31) expression -> IDENTIFIER .
+    (28) statement -> WHILE . LPAREN expression RPAREN LBRACE statementlist RBRACE
 
-    ASSIGN          shift and go to state 43
-    LPAREN          shift and go to state 42
-    SEMICOLON       reduce using rule 31 (expression -> IDENTIFIER .)
-    ISEQUAL         reduce using rule 31 (expression -> IDENTIFIER .)
-    LESSTHAN        reduce using rule 31 (expression -> IDENTIFIER .)
-    MORETHAN        reduce using rule 31 (expression -> IDENTIFIER .)
-    PLUS            reduce using rule 31 (expression -> IDENTIFIER .)
-    MINUS           reduce using rule 31 (expression -> IDENTIFIER .)
-    TIMES           reduce using rule 31 (expression -> IDENTIFIER .)
-    DIVIDE          reduce using rule 31 (expression -> IDENTIFIER .)
+    LPAREN          shift and go to state 43
 
 
 state 32
 
-    (19) statementlist -> empty .
+    (24) statement -> ifelse .
 
-    RBRACE          reduce using rule 19 (statementlist -> empty .)
+    RETURN          reduce using rule 24 (statement -> ifelse .)
+    LOOP            reduce using rule 24 (statement -> ifelse .)
+    BREAK           reduce using rule 24 (statement -> ifelse .)
+    WHILE           reduce using rule 24 (statement -> ifelse .)
+    IDENTIFIER      reduce using rule 24 (statement -> ifelse .)
+    NUMBER          reduce using rule 24 (statement -> ifelse .)
+    IF              reduce using rule 24 (statement -> ifelse .)
+    RBRACE          reduce using rule 24 (statement -> ifelse .)
 
 
 state 33
 
-    (44) ifelse -> IF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (22) statementlist -> statement . statementlist
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    LPAREN          shift and go to state 44
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
+    statementlist                  shift and go to state 44
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
 
 state 34
 
-    (25) statement -> BREAK . SEMICOLON
+    (29) statement -> IDENTIFIER . ASSIGN expression SEMICOLON
+    (30) expression -> IDENTIFIER . LPAREN arglist RPAREN
+    (33) expression -> IDENTIFIER .
 
-    SEMICOLON       shift and go to state 45
+    ASSIGN          shift and go to state 46
+    LPAREN          shift and go to state 45
+    SEMICOLON       reduce using rule 33 (expression -> IDENTIFIER .)
+    ISEQUAL         reduce using rule 33 (expression -> IDENTIFIER .)
+    LESSTHAN        reduce using rule 33 (expression -> IDENTIFIER .)
+    MORETHAN        reduce using rule 33 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 33 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 33 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 33 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 33 (expression -> IDENTIFIER .)
 
 
 state 35
 
-    (21) statement -> expression . SEMICOLON
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (21) statementlist -> empty .
 
-    SEMICOLON       shift and go to state 49
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    RBRACE          reduce using rule 21 (statementlist -> empty .)
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
 
 state 36
 
-    (24) statement -> LOOP . LBRACE statementlist RBRACE
+    (46) ifelse -> IF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    LBRACE          shift and go to state 56
+    LPAREN          shift and go to state 47
 
 
 state 37
 
-    (28) expression -> IDENTIFIER . LPAREN arglist RPAREN
-    (31) expression -> IDENTIFIER .
+    (27) statement -> BREAK . SEMICOLON
 
-    LPAREN          shift and go to state 42
-    RPAREN          reduce using rule 31 (expression -> IDENTIFIER .)
-    ISEQUAL         reduce using rule 31 (expression -> IDENTIFIER .)
-    LESSTHAN        reduce using rule 31 (expression -> IDENTIFIER .)
-    MORETHAN        reduce using rule 31 (expression -> IDENTIFIER .)
-    PLUS            reduce using rule 31 (expression -> IDENTIFIER .)
-    MINUS           reduce using rule 31 (expression -> IDENTIFIER .)
-    TIMES           reduce using rule 31 (expression -> IDENTIFIER .)
-    DIVIDE          reduce using rule 31 (expression -> IDENTIFIER .)
-    SEMICOLON       reduce using rule 31 (expression -> IDENTIFIER .)
-    COMMA           reduce using rule 31 (expression -> IDENTIFIER .)
-    RETURN          reduce using rule 31 (expression -> IDENTIFIER .)
-    LOOP            reduce using rule 31 (expression -> IDENTIFIER .)
-    BREAK           reduce using rule 31 (expression -> IDENTIFIER .)
-    WHILE           reduce using rule 31 (expression -> IDENTIFIER .)
-    IDENTIFIER      reduce using rule 31 (expression -> IDENTIFIER .)
-    NUMBER          reduce using rule 31 (expression -> IDENTIFIER .)
-    IF              reduce using rule 31 (expression -> IDENTIFIER .)
-    RBRACE          reduce using rule 31 (expression -> IDENTIFIER .)
+    SEMICOLON       shift and go to state 48
 
 
 state 38
 
-    (23) statement -> RETURN expression . SEMICOLON
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (23) statement -> expression . SEMICOLON
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    SEMICOLON       shift and go to state 57
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    SEMICOLON       shift and go to state 52
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 39
 
-    (5) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .
+    (26) statement -> LOOP . LBRACE statementlist RBRACE
 
-    INT             reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
-    FLOAT           reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
-    STRING          reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
-    VOID            reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
-    IDENTIFIER      reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
-    $end            reduce using rule 5 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    LBRACE          shift and go to state 59
 
 
 state 40
 
-    (26) statement -> WHILE LPAREN . expression RPAREN LBRACE statementlist RBRACE
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (30) expression -> IDENTIFIER . LPAREN arglist RPAREN
+    (33) expression -> IDENTIFIER .
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    LPAREN          shift and go to state 45
+    SEMICOLON       reduce using rule 33 (expression -> IDENTIFIER .)
+    ISEQUAL         reduce using rule 33 (expression -> IDENTIFIER .)
+    LESSTHAN        reduce using rule 33 (expression -> IDENTIFIER .)
+    MORETHAN        reduce using rule 33 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 33 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 33 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 33 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 33 (expression -> IDENTIFIER .)
+    RPAREN          reduce using rule 33 (expression -> IDENTIFIER .)
+    COMMA           reduce using rule 33 (expression -> IDENTIFIER .)
 
-    expression                     shift and go to state 58
 
 state 41
 
-    (20) statementlist -> statement statementlist .
+    (25) statement -> RETURN expression . SEMICOLON
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    RBRACE          reduce using rule 20 (statementlist -> statement statementlist .)
+    SEMICOLON       shift and go to state 60
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 42
 
-    (28) expression -> IDENTIFIER LPAREN . arglist RPAREN
-    (16) arglist -> . empty
-    (17) arglist -> . expression
-    (18) arglist -> . expression COMMA arglist
-    (15) empty -> .
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (6) funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .
 
-    RPAREN          reduce using rule 15 (empty -> .)
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    INT             reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    FLOAT           reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    STRING          reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    VOID            reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    IDENTIFIER      reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
+    $end            reduce using rule 6 (funcdef -> type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE .)
 
-    arglist                        shift and go to state 59
-    expression                     shift and go to state 60
-    empty                          shift and go to state 61
 
 state 43
 
-    (27) statement -> IDENTIFIER ASSIGN . expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (28) statement -> WHILE LPAREN . expression RPAREN LBRACE statementlist RBRACE
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
-    expression                     shift and go to state 62
+    expression                     shift and go to state 61
 
 state 44
 
-    (44) ifelse -> IF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (22) statementlist -> statement statementlist .
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    RBRACE          reduce using rule 22 (statementlist -> statement statementlist .)
 
-    expression                     shift and go to state 63
 
 state 45
 
-    (25) statement -> BREAK SEMICOLON .
+    (30) expression -> IDENTIFIER LPAREN . arglist RPAREN
+    (17) arglist -> . empty
+    (18) arglist -> . expression
+    (19) arglist -> . expression COMMA arglist
+    (16) empty -> .
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    RETURN          reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    LOOP            reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    BREAK           reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    WHILE           reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    IDENTIFIER      reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    NUMBER          reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    IF              reduce using rule 25 (statement -> BREAK SEMICOLON .)
-    RBRACE          reduce using rule 25 (statement -> BREAK SEMICOLON .)
+    RPAREN          reduce using rule 16 (empty -> .)
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
+    arglist                        shift and go to state 62
+    expression                     shift and go to state 63
+    empty                          shift and go to state 64
 
 state 46
 
-    (30) expression -> expression arithop . expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (29) statement -> IDENTIFIER ASSIGN . expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
-
-    expression                     shift and go to state 64
-
-state 47
-
-    (29) expression -> expression compare . expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
     expression                     shift and go to state 65
 
+state 47
+
+    (46) ifelse -> IF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 66
+
 state 48
 
-    (39) arithop -> DIVIDE .
+    (27) statement -> BREAK SEMICOLON .
 
-    IDENTIFIER      reduce using rule 39 (arithop -> DIVIDE .)
-    NUMBER          reduce using rule 39 (arithop -> DIVIDE .)
+    RETURN          reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    LOOP            reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    BREAK           reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    WHILE           reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    IDENTIFIER      reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    NUMBER          reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    IF              reduce using rule 27 (statement -> BREAK SEMICOLON .)
+    RBRACE          reduce using rule 27 (statement -> BREAK SEMICOLON .)
 
 
 state 49
 
-    (21) statement -> expression SEMICOLON .
+    (32) expression -> expression arithop . expression
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    RETURN          reduce using rule 21 (statement -> expression SEMICOLON .)
-    LOOP            reduce using rule 21 (statement -> expression SEMICOLON .)
-    BREAK           reduce using rule 21 (statement -> expression SEMICOLON .)
-    WHILE           reduce using rule 21 (statement -> expression SEMICOLON .)
-    IDENTIFIER      reduce using rule 21 (statement -> expression SEMICOLON .)
-    NUMBER          reduce using rule 21 (statement -> expression SEMICOLON .)
-    IF              reduce using rule 21 (statement -> expression SEMICOLON .)
-    RBRACE          reduce using rule 21 (statement -> expression SEMICOLON .)
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
+    expression                     shift and go to state 67
 
 state 50
 
-    (38) arithop -> TIMES .
+    (31) expression -> expression compare . expression
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    IDENTIFIER      reduce using rule 38 (arithop -> TIMES .)
-    NUMBER          reduce using rule 38 (arithop -> TIMES .)
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
+    expression                     shift and go to state 68
 
 state 51
 
-    (34) compare -> LESSTHAN .
+    (41) arithop -> DIVIDE .
 
-    IDENTIFIER      reduce using rule 34 (compare -> LESSTHAN .)
-    NUMBER          reduce using rule 34 (compare -> LESSTHAN .)
+    IDENTIFIER      reduce using rule 41 (arithop -> DIVIDE .)
+    NUMBER          reduce using rule 41 (arithop -> DIVIDE .)
 
 
 state 52
 
-    (36) arithop -> PLUS .
+    (23) statement -> expression SEMICOLON .
 
-    IDENTIFIER      reduce using rule 36 (arithop -> PLUS .)
-    NUMBER          reduce using rule 36 (arithop -> PLUS .)
+    RETURN          reduce using rule 23 (statement -> expression SEMICOLON .)
+    LOOP            reduce using rule 23 (statement -> expression SEMICOLON .)
+    BREAK           reduce using rule 23 (statement -> expression SEMICOLON .)
+    WHILE           reduce using rule 23 (statement -> expression SEMICOLON .)
+    IDENTIFIER      reduce using rule 23 (statement -> expression SEMICOLON .)
+    NUMBER          reduce using rule 23 (statement -> expression SEMICOLON .)
+    IF              reduce using rule 23 (statement -> expression SEMICOLON .)
+    RBRACE          reduce using rule 23 (statement -> expression SEMICOLON .)
 
 
 state 53
 
-    (33) compare -> ISEQUAL .
+    (40) arithop -> TIMES .
 
-    IDENTIFIER      reduce using rule 33 (compare -> ISEQUAL .)
-    NUMBER          reduce using rule 33 (compare -> ISEQUAL .)
+    IDENTIFIER      reduce using rule 40 (arithop -> TIMES .)
+    NUMBER          reduce using rule 40 (arithop -> TIMES .)
 
 
 state 54
 
-    (35) compare -> MORETHAN .
+    (36) compare -> LESSTHAN .
 
-    IDENTIFIER      reduce using rule 35 (compare -> MORETHAN .)
-    NUMBER          reduce using rule 35 (compare -> MORETHAN .)
+    IDENTIFIER      reduce using rule 36 (compare -> LESSTHAN .)
+    NUMBER          reduce using rule 36 (compare -> LESSTHAN .)
 
 
 state 55
 
-    (37) arithop -> MINUS .
+    (38) arithop -> PLUS .
 
-    IDENTIFIER      reduce using rule 37 (arithop -> MINUS .)
-    NUMBER          reduce using rule 37 (arithop -> MINUS .)
+    IDENTIFIER      reduce using rule 38 (arithop -> PLUS .)
+    NUMBER          reduce using rule 38 (arithop -> PLUS .)
 
 
 state 56
 
-    (24) statement -> LOOP LBRACE . statementlist RBRACE
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (35) compare -> ISEQUAL .
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    IDENTIFIER      reduce using rule 35 (compare -> ISEQUAL .)
+    NUMBER          reduce using rule 35 (compare -> ISEQUAL .)
 
-    statementlist                  shift and go to state 66
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
 
 state 57
 
-    (23) statement -> RETURN expression SEMICOLON .
+    (37) compare -> MORETHAN .
 
-    RETURN          reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    LOOP            reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    BREAK           reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    WHILE           reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    IDENTIFIER      reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    NUMBER          reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    IF              reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
-    RBRACE          reduce using rule 23 (statement -> RETURN expression SEMICOLON .)
+    IDENTIFIER      reduce using rule 37 (compare -> MORETHAN .)
+    NUMBER          reduce using rule 37 (compare -> MORETHAN .)
 
 
 state 58
 
-    (26) statement -> WHILE LPAREN expression . RPAREN LBRACE statementlist RBRACE
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (39) arithop -> MINUS .
 
-    RPAREN          shift and go to state 67
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    IDENTIFIER      reduce using rule 39 (arithop -> MINUS .)
+    NUMBER          reduce using rule 39 (arithop -> MINUS .)
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
 
 state 59
 
-    (28) expression -> IDENTIFIER LPAREN arglist . RPAREN
+    (26) statement -> LOOP LBRACE . statementlist RBRACE
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    RPAREN          shift and go to state 68
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
+    statementlist                  shift and go to state 69
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
 
 state 60
 
-    (17) arglist -> expression .
-    (18) arglist -> expression . COMMA arglist
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (25) statement -> RETURN expression SEMICOLON .
 
-    RPAREN          reduce using rule 17 (arglist -> expression .)
-    COMMA           shift and go to state 69
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    RETURN          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    LOOP            reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    BREAK           reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    WHILE           reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    IDENTIFIER      reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    NUMBER          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    IF              reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
+    RBRACE          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
 
 state 61
 
-    (16) arglist -> empty .
+    (28) statement -> WHILE LPAREN expression . RPAREN LBRACE statementlist RBRACE
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    RPAREN          reduce using rule 16 (arglist -> empty .)
+    RPAREN          shift and go to state 70
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 62
 
-    (27) statement -> IDENTIFIER ASSIGN expression .
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (30) expression -> IDENTIFIER LPAREN arglist . RPAREN
 
-    RETURN          reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    LOOP            reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    BREAK           reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    WHILE           reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    IDENTIFIER      reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    NUMBER          reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    IF              reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    RBRACE          reduce using rule 27 (statement -> IDENTIFIER ASSIGN expression .)
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    RPAREN          shift and go to state 71
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
 
 state 63
 
-    (44) ifelse -> IF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup optelse
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (18) arglist -> expression .
+    (19) arglist -> expression . COMMA arglist
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    RPAREN          shift and go to state 70
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    RPAREN          reduce using rule 18 (arglist -> expression .)
+    COMMA           shift and go to state 72
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 64
 
-    (30) expression -> expression arithop expression .
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (17) arglist -> empty .
 
-  ! shift/reduce conflict for ISEQUAL resolved as shift
-  ! shift/reduce conflict for LESSTHAN resolved as shift
-  ! shift/reduce conflict for MORETHAN resolved as shift
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for TIMES resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-    RPAREN          reduce using rule 30 (expression -> expression arithop expression .)
-    SEMICOLON       reduce using rule 30 (expression -> expression arithop expression .)
-    COMMA           reduce using rule 30 (expression -> expression arithop expression .)
-    RETURN          reduce using rule 30 (expression -> expression arithop expression .)
-    LOOP            reduce using rule 30 (expression -> expression arithop expression .)
-    BREAK           reduce using rule 30 (expression -> expression arithop expression .)
-    WHILE           reduce using rule 30 (expression -> expression arithop expression .)
-    IDENTIFIER      reduce using rule 30 (expression -> expression arithop expression .)
-    NUMBER          reduce using rule 30 (expression -> expression arithop expression .)
-    IF              reduce using rule 30 (expression -> expression arithop expression .)
-    RBRACE          reduce using rule 30 (expression -> expression arithop expression .)
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    RPAREN          reduce using rule 17 (arglist -> empty .)
 
-  ! ISEQUAL         [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! LESSTHAN        [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! MORETHAN        [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! PLUS            [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! MINUS           [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! TIMES           [ reduce using rule 30 (expression -> expression arithop expression .) ]
-  ! DIVIDE          [ reduce using rule 30 (expression -> expression arithop expression .) ]
-
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
 
 state 65
 
-    (29) expression -> expression compare expression .
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (29) statement -> IDENTIFIER ASSIGN expression . SEMICOLON
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
+
+    SEMICOLON       shift and go to state 73
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
+
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
+
+state 66
+
+    (46) ifelse -> IF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
+
+    RPAREN          shift and go to state 74
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
+
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
+
+state 67
+
+    (32) expression -> expression arithop expression .
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
   ! shift/reduce conflict for ISEQUAL resolved as shift
   ! shift/reduce conflict for LESSTHAN resolved as shift
@@ -1076,512 +1068,552 @@ state 65
   ! shift/reduce conflict for MINUS resolved as shift
   ! shift/reduce conflict for TIMES resolved as shift
   ! shift/reduce conflict for DIVIDE resolved as shift
-    RPAREN          reduce using rule 29 (expression -> expression compare expression .)
-    SEMICOLON       reduce using rule 29 (expression -> expression compare expression .)
-    COMMA           reduce using rule 29 (expression -> expression compare expression .)
-    RETURN          reduce using rule 29 (expression -> expression compare expression .)
-    LOOP            reduce using rule 29 (expression -> expression compare expression .)
-    BREAK           reduce using rule 29 (expression -> expression compare expression .)
-    WHILE           reduce using rule 29 (expression -> expression compare expression .)
-    IDENTIFIER      reduce using rule 29 (expression -> expression compare expression .)
-    NUMBER          reduce using rule 29 (expression -> expression compare expression .)
-    IF              reduce using rule 29 (expression -> expression compare expression .)
-    RBRACE          reduce using rule 29 (expression -> expression compare expression .)
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    SEMICOLON       reduce using rule 32 (expression -> expression arithop expression .)
+    RPAREN          reduce using rule 32 (expression -> expression arithop expression .)
+    COMMA           reduce using rule 32 (expression -> expression arithop expression .)
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
-  ! ISEQUAL         [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! LESSTHAN        [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! MORETHAN        [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! PLUS            [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! MINUS           [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! TIMES           [ reduce using rule 29 (expression -> expression compare expression .) ]
-  ! DIVIDE          [ reduce using rule 29 (expression -> expression compare expression .) ]
+  ! ISEQUAL         [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! LESSTHAN        [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! MORETHAN        [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! PLUS            [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! MINUS           [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! TIMES           [ reduce using rule 32 (expression -> expression arithop expression .) ]
+  ! DIVIDE          [ reduce using rule 32 (expression -> expression arithop expression .) ]
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
-
-state 66
-
-    (24) statement -> LOOP LBRACE statementlist . RBRACE
-
-    RBRACE          shift and go to state 71
-
-
-state 67
-
-    (26) statement -> WHILE LPAREN expression RPAREN . LBRACE statementlist RBRACE
-
-    LBRACE          shift and go to state 72
-
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 68
 
-    (28) expression -> IDENTIFIER LPAREN arglist RPAREN .
+    (31) expression -> expression compare expression .
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    RPAREN          reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    ISEQUAL         reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    LESSTHAN        reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    MORETHAN        reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    PLUS            reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    MINUS           reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    TIMES           reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    DIVIDE          reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    SEMICOLON       reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    COMMA           reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    RETURN          reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    LOOP            reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    BREAK           reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    WHILE           reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    IDENTIFIER      reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    NUMBER          reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    IF              reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
-    RBRACE          reduce using rule 28 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+  ! shift/reduce conflict for ISEQUAL resolved as shift
+  ! shift/reduce conflict for LESSTHAN resolved as shift
+  ! shift/reduce conflict for MORETHAN resolved as shift
+  ! shift/reduce conflict for PLUS resolved as shift
+  ! shift/reduce conflict for MINUS resolved as shift
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    SEMICOLON       reduce using rule 31 (expression -> expression compare expression .)
+    RPAREN          reduce using rule 31 (expression -> expression compare expression .)
+    COMMA           reduce using rule 31 (expression -> expression compare expression .)
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
+  ! ISEQUAL         [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! LESSTHAN        [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! MORETHAN        [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! PLUS            [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! MINUS           [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! TIMES           [ reduce using rule 31 (expression -> expression compare expression .) ]
+  ! DIVIDE          [ reduce using rule 31 (expression -> expression compare expression .) ]
+
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 69
 
-    (18) arglist -> expression COMMA . arglist
-    (16) arglist -> . empty
-    (17) arglist -> . expression
-    (18) arglist -> . expression COMMA arglist
-    (15) empty -> .
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (26) statement -> LOOP LBRACE statementlist . RBRACE
 
-    RPAREN          reduce using rule 15 (empty -> .)
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    RBRACE          shift and go to state 75
 
-    arglist                        shift and go to state 73
-    expression                     shift and go to state 60
-    empty                          shift and go to state 61
 
 state 70
 
-    (44) ifelse -> IF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup optelse
+    (28) statement -> WHILE LPAREN expression RPAREN . LBRACE statementlist RBRACE
 
-    LBRACE          shift and go to state 74
+    LBRACE          shift and go to state 76
 
 
 state 71
 
-    (24) statement -> LOOP LBRACE statementlist RBRACE .
+    (30) expression -> IDENTIFIER LPAREN arglist RPAREN .
 
-    RETURN          reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    LOOP            reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    BREAK           reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    WHILE           reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    IDENTIFIER      reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    NUMBER          reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    IF              reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
-    RBRACE          reduce using rule 24 (statement -> LOOP LBRACE statementlist RBRACE .)
+    SEMICOLON       reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    ISEQUAL         reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    LESSTHAN        reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    MORETHAN        reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    PLUS            reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    MINUS           reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    TIMES           reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    DIVIDE          reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    RPAREN          reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    COMMA           reduce using rule 30 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
 
 
 state 72
 
-    (26) statement -> WHILE LPAREN expression RPAREN LBRACE . statementlist RBRACE
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (19) arglist -> expression COMMA . arglist
+    (17) arglist -> . empty
+    (18) arglist -> . expression
+    (19) arglist -> . expression COMMA arglist
+    (16) empty -> .
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    RPAREN          reduce using rule 16 (empty -> .)
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
-    statementlist                  shift and go to state 75
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
+    arglist                        shift and go to state 77
+    expression                     shift and go to state 63
+    empty                          shift and go to state 64
 
 state 73
 
-    (18) arglist -> expression COMMA arglist .
+    (29) statement -> IDENTIFIER ASSIGN expression SEMICOLON .
 
-    RPAREN          reduce using rule 18 (arglist -> expression COMMA arglist .)
+    RETURN          reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    LOOP            reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    BREAK           reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    WHILE           reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    IDENTIFIER      reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    NUMBER          reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    IF              reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
+    RBRACE          reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
 
 
 state 74
 
-    (44) ifelse -> IF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup optelse
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (46) ifelse -> IF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup optelse
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    LBRACE          shift and go to state 78
 
-    statementlist                  shift and go to state 76
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
 
 state 75
 
-    (26) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist . RBRACE
+    (26) statement -> LOOP LBRACE statementlist RBRACE .
 
-    RBRACE          shift and go to state 77
+    RETURN          reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    LOOP            reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    BREAK           reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    WHILE           reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    IDENTIFIER      reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    NUMBER          reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    IF              reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
+    RBRACE          reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
 
 
 state 76
 
-    (44) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup optelse
+    (28) statement -> WHILE LPAREN expression RPAREN LBRACE . statementlist RBRACE
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    RBRACE          shift and go to state 78
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
+    statementlist                  shift and go to state 79
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
 
 state 77
 
-    (26) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .
+    (19) arglist -> expression COMMA arglist .
 
-    RETURN          reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    LOOP            reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    BREAK           reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    WHILE           reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    IDENTIFIER      reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    NUMBER          reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    IF              reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
-    RBRACE          reduce using rule 26 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    RPAREN          reduce using rule 19 (arglist -> expression COMMA arglist .)
 
 
 state 78
 
-    (44) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup optelse
-    (40) elifgroup -> . empty
-    (41) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
-    (15) empty -> .
+    (46) ifelse -> IF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup optelse
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    ELIF            shift and go to state 79
-    ELSE            reduce using rule 15 (empty -> .)
-    RETURN          reduce using rule 15 (empty -> .)
-    LOOP            reduce using rule 15 (empty -> .)
-    BREAK           reduce using rule 15 (empty -> .)
-    WHILE           reduce using rule 15 (empty -> .)
-    IDENTIFIER      reduce using rule 15 (empty -> .)
-    NUMBER          reduce using rule 15 (empty -> .)
-    IF              reduce using rule 15 (empty -> .)
-    RBRACE          reduce using rule 15 (empty -> .)
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
-    empty                          shift and go to state 80
-    elifgroup                      shift and go to state 81
+    statementlist                  shift and go to state 80
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
 
 state 79
 
-    (41) elifgroup -> ELIF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (28) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist . RBRACE
 
-    LPAREN          shift and go to state 82
+    RBRACE          shift and go to state 81
 
 
 state 80
 
-    (40) elifgroup -> empty .
+    (46) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup optelse
 
-    ELSE            reduce using rule 40 (elifgroup -> empty .)
-    RETURN          reduce using rule 40 (elifgroup -> empty .)
-    LOOP            reduce using rule 40 (elifgroup -> empty .)
-    BREAK           reduce using rule 40 (elifgroup -> empty .)
-    WHILE           reduce using rule 40 (elifgroup -> empty .)
-    IDENTIFIER      reduce using rule 40 (elifgroup -> empty .)
-    NUMBER          reduce using rule 40 (elifgroup -> empty .)
-    IF              reduce using rule 40 (elifgroup -> empty .)
-    RBRACE          reduce using rule 40 (elifgroup -> empty .)
+    RBRACE          shift and go to state 82
 
 
 state 81
 
-    (44) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup . optelse
-    (42) optelse -> . empty
-    (43) optelse -> . ELSE LBRACE statementlist RBRACE
-    (15) empty -> .
+    (28) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .
 
-    ELSE            shift and go to state 83
-    RETURN          reduce using rule 15 (empty -> .)
-    LOOP            reduce using rule 15 (empty -> .)
-    BREAK           reduce using rule 15 (empty -> .)
-    WHILE           reduce using rule 15 (empty -> .)
-    IDENTIFIER      reduce using rule 15 (empty -> .)
-    NUMBER          reduce using rule 15 (empty -> .)
-    IF              reduce using rule 15 (empty -> .)
-    RBRACE          reduce using rule 15 (empty -> .)
+    RETURN          reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    LOOP            reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    BREAK           reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    WHILE           reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    IDENTIFIER      reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    NUMBER          reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    IF              reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
+    RBRACE          reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
 
-    empty                          shift and go to state 85
-    optelse                        shift and go to state 84
 
 state 82
 
-    (41) elifgroup -> ELIF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
+    (46) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup optelse
+    (42) elifgroup -> . empty
+    (43) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (16) empty -> .
 
-    IDENTIFIER      shift and go to state 37
-    NUMBER          shift and go to state 26
+    ELIF            shift and go to state 83
+    ELSE            reduce using rule 16 (empty -> .)
+    RETURN          reduce using rule 16 (empty -> .)
+    LOOP            reduce using rule 16 (empty -> .)
+    BREAK           reduce using rule 16 (empty -> .)
+    WHILE           reduce using rule 16 (empty -> .)
+    IDENTIFIER      reduce using rule 16 (empty -> .)
+    NUMBER          reduce using rule 16 (empty -> .)
+    IF              reduce using rule 16 (empty -> .)
+    RBRACE          reduce using rule 16 (empty -> .)
 
-    expression                     shift and go to state 86
+    empty                          shift and go to state 84
+    elifgroup                      shift and go to state 85
 
 state 83
 
-    (43) optelse -> ELSE . LBRACE statementlist RBRACE
+    (43) elifgroup -> ELIF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
 
-    LBRACE          shift and go to state 87
+    LPAREN          shift and go to state 86
 
 
 state 84
 
-    (44) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .
+    (42) elifgroup -> empty .
 
-    RETURN          reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    LOOP            reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    BREAK           reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    WHILE           reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    IDENTIFIER      reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    NUMBER          reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    IF              reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    RBRACE          reduce using rule 44 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    ELSE            reduce using rule 42 (elifgroup -> empty .)
+    RETURN          reduce using rule 42 (elifgroup -> empty .)
+    LOOP            reduce using rule 42 (elifgroup -> empty .)
+    BREAK           reduce using rule 42 (elifgroup -> empty .)
+    WHILE           reduce using rule 42 (elifgroup -> empty .)
+    IDENTIFIER      reduce using rule 42 (elifgroup -> empty .)
+    NUMBER          reduce using rule 42 (elifgroup -> empty .)
+    IF              reduce using rule 42 (elifgroup -> empty .)
+    RBRACE          reduce using rule 42 (elifgroup -> empty .)
 
 
 state 85
 
-    (42) optelse -> empty .
+    (46) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup . optelse
+    (44) optelse -> . empty
+    (45) optelse -> . ELSE LBRACE statementlist RBRACE
+    (16) empty -> .
 
-    RETURN          reduce using rule 42 (optelse -> empty .)
-    LOOP            reduce using rule 42 (optelse -> empty .)
-    BREAK           reduce using rule 42 (optelse -> empty .)
-    WHILE           reduce using rule 42 (optelse -> empty .)
-    IDENTIFIER      reduce using rule 42 (optelse -> empty .)
-    NUMBER          reduce using rule 42 (optelse -> empty .)
-    IF              reduce using rule 42 (optelse -> empty .)
-    RBRACE          reduce using rule 42 (optelse -> empty .)
+    ELSE            shift and go to state 87
+    RETURN          reduce using rule 16 (empty -> .)
+    LOOP            reduce using rule 16 (empty -> .)
+    BREAK           reduce using rule 16 (empty -> .)
+    WHILE           reduce using rule 16 (empty -> .)
+    IDENTIFIER      reduce using rule 16 (empty -> .)
+    NUMBER          reduce using rule 16 (empty -> .)
+    IF              reduce using rule 16 (empty -> .)
+    RBRACE          reduce using rule 16 (empty -> .)
 
+    empty                          shift and go to state 89
+    optelse                        shift and go to state 88
 
 state 86
 
-    (41) elifgroup -> ELIF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup
-    (29) expression -> expression . compare expression
-    (30) expression -> expression . arithop expression
-    (33) compare -> . ISEQUAL
-    (34) compare -> . LESSTHAN
-    (35) compare -> . MORETHAN
-    (36) arithop -> . PLUS
-    (37) arithop -> . MINUS
-    (38) arithop -> . TIMES
-    (39) arithop -> . DIVIDE
+    (43) elifgroup -> ELIF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
 
-    RPAREN          shift and go to state 88
-    ISEQUAL         shift and go to state 53
-    LESSTHAN        shift and go to state 51
-    MORETHAN        shift and go to state 54
-    PLUS            shift and go to state 52
-    MINUS           shift and go to state 55
-    TIMES           shift and go to state 50
-    DIVIDE          shift and go to state 48
+    IDENTIFIER      shift and go to state 40
+    NUMBER          shift and go to state 29
 
-    arithop                        shift and go to state 46
-    compare                        shift and go to state 47
+    expression                     shift and go to state 90
 
 state 87
 
-    (43) optelse -> ELSE LBRACE . statementlist RBRACE
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (45) optelse -> ELSE . LBRACE statementlist RBRACE
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    LBRACE          shift and go to state 91
 
-    statementlist                  shift and go to state 89
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
 
 state 88
 
-    (41) elifgroup -> ELIF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup
+    (46) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .
 
-    LBRACE          shift and go to state 90
+    RETURN          reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    LOOP            reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    BREAK           reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    WHILE           reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    IDENTIFIER      reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    NUMBER          reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    IF              reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    RBRACE          reduce using rule 46 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
 
 
 state 89
 
-    (43) optelse -> ELSE LBRACE statementlist . RBRACE
+    (44) optelse -> empty .
 
-    RBRACE          shift and go to state 91
+    RETURN          reduce using rule 44 (optelse -> empty .)
+    LOOP            reduce using rule 44 (optelse -> empty .)
+    BREAK           reduce using rule 44 (optelse -> empty .)
+    WHILE           reduce using rule 44 (optelse -> empty .)
+    IDENTIFIER      reduce using rule 44 (optelse -> empty .)
+    NUMBER          reduce using rule 44 (optelse -> empty .)
+    IF              reduce using rule 44 (optelse -> empty .)
+    RBRACE          reduce using rule 44 (optelse -> empty .)
 
 
 state 90
 
-    (41) elifgroup -> ELIF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup
-    (19) statementlist -> . empty
-    (20) statementlist -> . statement statementlist
-    (15) empty -> .
-    (21) statement -> . expression SEMICOLON
-    (22) statement -> . ifelse
-    (23) statement -> . RETURN expression SEMICOLON
-    (24) statement -> . LOOP LBRACE statementlist RBRACE
-    (25) statement -> . BREAK SEMICOLON
-    (26) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (27) statement -> . IDENTIFIER ASSIGN expression
-    (28) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (29) expression -> . expression compare expression
-    (30) expression -> . expression arithop expression
-    (31) expression -> . IDENTIFIER
-    (32) expression -> . NUMBER
-    (44) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (43) elifgroup -> ELIF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup
+    (31) expression -> expression . compare expression
+    (32) expression -> expression . arithop expression
+    (35) compare -> . ISEQUAL
+    (36) compare -> . LESSTHAN
+    (37) compare -> . MORETHAN
+    (38) arithop -> . PLUS
+    (39) arithop -> . MINUS
+    (40) arithop -> . TIMES
+    (41) arithop -> . DIVIDE
 
-    RBRACE          reduce using rule 15 (empty -> .)
-    RETURN          shift and go to state 25
-    LOOP            shift and go to state 36
-    BREAK           shift and go to state 34
-    WHILE           shift and go to state 28
-    IDENTIFIER      shift and go to state 31
-    NUMBER          shift and go to state 26
-    IF              shift and go to state 33
+    RPAREN          shift and go to state 92
+    ISEQUAL         shift and go to state 56
+    LESSTHAN        shift and go to state 54
+    MORETHAN        shift and go to state 57
+    PLUS            shift and go to state 55
+    MINUS           shift and go to state 58
+    TIMES           shift and go to state 53
+    DIVIDE          shift and go to state 51
 
-    statementlist                  shift and go to state 92
-    ifelse                         shift and go to state 29
-    statement                      shift and go to state 30
-    expression                     shift and go to state 35
-    empty                          shift and go to state 32
+    arithop                        shift and go to state 49
+    compare                        shift and go to state 50
 
 state 91
 
-    (43) optelse -> ELSE LBRACE statementlist RBRACE .
+    (45) optelse -> ELSE LBRACE . statementlist RBRACE
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    RETURN          reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    LOOP            reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    BREAK           reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    WHILE           reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    IDENTIFIER      reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    NUMBER          reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    IF              reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    RBRACE          reduce using rule 43 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
 
+    statementlist                  shift and go to state 93
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
 
 state 92
 
-    (41) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup
+    (43) elifgroup -> ELIF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup
 
-    RBRACE          shift and go to state 93
+    LBRACE          shift and go to state 94
 
 
 state 93
 
-    (41) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup
-    (40) elifgroup -> . empty
-    (41) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
-    (15) empty -> .
+    (45) optelse -> ELSE LBRACE statementlist . RBRACE
 
-    ELIF            shift and go to state 79
-    ELSE            reduce using rule 15 (empty -> .)
-    RETURN          reduce using rule 15 (empty -> .)
-    LOOP            reduce using rule 15 (empty -> .)
-    BREAK           reduce using rule 15 (empty -> .)
-    WHILE           reduce using rule 15 (empty -> .)
-    IDENTIFIER      reduce using rule 15 (empty -> .)
-    NUMBER          reduce using rule 15 (empty -> .)
-    IF              reduce using rule 15 (empty -> .)
-    RBRACE          reduce using rule 15 (empty -> .)
+    RBRACE          shift and go to state 95
 
-    empty                          shift and go to state 80
-    elifgroup                      shift and go to state 94
 
 state 94
 
-    (41) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .
+    (43) elifgroup -> ELIF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (31) expression -> . expression compare expression
+    (32) expression -> . expression arithop expression
+    (33) expression -> . IDENTIFIER
+    (34) expression -> . NUMBER
+    (46) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
-    ELSE            reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    RETURN          reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    LOOP            reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    BREAK           reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    WHILE           reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    IDENTIFIER      reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    NUMBER          reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    IF              reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    RBRACE          reduce using rule 41 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 39
+    BREAK           shift and go to state 37
+    WHILE           shift and go to state 31
+    IDENTIFIER      shift and go to state 34
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 36
+
+    statementlist                  shift and go to state 96
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 38
+    empty                          shift and go to state 35
+
+state 95
+
+    (45) optelse -> ELSE LBRACE statementlist RBRACE .
+
+    RETURN          reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    LOOP            reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    BREAK           reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    WHILE           reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    IDENTIFIER      reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    NUMBER          reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    IF              reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    RBRACE          reduce using rule 45 (optelse -> ELSE LBRACE statementlist RBRACE .)
+
+
+state 96
+
+    (43) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup
+
+    RBRACE          shift and go to state 97
+
+
+state 97
+
+    (43) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup
+    (42) elifgroup -> . empty
+    (43) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (16) empty -> .
+
+    ELIF            shift and go to state 83
+    ELSE            reduce using rule 16 (empty -> .)
+    RETURN          reduce using rule 16 (empty -> .)
+    LOOP            reduce using rule 16 (empty -> .)
+    BREAK           reduce using rule 16 (empty -> .)
+    WHILE           reduce using rule 16 (empty -> .)
+    IDENTIFIER      reduce using rule 16 (empty -> .)
+    NUMBER          reduce using rule 16 (empty -> .)
+    IF              reduce using rule 16 (empty -> .)
+    RBRACE          reduce using rule 16 (empty -> .)
+
+    empty                          shift and go to state 84
+    elifgroup                      shift and go to state 98
+
+state 98
+
+    (43) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .
+
+    ELSE            reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    RETURN          reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    LOOP            reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    BREAK           reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    WHILE           reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    IDENTIFIER      reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    NUMBER          reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    IF              reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    RBRACE          reduce using rule 43 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for ISEQUAL in state 64 resolved as shift
-WARNING: shift/reduce conflict for LESSTHAN in state 64 resolved as shift
-WARNING: shift/reduce conflict for MORETHAN in state 64 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 64 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 64 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 64 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 64 resolved as shift
-WARNING: shift/reduce conflict for ISEQUAL in state 65 resolved as shift
-WARNING: shift/reduce conflict for LESSTHAN in state 65 resolved as shift
-WARNING: shift/reduce conflict for MORETHAN in state 65 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 65 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 65 resolved as shift
-WARNING: shift/reduce conflict for TIMES in state 65 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 65 resolved as shift
+WARNING: shift/reduce conflict for ISEQUAL in state 67 resolved as shift
+WARNING: shift/reduce conflict for LESSTHAN in state 67 resolved as shift
+WARNING: shift/reduce conflict for MORETHAN in state 67 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 67 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 67 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 67 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 67 resolved as shift
+WARNING: shift/reduce conflict for ISEQUAL in state 68 resolved as shift
+WARNING: shift/reduce conflict for LESSTHAN in state 68 resolved as shift
+WARNING: shift/reduce conflict for MORETHAN in state 68 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 68 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 68 resolved as shift
+WARNING: shift/reduce conflict for TIMES in state 68 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 68 resolved as shift

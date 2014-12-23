@@ -22,8 +22,11 @@ many_call.o: TestCases/many_call.bdgrt
 num_output.o: TestCases/num_output.bdgrt  
 	python compiler.py TestCases/num_output.bdgrt num_output.o
 
-pong.o : TestCases/pong.bdgrt
+pong.o: TestCases/pong.bdgrt
 	python compiler.py TestCases/pong.bdgrt pong.o
+
+vars.o: TestCases/vars.bdgrt
+	python compiler.py TestCases/vars.bdgrt vars.o
 
 fact.exe: fact.o support.o
 	gcc -o fact.exe support.o fact.o
@@ -43,6 +46,8 @@ num_output.exe: num_output.o support.o
 pong.exe: pong.o sdl_wrapper.o
 	gcc -o pong.exe pong.o sdl_wrapper.o -lSDL2
 
+vars.exe: vars.o support.o
+	gcc -o vars.exe support.o vars.o
 
 clean:
 	rm -rf *.o *.exe

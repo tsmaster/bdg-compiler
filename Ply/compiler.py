@@ -99,6 +99,10 @@ def p_toplevelgroup_funcdef(t):
     'toplevelgroup : funcdef toplevelgroup'
     t[0] = [t[1]] + t[2]
 
+def p_toplevelgroup_vardecl(t):
+    'toplevelgroup : globalvardecl toplevelgroup'
+    t[0] = [t[1]] + t[2]
+
 def p_toplevelgroup_empty(t):
     'toplevelgroup : empty'
     t[0] = []
@@ -180,6 +184,10 @@ def p_arglist_many(t):
     'arglist : expression COMMA arglist'
     t[0] = [t[1]] + t[3]
 
+def p_globalvardecl(t):
+    '''globalvardecl : type IDENTIFIER SEMICOLON'''
+    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2])
+
 def p_statementlist_empty(t):
     'statementlist : empty'
     t[0] = ast.StatementList([])
@@ -216,8 +224,8 @@ def p_statement_while_loop(t):
     t[0] = ast.WhileLoop(t[3], t[6])
 
 def p_statement_assign(t):
-    '''statement : IDENTIFIER ASSIGN expression'''
-    t[0] = ast.AssignStatement(t[1], t[3])
+    '''statement : IDENTIFIER ASSIGN expression SEMICOLON'''
+    t[0] = ast.AssignStatement(t.lineno, t[1], t[3])
 
 def p_expression_functioncall(t):
     '''expression : IDENTIFIER LPAREN arglist RPAREN'''
@@ -314,7 +322,9 @@ def compile(filename, basename, outname):
             print "making decl for",tlt.name
             tlt.generateDecl()
         for tlt in tree:
-            topLevelObjs.append(tlt.generateCode())
+            obj = tlt.generateCode()
+            if not (obj is None):
+                topLevelObjs.append(obj)
             print
     
     for tlo in topLevelObjs:

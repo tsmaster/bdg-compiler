@@ -6,6 +6,7 @@ gNamedValues = {}
 
 funcDefs = {}
 
+gGlobalVars = {}
 
 class ASTNode(object):
     def __init__(self, linenum, typename):
@@ -77,8 +78,44 @@ class FuncDeclNode(ASTNode):
         return funcobj
 
     def generateDecl(self):
-        return self.generateCode(None)                
+        return self.generateCode(None)
 
+
+class GlobalVarDeclNode(ASTNode):
+    def __init__(self, linenum, typeName, name):
+        super(GlobalVarDeclNode, self).__init__(linenum, "GlobalVarDeclNode")
+        self.typeName = typeName
+        self.name = name
+        print "made global var decl:", self.typeName, name
+
+    def generateCode(self, breakBlock=None):
+        typeObj = makeType(self.typeName)
+        var = gLlvmModule.add_global_variable(typeObj, self.name)
+        var.initializer = llvm.core.Constant.undef(typeObj)
+        gGlobalVars[self.name] = var
+        print "made var:",var
+        print
+
+    def __str__(self):
+        return "(%s) %s" % (self.type, self.name)
+
+
+class AssignStatement(ASTNode):
+    def __init__(self, linenum, varname, value):
+        super(AssignStatement, self).__init__(linenum, "AssignStatement")
+        self.varname = varname
+        self.value = value
+
+    def generateCode(self, breakBlock=None):
+        if self.varname in gGlobalVars:
+            gLlvmBuilder.store(self.value.generateCode(None), gGlobalVars[self.varname])
+        else:
+            print "don't recognize variable:",self.varname
+            raise RuntimeError
+
+    def __str__(self):
+        return "(%s) %s" % (self.type, self.name)
+        
 
 class RValueVar(ASTNode):
     def __init__(self, name, linenum):
@@ -87,11 +124,12 @@ class RValueVar(ASTNode):
 
     def generateCode(self, breakBlock=None):
         if self.name in gNamedValues:
-            return gNamedValues[self.name]
+            return gNamedValues[self.name].load()
+        elif self.name in gGlobalVars:
+            return gLlvmBuilder.load(gGlobalVars[self.name])
         else:
+            print "cannot find %s in gNamedValues or gGlobalVars" % self.name
             raise RuntimeError
-        # todo: lookup variable
-        #return llvm.core.Constant.int(llvm.core.Type.int(), 93)
 
 
 class FuncDefNode(ASTNode):

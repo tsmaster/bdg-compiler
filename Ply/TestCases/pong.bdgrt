@@ -8,12 +8,17 @@ void srand_from_time();
 int rand_int(int max);
 void delay(int ms);
 
+int ball_x;
+
 int main() {
   srand_from_time();
   open_window(640, 480);
   clear_window(rand_int(256), 
                rand_int(256),
 	       rand_int(256));
+
+  ball_x = 320;
+
   loop {
     sdl_tick_input();
     if (sdl_quit_signalled() == 1) {
