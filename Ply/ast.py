@@ -114,7 +114,7 @@ class AssignStatement(ASTNode):
             raise RuntimeError
 
     def __str__(self):
-        return "(%s) %s" % (self.type, self.name)
+        return "%s := %s" % (self.varname, str(self.value))
         
 
 class RValueVar(ASTNode):
@@ -124,7 +124,7 @@ class RValueVar(ASTNode):
 
     def generateCode(self, breakBlock=None):
         if self.name in gNamedValues:
-            return gNamedValues[self.name].load()
+            return gNamedValues[self.name]
         elif self.name in gGlobalVars:
             return gLlvmBuilder.load(gGlobalVars[self.name])
         else:
@@ -212,6 +212,7 @@ class IfElse:
         condCount = len(self.conditions)
         thenBlocks = []
         testBlocks = [gLlvmBuilder.basic_block]
+        mergeBlock = funcObj.append_basic_block('mergeblock')
 
         for ci in range(condCount):
             thenBlocks.append(funcObj.append_basic_block('thenblock'+str(ci)))
@@ -220,35 +221,37 @@ class IfElse:
 
         testBlocks.append(funcObj.append_basic_block('finalelse'))
 
-        print "thenBlocks:", thenBlocks
-        print "testBlocks:", testBlocks
+        #print "thenBlocks:", thenBlocks
+        #print "testBlocks:", testBlocks
         
         for i in range(condCount):
-            print "about to make a branch"
-            print i
+            #print "about to make a branch"
+            #print i
             condition = self.conditions[i]
-            print condition
+            #print condition
             body = self.bodies[i]
             testBlock = testBlocks[i]
             thenBlock = thenBlocks[i]
             elseBlock = testBlocks[i+1]
-            print "test:", testBlock
-            print "then:", thenBlock
-            print "else:", elseBlock
+            #print "test:", testBlock
+            #print "then:", thenBlock
+            #print "else:", elseBlock
 
-            print "positioning at end of test block", testBlock
+            #print "positioning at end of test block", testBlock
             gLlvmBuilder.position_at_end(testBlock)
             condition_bool = self.generateCondition(condition, funcObj)
-            print condition_bool
+            #print condition_bool
             gLlvmBuilder.cbranch(condition_bool, thenBlock, elseBlock)
 
-            print "positioning at end of then block", thenBlock
+            #print "positioning at end of then block", thenBlock
             gLlvmBuilder.position_at_end(thenBlock)
-            print "about to generate code for body:"
-            print body
-            print "in block"
-            print gLlvmBuilder.basic_block
+            #print "about to generate code for body:"
+            #print body
+            #print "in block"
+            #print gLlvmBuilder.basic_block
             body.generateCode(breakBlock)
+            if gLlvmBuilder.basic_block.terminator is None:
+                gLlvmBuilder.branch(mergeBlock)
 
         print "about to make an else"
         # emit else
@@ -261,18 +264,12 @@ class IfElse:
         gLlvmBuilder.position_at_end(elseBlock)
         if self.elsebody:
             else_value = self.elsebody.generateCode(breakBlock)
+        gLlvmBuilder.branch(mergeBlock)
+        gLlvmBuilder.position_at_end(mergeBlock)
+
         return None
 
                              
-class BinaryExpr:
-    def __init__(self, expr1, op, expr2):
-        self.op = op
-        self.exprs=[expr1, expr2]
-
-    def __str__(self):
-        return "BE: {%s} %s {%s}" % (self.exprs[0], self.op, self.exprs[1])
-
-
 class ReturnStatement:
     def __init__(self, expr):
         self.expr = expr;
@@ -379,11 +376,20 @@ class BinaryExprNode(ASTNode):
         return '['+str(self.nodes[0])+str(self.opstr)+str(self.nodes[1])+']'
 
     def generateCode(self, breakBlock=None):
-        #print "making binexpr", self.opstr
+        print "making binexpr", self.opstr
         code0 = self.nodes[0].generateCode(None)
         code1 = self.nodes[1].generateCode(None)
-        #print code0
-        #print code1
+        print code0
+        print code0.type
+        print code1
+        print code1.type
+        if not (code0.type == code1.type):
+            print "code0 type:",code0.type
+            print "code0:", code0
+            print "code1 type:",code1.type
+            print "code1:", code1
+            raise RuntimeError
+        
         if self.opstr == '+':
             return gLlvmBuilder.add(code0, code1, "addtmp")
         elif self.opstr == '-':
@@ -402,6 +408,19 @@ class BinaryExprNode(ASTNode):
             print "invalid operator:", self.opstr
             print "maybe?", dir(gLlvmBuilder)
             raise ValueError
+
+
+class NegativeExprNode(ASTNode):
+    def __init__(self, linenum, node):
+        super(NegativeExprNode, self).__init__(linenum, "NegativeExprNode")
+        self.node=node
+
+    def __str__(self):
+        return '-'+str(self.node)
+
+    def generateCode(self, breakBlock=None):
+        code = self.node.generateCode(None)
+        return gLlvmBuilder.mul(code, llvm.core.Constant.int(llvm.core.Type.int(), -1))
 
 
 class topLevelGroup(ASTNode):

@@ -242,6 +242,10 @@ def p_expression_variable(t):
     # rvalue
     t[0] = ast.RValueVar(t[1], t.lineno)
 
+def p_expression_negop(t):
+    '''expression : MINUS expression'''
+    t[0] = ast.NegativeExprNode(t.lineno, t[2])
+
 def p_expression_number(t):
     '''expression : NUMBER'''
     t[0] = t[1]

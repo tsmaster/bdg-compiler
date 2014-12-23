@@ -9,6 +9,39 @@ int rand_int(int max);
 void delay(int ms);
 
 int ball_x;
+int ball_y;
+int ball_size;
+
+int vx;
+int vy;
+
+int paddle_y_left;
+int paddle_y_right;
+
+int pvel;
+
+int draw_background() {
+  clear_window(64, 128, 64);
+  return 0;
+}
+
+int draw_ball() {
+   sdl_draw_rect(ball_x - ball_size / 2, 
+                 ball_y - ball_size / 2, 
+		 ball_size, ball_size, 
+		 200, 200, 200);
+   return 0;
+}
+
+int draw_paddle_left() {
+  sdl_draw_rect(32, paddle_y_left - 128/2, 32, 128, 200, 128, 128);
+  return 0;
+}
+
+int draw_paddle_right() {
+  sdl_draw_rect(640 - 64, paddle_y_right - 128/2, 32, 128, 128, 128, 200);
+  return 0;
+}
 
 int main() {
   srand_from_time();
@@ -18,19 +51,60 @@ int main() {
 	       rand_int(256));
 
   ball_x = 320;
+  ball_y = 240;
+  ball_size = 32;
+  
+  vx = 4;
+  vy = 7;
+
+  pvel = 8;
 
   loop {
     sdl_tick_input();
     if (sdl_quit_signalled() == 1) {
       break;
     }
-    clear_window(rand_int(64), rand_int(256), rand_int(64));
-    sdl_draw_rect(32, 240 - 128/2, 32, 128, 200, 128, 128);
-    sdl_draw_rect(640 - 64, 240 - 128/2, 32, 128, 128, 128, 200);
-    sdl_draw_rect(320 - 16, 240 - 16, 32, 32, 200, 200, 200);
+    draw_background();
+    draw_paddle_left();
+    draw_paddle_right();
+    draw_ball();
+
+    ball_x = ball_x + vx;
+
+    if (ball_x > 640 - 64) {
+       ball_x = 640 - 64;
+       vx = -4;
+    } elif (ball_x < 64) {
+       ball_x = 64;
+       vx = 4;
+    }
+
+    ball_y = ball_y + vy;
+    if (vx < 0) {
+      if (paddle_y_left < ball_y) {
+        paddle_y_left = paddle_y_left + pvel;
+      } else {
+        paddle_y_left = paddle_y_left - pvel;
+      }
+    } else {
+      if (paddle_y_right < ball_y) {
+        paddle_y_right = paddle_y_right + pvel;
+      } else {
+        paddle_y_right = paddle_y_right - pvel;
+      }
+    }
+
+    if (ball_y > 480) {
+       ball_y = 480;
+       vy = -7;
+    } elif (ball_y < 0) {
+       ball_y = 0;
+       vy = 7;
+    }
+
     delay(20);
     flip();    
   }
-  delay(1000);
+  delay(100);
   return 0;
 }
