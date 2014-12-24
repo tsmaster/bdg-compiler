@@ -8,9 +8,22 @@ void srand_from_time();
 int rand_int(int max);
 void delay(int ms);
 
+int m_sin(int milliradians, int scale);
+int m_cos(int milliradians, int scale);
+
+int m_atan2(int y, int x);
+
+void print_integer(int num);
+void print_line();
+void print_char(int ascii);
+
+
 int ball_x;
 int ball_y;
 int ball_size;
+
+int ball_speed;
+int ball_angle;
 
 int vx;
 int vy;
@@ -19,6 +32,45 @@ int paddle_y_left;
 int paddle_y_right;
 
 int pvel;
+
+int PI;
+int TWOPI;
+int PI_OVER_TWO;
+int PI_OVER_SIX;
+
+int set_velocity_from_angle() {
+    vx = m_cos(ball_angle, ball_speed);
+    vy = m_sin(ball_angle, ball_speed);
+
+    # print_integer(ball_angle);
+    # print_char(32);
+    # print_integer(vx);
+    # print_char(32);
+    # print_integer(vy);
+    # print_line();
+    return 0;
+}
+
+int reflect_ball_y() {
+  ball_angle = TWOPI - ball_angle;
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  set_velocity_from_angle();
+  return 0;
+}
+
+int reflect_ball_x() {
+  ball_angle = PI - ball_angle;
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  set_velocity_from_angle();
+}
 
 int draw_background() {
   clear_window(64, 128, 64);
@@ -44,6 +96,11 @@ int draw_paddle_right() {
 }
 
 int main() {
+  PI = 3142;
+  TWOPI = 6283;
+  PI_OVER_SIX = 524;
+  PI_OVER_TWO = 1571;
+
   srand_from_time();
   open_window(640, 480);
   clear_window(rand_int(256), 
@@ -53,11 +110,19 @@ int main() {
   ball_x = 320;
   ball_y = 240;
   ball_size = 32;
-  
-  vx = 4;
-  vy = 7;
 
-  pvel = 8;
+  paddle_y_left = 240;
+  paddle_y_right = 240;
+
+  ball_angle = PI_OVER_TWO * rand_int(4);
+  ball_angle = ball_angle + rand_int(PI_OVER_SIX);
+  ball_angle = ball_angle + PI_OVER_SIX;
+  
+  ball_speed = 8;
+
+  set_velocity_from_angle();
+
+  pvel = 5;
 
   loop {
     sdl_tick_input();
@@ -73,10 +138,10 @@ int main() {
 
     if (ball_x > 640 - 64) {
        ball_x = 640 - 64;
-       vx = -4;
+       reflect_ball_x();
     } elif (ball_x < 64) {
        ball_x = 64;
-       vx = 4;
+       reflect_ball_x();
     }
 
     ball_y = ball_y + vy;
@@ -96,10 +161,10 @@ int main() {
 
     if (ball_y > 480) {
        ball_y = 480;
-       vy = -7;
+       reflect_ball_y();
     } elif (ball_y < 0) {
        ball_y = 0;
-       vy = 7;
+       reflect_ball_y();
     }
 
     delay(20);

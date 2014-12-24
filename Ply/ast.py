@@ -212,7 +212,7 @@ class IfElse:
         condCount = len(self.conditions)
         thenBlocks = []
         testBlocks = [gLlvmBuilder.basic_block]
-        mergeBlock = funcObj.append_basic_block('mergeblock')
+        mergeBlock = None
 
         for ci in range(condCount):
             thenBlocks.append(funcObj.append_basic_block('thenblock'+str(ci)))
@@ -233,39 +233,28 @@ class IfElse:
             testBlock = testBlocks[i]
             thenBlock = thenBlocks[i]
             elseBlock = testBlocks[i+1]
-            #print "test:", testBlock
-            #print "then:", thenBlock
-            #print "else:", elseBlock
 
-            #print "positioning at end of test block", testBlock
             gLlvmBuilder.position_at_end(testBlock)
             condition_bool = self.generateCondition(condition, funcObj)
-            #print condition_bool
             gLlvmBuilder.cbranch(condition_bool, thenBlock, elseBlock)
 
-            #print "positioning at end of then block", thenBlock
             gLlvmBuilder.position_at_end(thenBlock)
-            #print "about to generate code for body:"
-            #print body
-            #print "in block"
-            #print gLlvmBuilder.basic_block
             body.generateCode(breakBlock)
             if gLlvmBuilder.basic_block.terminator is None:
+                if mergeBlock is None:
+                    mergeBlock = funcObj.append_basic_block('mergeblock')
                 gLlvmBuilder.branch(mergeBlock)
 
-        print "about to make an else"
-        # emit else
         elseBlock = testBlocks[-1]
-        print "else block:"
-        print elseBlock
-        print "else body:"
-        print self.elsebody
-        print "positioning at end of test block", elseBlock
         gLlvmBuilder.position_at_end(elseBlock)
         if self.elsebody:
             else_value = self.elsebody.generateCode(breakBlock)
-        gLlvmBuilder.branch(mergeBlock)
-        gLlvmBuilder.position_at_end(mergeBlock)
+        if gLlvmBuilder.basic_block.terminator is None:
+            if mergeBlock is None:
+                mergeBlock = funcObj.append_basic_block('mergeblock')
+            gLlvmBuilder.branch(mergeBlock)
+        if not(mergeBlock is None):
+            gLlvmBuilder.position_at_end(mergeBlock)
 
         return None
 

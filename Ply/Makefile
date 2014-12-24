@@ -1,5 +1,5 @@
 
-all: fact.exe fib.exe fact_decl.exe many_call.exe num_output.exe
+all: fact.exe fib.exe fact_decl.exe many_call.exe num_output.exe vars.exe pong.exe
 
 support.o: support.c
 	gcc -g -c support.c
@@ -28,6 +28,9 @@ pong.o: TestCases/pong.bdgrt
 vars.o: TestCases/vars.bdgrt
 	python compiler.py TestCases/vars.bdgrt vars.o
 
+comments.o: TestCases/comments.bdgrt
+	python compiler.py TestCases/comments.bdgrt comments.o
+
 fact.exe: fact.o support.o
 	gcc -o fact.exe support.o fact.o
 
@@ -43,11 +46,14 @@ many_call.exe: many_call.o support.o
 num_output.exe: num_output.o support.o
 	gcc -o num_output.exe support.o num_output.o
 
-pong.exe: pong.o sdl_wrapper.o
-	gcc -o pong.exe pong.o sdl_wrapper.o -lSDL2
+pong.exe: pong.o sdl_wrapper.o support.o
+	gcc -o pong.exe pong.o support.o sdl_wrapper.o -lSDL2 -lm
 
 vars.exe: vars.o support.o
 	gcc -o vars.exe support.o vars.o
+
+comments.exe: comments.o support.o
+	gcc -o comments.exe support.o comments.o
 
 clean:
 	rm -rf *.o *.exe

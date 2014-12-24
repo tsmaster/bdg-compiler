@@ -52,6 +52,11 @@ t_LESSTHAN = '<'
 t_MORETHAN = '>'
 literals = r'+-*/^~!(){}=[]\|;'
 
+def t_COMMENT(t):
+    r'\#.*'
+    pass
+    # No return value. Token discarded
+
 
 reserved = {
     'if' : 'IF',

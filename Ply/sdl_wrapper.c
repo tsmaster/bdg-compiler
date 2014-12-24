@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <math.h>
 
 #include <SDL2/SDL.h>
 
@@ -82,4 +83,20 @@ void srand_from_time() {
 
 void delay(int ms) {
   SDL_Delay(ms);
+}
+
+
+
+//
+
+int m_sin(int milliradians, int scale) {
+  return (int)(sin(milliradians / 1000.0f) * scale + 0.5f);
+}
+
+int m_cos(int milliradians, int scale) {
+  return (int)(cos(milliradians / 1000.0f) * scale + 0.5f);
+}
+
+int m_atan2(int y, int x) {
+  return (int)(atan2(y, x) * 1000);
 }
