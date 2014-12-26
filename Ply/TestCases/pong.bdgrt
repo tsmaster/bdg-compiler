@@ -1,20 +1,11 @@
 @include "conio.bdgrt"
 @include "font.bdgrt"
+@include "trig.bdgrt"
+@include "sdl.bdgrt"
 
-int open_window(int width, int height);
-void clear_window(int red, int green, int blue);
-void flip();
-void sdl_tick_input();
-int sdl_quit_signalled();
-void sdl_draw_rect(int left, int top, int width, int height, int r, int g, int b);
 void srand_from_time();
 int rand_int(int max);
-void delay(int ms);
 
-int m_sin(int milliradians, int scale);
-int m_cos(int milliradians, int scale);
-
-int m_atan2(int y, int x);
 
 
 int dot_y;
@@ -42,6 +33,8 @@ int pvel;
 
 int score_l;
 int score_r;
+
+int MAX_DEFLECTION;
 
 int PI;
 int TWOPI;
@@ -115,7 +108,7 @@ int reflect_ball_y() {
 
 int reflect_ball_x() {
   ball_angle = PI - ball_angle;
-  perturb(600);
+  #perturb(600);
   if (ball_angle < 0) {
     ball_angle = ball_angle + TWOPI;
   } elif (ball_angle > TWOPI) {
@@ -215,15 +208,15 @@ int draw_paddle_right() {
 
 int update_paddles() {
   if (vx < 0) {
-    if (paddle_y_left < ball_y) {
+    if (paddle_y_left < ball_y - PADDLE_SIZE / 2) {
       paddle_y_left = paddle_y_left + pvel;
-    } else {
+    } elif (paddle_y_left > ball_y + PADDLE_SIZE / 2) {
       paddle_y_left = paddle_y_left - pvel;
     }
   } else {
-    if (paddle_y_right < ball_y) {
+    if (paddle_y_right < ball_y - PADDLE_SIZE / 2) {
       paddle_y_right = paddle_y_right + pvel;
-    } else {
+    } elif (paddle_y_right > ball_y + PADDLE_SIZE / 2) {
       paddle_y_right = paddle_y_right - pvel;
     }
   }
@@ -248,11 +241,21 @@ int hit_right_paddle() {
   return 0;
 }
 
+int calc_deflection_left() {
+  return (2 * (paddle_y_left - ball_y) * MAX_DEFLECTION) / PADDLE_SIZE;    
+}
+
+int calc_deflection_right() {
+  return (2 * (ball_y - paddle_y_right) * MAX_DEFLECTION) / PADDLE_SIZE;    
+}
+
 int main() {
   PI = 3142;
   TWOPI = 6283;
   PI_OVER_SIX = 524;
   PI_OVER_TWO = 1571;
+
+  MAX_DEFLECTION = 400;
 
   PADDLE_SIZE = 128;
   PADDLE_LEFT_X = 48;
@@ -272,7 +275,7 @@ int main() {
   ball_speed = 10;
   launch_ball();
 
-  pvel = 3;
+  pvel = 5;
   score_l = 0;
   score_r = 0;
 
@@ -295,6 +298,7 @@ int main() {
         ball_x = 640 - 64;
 	if (vx > 0) {
 	  reflect_ball_x();
+          ball_angle = ball_angle + calc_deflection_right();
         }
       } elif (ball_x > 640) {
         score_left();
@@ -305,6 +309,7 @@ int main() {
         ball_x = 64;
 	if (vx < 0) {
           reflect_ball_x();
+          ball_angle = ball_angle + calc_deflection_left();
 	}
       } elif (ball_x < 0) {
         score_right();

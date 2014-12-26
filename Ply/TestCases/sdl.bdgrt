@@ -1,0 +1,8 @@
+int open_window(int width, int height);
+void clear_window(int red, int green, int blue);
+void flip();
+void sdl_tick_input();
+int sdl_quit_signalled();
+void sdl_draw_rect(int left, int top, int width, int height, int r, int g, int b);
+void delay(int ms);
+

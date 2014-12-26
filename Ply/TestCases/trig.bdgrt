@@ -1,0 +1,4 @@
+int m_sin(int milliradians, int scale);
+int m_cos(int milliradians, int scale);
+
+int m_atan2(int y, int x);
