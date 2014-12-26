@@ -1,3 +1,6 @@
+@include "conio.bdgrt"
+@include "font.bdgrt"
+
 int open_window(int width, int height);
 void clear_window(int red, int green, int blue);
 void flip();
@@ -13,9 +16,6 @@ int m_cos(int milliradians, int scale);
 
 int m_atan2(int y, int x);
 
-void print_integer(int num);
-void print_line();
-void print_char(int ascii);
 
 int dot_y;
 
@@ -145,42 +145,9 @@ int show_score() {
 }
 
 int draw_num(int n, int x, int y, int scale, int r, int g, int b) {
-  if (n==0) {
-    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
-    sdl_draw_rect(x + scale * 4, y + scale, scale, scale * 5, r, g, b);
-    sdl_draw_rect(x + scale, y + 6 * scale, 3 * scale, scale, r, g, b);
-    sdl_draw_rect(x, y + scale, scale, 5 * scale, r, g, b);
-    sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
-  } elif (n==1) {
-    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + scale, y, scale, scale * 7, r, g, b);
-    sdl_draw_rect(x, y + 6 * scale, 3 * scale, scale, r, g, b);
-  } elif (n==2) {
-    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
-    sdl_draw_rect(x + 4 * scale, y + scale, scale, 2 * scale, r, g, b);
-    sdl_draw_rect(x + 2 * scale, y + 3 * scale, 2 * scale, scale, r, g, b);
-    sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x, y + 5 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x, y + 6 * scale, 5 * scale, scale, r, g, b);
-  } elif (n==3) {
-    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
-    sdl_draw_rect(x + 4 * scale, y + scale, scale, 2 * scale, r, g, b);
-    sdl_draw_rect(x + 2 * scale, y + 3 * scale, 2 * scale, scale, r, g, b);
-    sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, 2 * scale, r, g, b);
-    sdl_draw_rect(x + scale, y + 6 * scale, 3 * scale, scale, r, g, b);
-    sdl_draw_rect(x, y + 5 * scale, scale, scale, r, g, b);
-  } elif (n==4) {
-    sdl_draw_rect(x + 3 * scale, y, scale, 7 * scale, r, g, b);
-    sdl_draw_rect(x, y + 4 * scale, 5 * scale, scale, r, g, b);
-    sdl_draw_rect(x, y + 3 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
-    sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
-  }
-
+  if (n < 10) {
+    draw_char(48 + n, x, y, scale, r, g, b);
+  } 
   return 0;
 }
 
@@ -219,6 +186,12 @@ int draw_background() {
       break;
     }
   }
+
+  draw_char(64 + 16, 320 - 60 + 0 , 20, 5, 255, 255, 0);
+  draw_char(64 + 15, 320 - 60 + 30, 20, 5, 255, 255, 0);
+  draw_char(64 + 14, 320 - 60 + 60, 20, 5, 255, 255, 0);
+  draw_char(64 + 7,  320 - 60 + 90, 20, 5, 255, 255, 0);
+
   return 0;
 }
 

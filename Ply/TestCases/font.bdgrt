@@ -1,0 +1,842 @@
+# DO NOT EDIT
+# CREATED BY makeFont.py
+
+int draw_0(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_1(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_2(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_3(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_4(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_5(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_6(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_7(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_8(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_9(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_A(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_B(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_C(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_D(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_E(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_F(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_G(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_H(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_I(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_J(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_K(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_L(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_M(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_N(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_O(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_P(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_Q(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_R(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_S(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_T(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_U(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_V(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_W(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_X(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_Y(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x , y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_Z(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y , scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y , scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 5 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_PLUS(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_MINUS(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 3 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_EQUALS(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 4 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 4 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_UNDER(int x, int y, int scale, int r, int g, int b) {
+  sdl_draw_rect(x , y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 2 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 3 * scale, y + 6 * scale, scale, scale, r, g, b);
+  sdl_draw_rect(x + 4 * scale, y + 6 * scale, scale, scale, r, g, b);
+  return 0;
+}
+
+int draw_char(int c, int x, int y, int scale, int r, int g, int b) {
+  if (c == 48) {
+    draw_0(x, y, scale, r, g, b);
+  }
+  if (c == 49) {
+    draw_1(x, y, scale, r, g, b);
+  }
+  if (c == 50) {
+    draw_2(x, y, scale, r, g, b);
+  }
+  if (c == 51) {
+    draw_3(x, y, scale, r, g, b);
+  }
+  if (c == 52) {
+    draw_4(x, y, scale, r, g, b);
+  }
+  if (c == 53) {
+    draw_5(x, y, scale, r, g, b);
+  }
+  if (c == 54) {
+    draw_6(x, y, scale, r, g, b);
+  }
+  if (c == 55) {
+    draw_7(x, y, scale, r, g, b);
+  }
+  if (c == 56) {
+    draw_8(x, y, scale, r, g, b);
+  }
+  if (c == 57) {
+    draw_9(x, y, scale, r, g, b);
+  }
+  if (c == 65) {
+    draw_A(x, y, scale, r, g, b);
+  }
+  if (c == 66) {
+    draw_B(x, y, scale, r, g, b);
+  }
+  if (c == 67) {
+    draw_C(x, y, scale, r, g, b);
+  }
+  if (c == 68) {
+    draw_D(x, y, scale, r, g, b);
+  }
+  if (c == 69) {
+    draw_E(x, y, scale, r, g, b);
+  }
+  if (c == 70) {
+    draw_F(x, y, scale, r, g, b);
+  }
+  if (c == 71) {
+    draw_G(x, y, scale, r, g, b);
+  }
+  if (c == 72) {
+    draw_H(x, y, scale, r, g, b);
+  }
+  if (c == 73) {
+    draw_I(x, y, scale, r, g, b);
+  }
+  if (c == 74) {
+    draw_J(x, y, scale, r, g, b);
+  }
+  if (c == 75) {
+    draw_K(x, y, scale, r, g, b);
+  }
+  if (c == 76) {
+    draw_L(x, y, scale, r, g, b);
+  }
+  if (c == 77) {
+    draw_M(x, y, scale, r, g, b);
+  }
+  if (c == 78) {
+    draw_N(x, y, scale, r, g, b);
+  }
+  if (c == 79) {
+    draw_O(x, y, scale, r, g, b);
+  }
+  if (c == 80) {
+    draw_P(x, y, scale, r, g, b);
+  }
+  if (c == 81) {
+    draw_Q(x, y, scale, r, g, b);
+  }
+  if (c == 82) {
+    draw_R(x, y, scale, r, g, b);
+  }
+  if (c == 83) {
+    draw_S(x, y, scale, r, g, b);
+  }
+  if (c == 84) {
+    draw_T(x, y, scale, r, g, b);
+  }
+  if (c == 85) {
+    draw_U(x, y, scale, r, g, b);
+  }
+  if (c == 86) {
+    draw_V(x, y, scale, r, g, b);
+  }
+  if (c == 87) {
+    draw_W(x, y, scale, r, g, b);
+  }
+  if (c == 88) {
+    draw_X(x, y, scale, r, g, b);
+  }
+  if (c == 89) {
+    draw_Y(x, y, scale, r, g, b);
+  }
+  if (c == 90) {
+    draw_Z(x, y, scale, r, g, b);
+  }
+  if (c == 43) {
+    draw_PLUS(x, y, scale, r, g, b);
+  }
+  if (c == 45) {
+    draw_MINUS(x, y, scale, r, g, b);
+  }
+  if (c == 61) {
+    draw_EQUALS(x, y, scale, r, g, b);
+  }
+  if (c == 95) {
+    draw_UNDER(x, y, scale, r, g, b);
+  }
+  return 0;
+}
+

@@ -1,0 +1,8 @@
+import os
+import time
+
+base_filename = '../pong.gif'
+
+time_filename = time.strftime("../Screenshots/pong_%Y_%m_%d.gif")
+
+print time_filename
