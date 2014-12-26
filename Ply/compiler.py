@@ -31,6 +31,7 @@ tokens = (
     'VOID',
     'COMMA',
     'ISEQUAL',
+    'NOTEQUAL',
     'LESSTHAN',
     'GREATERTHAN',
     'LESSEQUAL',
@@ -50,6 +51,7 @@ t_TIMES = r'\*'
 t_DIVIDE = r'\/'
 t_COMMA = ','
 t_ISEQUAL = '=='
+t_NOTEQUAL = '!='
 t_LESSTHAN = '<'
 t_GREATERTHAN = '>'
 t_LESSEQUAL = '<='
@@ -73,7 +75,7 @@ reserved = {
     'string' : 'STRING',
     'loop' : 'LOOP',
     'while' : 'WHILE',
-    'break' : 'BREAK'    
+    'break' : 'BREAK'
 }
 
 def t_IDENTIFIER(t):
@@ -101,7 +103,7 @@ def t_error(t):
 lexer = lex.lex()
 
 precedence = (
-    ('left', 'ISEQUAL', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
+    ('left', 'ISEQUAL', 'NOTEQUAL', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
     ('left','PLUS','MINUS'),
     ('left','TIMES','DIVIDE'),
     ('right','UMINUS'),
@@ -251,14 +253,9 @@ def p_expression_functioncall(t):
     '''expression : IDENTIFIER LPAREN arglist RPAREN'''
     t[0] = ast.FunctionCall(t[1], t[3])
 
-#def p_expression_binaryop(t):
-#    '''expression : expression compare expression
-#                  | expression arithop expression'''
-#    node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
-#    t[0] = node
-
 def p_expression_binaryop(t):
     '''expression : expression ISEQUAL expression
+                  | expression NOTEQUAL expression
                   | expression LESSTHAN expression
                   | expression GREATERTHAN expression
                   | expression LESSEQUAL expression
@@ -283,22 +280,6 @@ def p_expression_number(t):
     '''expression : NUMBER'''
     t[0] = t[1]
 
-def p_compare(t):
-    '''compare : ISEQUAL
-               | LESSTHAN
-               | GREATERTHAN
-               | LESSEQUAL
-               | GREATEREQUAL'''
-    t[0] = t[1]
-
-def p_arithop(t):
-    '''arithop : PLUS
-               | MINUS
-               | TIMES
-               | DIVIDE'''
-
-    t[0] = t[1]
-
 def p_elifgroup_empty(t):
     '''elifgroup : empty'''
     t[0] = []
@@ -321,14 +302,39 @@ def p_ifelse_if(t):
     t[0] = ast.IfElse(t[3], t[6], t[8], t[9])
 
 def p_error(t):
-    print("Syntax error at %s" % t.value)
+    print("Syntax error at %s (line:%d)" % (t.value, t.lineno))
     print t
 
 yacc.yacc(start = 'toplevelgroup')
 
-def load_file(filename):
+def load_file(filename, includeDict=None):
+    file_path, file_base = os.path.split(filename)
+    if not includeDict:
+        includeDict = {}
+
     f = open(filename)
-    return f.read()
+    f_lines = list(f.readlines())
+
+    out_buffer = ''
+    for line in f_lines:
+        key = '@include'
+        if line.startswith(key):
+            start_quote = line.index('"')
+            end_quote = line.rindex('"')
+            if start_quote == -1 or end_quote == -1:
+                print "malformed include:",line
+                raise RuntimeError
+            included_filename = line[start_quote+1 : end_quote]
+            included_path = os.path.join(file_path, included_filename)
+            if not (included_path in includeDict):
+                included_file = load_file(included_path, includeDict)
+                out_buffer = out_buffer + '# INCLUDED FILE BEGINS: %s \n' % included_path
+                out_buffer = out_buffer + included_file + '\n'
+                out_buffer = out_buffer + '# INCLUDED FILE ENDS: %s \n' % included_path
+                includeDict[included_path] = 1;
+        else:
+            out_buffer = out_buffer + line
+    return out_buffer
 
 def makeObj(name, mainFunc):
     objFile = open(name, 'wb')

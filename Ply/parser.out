@@ -35,61 +35,54 @@ Rule 29    statement -> IDENTIFIER ASSIGN expression SEMICOLON
 Rule 30    expression -> LPAREN expression RPAREN
 Rule 31    expression -> IDENTIFIER LPAREN arglist RPAREN
 Rule 32    expression -> expression ISEQUAL expression
-Rule 33    expression -> expression LESSTHAN expression
-Rule 34    expression -> expression GREATERTHAN expression
-Rule 35    expression -> expression LESSEQUAL expression
-Rule 36    expression -> expression GREATEREQUAL expression
-Rule 37    expression -> expression PLUS expression
-Rule 38    expression -> expression MINUS expression
-Rule 39    expression -> expression TIMES expression
-Rule 40    expression -> expression DIVIDE expression
-Rule 41    expression -> IDENTIFIER
-Rule 42    expression -> MINUS expression
-Rule 43    expression -> NUMBER
-Rule 44    compare -> ISEQUAL
-Rule 45    compare -> LESSTHAN
-Rule 46    compare -> GREATERTHAN
-Rule 47    compare -> LESSEQUAL
-Rule 48    compare -> GREATEREQUAL
-Rule 49    arithop -> PLUS
-Rule 50    arithop -> MINUS
-Rule 51    arithop -> TIMES
-Rule 52    arithop -> DIVIDE
-Rule 53    elifgroup -> empty
-Rule 54    elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
-Rule 55    optelse -> empty
-Rule 56    optelse -> ELSE LBRACE statementlist RBRACE
-Rule 57    ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+Rule 33    expression -> expression NOTEQUAL expression
+Rule 34    expression -> expression LESSTHAN expression
+Rule 35    expression -> expression GREATERTHAN expression
+Rule 36    expression -> expression LESSEQUAL expression
+Rule 37    expression -> expression GREATEREQUAL expression
+Rule 38    expression -> expression PLUS expression
+Rule 39    expression -> expression MINUS expression
+Rule 40    expression -> expression TIMES expression
+Rule 41    expression -> expression DIVIDE expression
+Rule 42    expression -> IDENTIFIER
+Rule 43    expression -> MINUS expression
+Rule 44    expression -> NUMBER
+Rule 45    elifgroup -> empty
+Rule 46    elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+Rule 47    optelse -> empty
+Rule 48    optelse -> ELSE LBRACE statementlist RBRACE
+Rule 49    ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
 Terminals, with rules where they appear
 
 ASSIGN               : 29
 BREAK                : 27
 COMMA                : 14 19
-DIVIDE               : 40 52
-ELIF                 : 54
-ELSE                 : 56
+DIVIDE               : 41
+ELIF                 : 46
+ELSE                 : 48
 FLOAT                : 8
-GREATEREQUAL         : 36 48
-GREATERTHAN          : 34 46
-IDENTIFIER           : 5 6 11 15 20 29 31 41
-IF                   : 57
+GREATEREQUAL         : 37
+GREATERTHAN          : 35
+IDENTIFIER           : 5 6 11 15 20 29 31 42
+IF                   : 49
 INT                  : 7
-ISEQUAL              : 32 44
-LBRACE               : 6 26 28 54 56 57
-LESSEQUAL            : 35 47
-LESSTHAN             : 33 45
+ISEQUAL              : 32
+LBRACE               : 6 26 28 46 48 49
+LESSEQUAL            : 36
+LESSTHAN             : 34
 LOOP                 : 26
-LPAREN               : 5 6 28 30 31 54 57
-MINUS                : 38 42 50
-NUMBER               : 43
-PLUS                 : 37 49
-RBRACE               : 6 26 28 54 56 57
+LPAREN               : 5 6 28 30 31 46 49
+MINUS                : 39 43
+NOTEQUAL             : 33
+NUMBER               : 44
+PLUS                 : 38
+RBRACE               : 6 26 28 46 48 49
 RETURN               : 25
-RPAREN               : 5 6 28 30 31 54 57
+RPAREN               : 5 6 28 30 31 46 49
 SEMICOLON            : 5 20 23 25 27 29
 STRING               : 9
-TIMES                : 39 51
+TIMES                : 40
 VOID                 : 10
 WHILE                : 28
 error                : 
@@ -99,18 +92,16 @@ Nonterminals, with rules where they appear
 argdecl              : 13 14
 argdecllist          : 5 6 14
 arglist              : 19 31
-arithop              : 
-compare              : 
-elifgroup            : 54 57
-empty                : 4 12 17 21 53 55
-expression           : 18 19 23 25 28 29 30 32 32 33 33 34 34 35 35 36 36 37 37 38 38 39 39 40 40 42 54 57
+elifgroup            : 46 49
+empty                : 4 12 17 21 45 47
+expression           : 18 19 23 25 28 29 30 32 32 33 33 34 34 35 35 36 36 37 37 38 38 39 39 40 40 41 41 43 46 49
 funcdecl             : 1
 funcdef              : 2
 globalvardecl        : 3
 ifelse               : 24
-optelse              : 57
+optelse              : 49
 statement            : 22
-statementlist        : 6 22 26 28 54 56 57
+statementlist        : 6 22 26 28 46 48 49
 toplevelgroup        : 1 2 3 0
 type                 : 5 6 15 20
 
@@ -469,18 +460,19 @@ state 26
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -512,17 +504,18 @@ state 28
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -533,20 +526,21 @@ state 28
 
 state 29
 
-    (43) expression -> NUMBER .
+    (44) expression -> NUMBER .
 
-    ISEQUAL         reduce using rule 43 (expression -> NUMBER .)
-    LESSTHAN        reduce using rule 43 (expression -> NUMBER .)
-    GREATERTHAN     reduce using rule 43 (expression -> NUMBER .)
-    LESSEQUAL       reduce using rule 43 (expression -> NUMBER .)
-    GREATEREQUAL    reduce using rule 43 (expression -> NUMBER .)
-    PLUS            reduce using rule 43 (expression -> NUMBER .)
-    MINUS           reduce using rule 43 (expression -> NUMBER .)
-    TIMES           reduce using rule 43 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 43 (expression -> NUMBER .)
-    SEMICOLON       reduce using rule 43 (expression -> NUMBER .)
-    RPAREN          reduce using rule 43 (expression -> NUMBER .)
-    COMMA           reduce using rule 43 (expression -> NUMBER .)
+    ISEQUAL         reduce using rule 44 (expression -> NUMBER .)
+    NOTEQUAL        reduce using rule 44 (expression -> NUMBER .)
+    LESSTHAN        reduce using rule 44 (expression -> NUMBER .)
+    GREATERTHAN     reduce using rule 44 (expression -> NUMBER .)
+    LESSEQUAL       reduce using rule 44 (expression -> NUMBER .)
+    GREATEREQUAL    reduce using rule 44 (expression -> NUMBER .)
+    PLUS            reduce using rule 44 (expression -> NUMBER .)
+    MINUS           reduce using rule 44 (expression -> NUMBER .)
+    TIMES           reduce using rule 44 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 44 (expression -> NUMBER .)
+    SEMICOLON       reduce using rule 44 (expression -> NUMBER .)
+    RPAREN          reduce using rule 44 (expression -> NUMBER .)
+    COMMA           reduce using rule 44 (expression -> NUMBER .)
 
 
 state 30
@@ -558,21 +552,22 @@ state 30
 
 state 31
 
-    (42) expression -> MINUS . expression
+    (43) expression -> MINUS . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -613,18 +608,19 @@ state 33
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -647,20 +643,21 @@ state 34
 
     (29) statement -> IDENTIFIER . ASSIGN expression SEMICOLON
     (31) expression -> IDENTIFIER . LPAREN arglist RPAREN
-    (41) expression -> IDENTIFIER .
+    (42) expression -> IDENTIFIER .
 
     ASSIGN          shift and go to state 48
     LPAREN          shift and go to state 47
-    SEMICOLON       reduce using rule 41 (expression -> IDENTIFIER .)
-    ISEQUAL         reduce using rule 41 (expression -> IDENTIFIER .)
-    LESSTHAN        reduce using rule 41 (expression -> IDENTIFIER .)
-    GREATERTHAN     reduce using rule 41 (expression -> IDENTIFIER .)
-    LESSEQUAL       reduce using rule 41 (expression -> IDENTIFIER .)
-    GREATEREQUAL    reduce using rule 41 (expression -> IDENTIFIER .)
-    PLUS            reduce using rule 41 (expression -> IDENTIFIER .)
-    MINUS           reduce using rule 41 (expression -> IDENTIFIER .)
-    TIMES           reduce using rule 41 (expression -> IDENTIFIER .)
-    DIVIDE          reduce using rule 41 (expression -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 42 (expression -> IDENTIFIER .)
+    ISEQUAL         reduce using rule 42 (expression -> IDENTIFIER .)
+    NOTEQUAL        reduce using rule 42 (expression -> IDENTIFIER .)
+    LESSTHAN        reduce using rule 42 (expression -> IDENTIFIER .)
+    GREATERTHAN     reduce using rule 42 (expression -> IDENTIFIER .)
+    LESSEQUAL       reduce using rule 42 (expression -> IDENTIFIER .)
+    GREATEREQUAL    reduce using rule 42 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 42 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 42 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 42 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 42 (expression -> IDENTIFIER .)
 
 
 state 35
@@ -676,17 +673,18 @@ state 36
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -697,7 +695,7 @@ state 36
 
 state 37
 
-    (57) ifelse -> IF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (49) ifelse -> IF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     LPAREN          shift and go to state 50
 
@@ -720,77 +718,82 @@ state 40
 
     (23) statement -> expression . SEMICOLON
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    SEMICOLON       shift and go to state 55
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    SEMICOLON       shift and go to state 56
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 41
 
     (26) statement -> LOOP . LBRACE statementlist RBRACE
 
-    LBRACE          shift and go to state 63
+    LBRACE          shift and go to state 64
 
 
 state 42
 
     (31) expression -> IDENTIFIER . LPAREN arglist RPAREN
-    (41) expression -> IDENTIFIER .
+    (42) expression -> IDENTIFIER .
 
     LPAREN          shift and go to state 47
-    ISEQUAL         reduce using rule 41 (expression -> IDENTIFIER .)
-    LESSTHAN        reduce using rule 41 (expression -> IDENTIFIER .)
-    GREATERTHAN     reduce using rule 41 (expression -> IDENTIFIER .)
-    LESSEQUAL       reduce using rule 41 (expression -> IDENTIFIER .)
-    GREATEREQUAL    reduce using rule 41 (expression -> IDENTIFIER .)
-    PLUS            reduce using rule 41 (expression -> IDENTIFIER .)
-    MINUS           reduce using rule 41 (expression -> IDENTIFIER .)
-    TIMES           reduce using rule 41 (expression -> IDENTIFIER .)
-    DIVIDE          reduce using rule 41 (expression -> IDENTIFIER .)
-    SEMICOLON       reduce using rule 41 (expression -> IDENTIFIER .)
-    RPAREN          reduce using rule 41 (expression -> IDENTIFIER .)
-    COMMA           reduce using rule 41 (expression -> IDENTIFIER .)
+    ISEQUAL         reduce using rule 42 (expression -> IDENTIFIER .)
+    NOTEQUAL        reduce using rule 42 (expression -> IDENTIFIER .)
+    LESSTHAN        reduce using rule 42 (expression -> IDENTIFIER .)
+    GREATERTHAN     reduce using rule 42 (expression -> IDENTIFIER .)
+    LESSEQUAL       reduce using rule 42 (expression -> IDENTIFIER .)
+    GREATEREQUAL    reduce using rule 42 (expression -> IDENTIFIER .)
+    PLUS            reduce using rule 42 (expression -> IDENTIFIER .)
+    MINUS           reduce using rule 42 (expression -> IDENTIFIER .)
+    TIMES           reduce using rule 42 (expression -> IDENTIFIER .)
+    DIVIDE          reduce using rule 42 (expression -> IDENTIFIER .)
+    SEMICOLON       reduce using rule 42 (expression -> IDENTIFIER .)
+    RPAREN          reduce using rule 42 (expression -> IDENTIFIER .)
+    COMMA           reduce using rule 42 (expression -> IDENTIFIER .)
 
 
 state 43
 
     (25) statement -> RETURN expression . SEMICOLON
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    SEMICOLON       shift and go to state 64
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    SEMICOLON       shift and go to state 65
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 44
@@ -807,39 +810,42 @@ state 44
 
 state 45
 
-    (42) expression -> MINUS expression .
+    (43) expression -> MINUS expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 42 (expression -> MINUS expression .)
-    LESSTHAN        reduce using rule 42 (expression -> MINUS expression .)
-    GREATERTHAN     reduce using rule 42 (expression -> MINUS expression .)
-    LESSEQUAL       reduce using rule 42 (expression -> MINUS expression .)
-    GREATEREQUAL    reduce using rule 42 (expression -> MINUS expression .)
-    PLUS            reduce using rule 42 (expression -> MINUS expression .)
-    MINUS           reduce using rule 42 (expression -> MINUS expression .)
-    TIMES           reduce using rule 42 (expression -> MINUS expression .)
-    DIVIDE          reduce using rule 42 (expression -> MINUS expression .)
-    SEMICOLON       reduce using rule 42 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 42 (expression -> MINUS expression .)
-    COMMA           reduce using rule 42 (expression -> MINUS expression .)
+    ISEQUAL         reduce using rule 43 (expression -> MINUS expression .)
+    NOTEQUAL        reduce using rule 43 (expression -> MINUS expression .)
+    LESSTHAN        reduce using rule 43 (expression -> MINUS expression .)
+    GREATERTHAN     reduce using rule 43 (expression -> MINUS expression .)
+    LESSEQUAL       reduce using rule 43 (expression -> MINUS expression .)
+    GREATEREQUAL    reduce using rule 43 (expression -> MINUS expression .)
+    PLUS            reduce using rule 43 (expression -> MINUS expression .)
+    MINUS           reduce using rule 43 (expression -> MINUS expression .)
+    TIMES           reduce using rule 43 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 43 (expression -> MINUS expression .)
+    SEMICOLON       reduce using rule 43 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 43 (expression -> MINUS expression .)
+    COMMA           reduce using rule 43 (expression -> MINUS expression .)
 
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 62 ]
-  ! TIMES           [ shift and go to state 56 ]
-  ! DIVIDE          [ shift and go to state 54 ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 63 ]
+  ! TIMES           [ shift and go to state 57 ]
+  ! DIVIDE          [ shift and go to state 55 ]
 
 
 state 46
@@ -859,17 +865,18 @@ state 47
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     RPAREN          reduce using rule 16 (empty -> .)
     LPAREN          shift and go to state 36
@@ -877,9 +884,9 @@ state 47
     MINUS           shift and go to state 31
     NUMBER          shift and go to state 29
 
-    arglist                        shift and go to state 65
-    expression                     shift and go to state 66
-    empty                          shift and go to state 67
+    arglist                        shift and go to state 66
+    expression                     shift and go to state 67
+    empty                          shift and go to state 68
 
 state 48
 
@@ -887,92 +894,71 @@ state 48
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
     MINUS           shift and go to state 31
     NUMBER          shift and go to state 29
 
-    expression                     shift and go to state 68
+    expression                     shift and go to state 69
 
 state 49
 
     (30) expression -> LPAREN expression . RPAREN
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    RPAREN          shift and go to state 69
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    RPAREN          shift and go to state 70
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 50
 
-    (57) ifelse -> IF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (49) ifelse -> IF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-
-    LPAREN          shift and go to state 36
-    IDENTIFIER      shift and go to state 42
-    MINUS           shift and go to state 31
-    NUMBER          shift and go to state 29
-
-    expression                     shift and go to state 70
-
-state 51
-
-    (28) statement -> WHILE LPAREN . expression RPAREN LBRACE statementlist RBRACE
-    (30) expression -> . LPAREN expression RPAREN
-    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -980,6 +966,32 @@ state 51
     NUMBER          shift and go to state 29
 
     expression                     shift and go to state 71
+
+state 51
+
+    (28) statement -> WHILE LPAREN . expression RPAREN LBRACE statementlist RBRACE
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+
+    LPAREN          shift and go to state 36
+    IDENTIFIER      shift and go to state 42
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 72
 
 state 52
 
@@ -999,46 +1011,22 @@ state 52
 
 state 53
 
-    (36) expression -> expression GREATEREQUAL . expression
+    (33) expression -> expression NOTEQUAL . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-
-    LPAREN          shift and go to state 36
-    IDENTIFIER      shift and go to state 42
-    MINUS           shift and go to state 31
-    NUMBER          shift and go to state 29
-
-    expression                     shift and go to state 72
-
-state 54
-
-    (40) expression -> expression DIVIDE . expression
-    (30) expression -> . LPAREN expression RPAREN
-    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1047,7 +1035,59 @@ state 54
 
     expression                     shift and go to state 73
 
+state 54
+
+    (37) expression -> expression GREATEREQUAL . expression
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+
+    LPAREN          shift and go to state 36
+    IDENTIFIER      shift and go to state 42
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 74
+
 state 55
+
+    (41) expression -> expression DIVIDE . expression
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+
+    LPAREN          shift and go to state 36
+    IDENTIFIER      shift and go to state 42
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 75
+
+state 56
 
     (23) statement -> expression SEMICOLON .
 
@@ -1063,73 +1103,24 @@ state 55
     RBRACE          reduce using rule 23 (statement -> expression SEMICOLON .)
 
 
-state 56
-
-    (39) expression -> expression TIMES . expression
-    (30) expression -> . LPAREN expression RPAREN
-    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-
-    LPAREN          shift and go to state 36
-    IDENTIFIER      shift and go to state 42
-    MINUS           shift and go to state 31
-    NUMBER          shift and go to state 29
-
-    expression                     shift and go to state 74
-
 state 57
 
-    (33) expression -> expression LESSTHAN . expression
+    (40) expression -> expression TIMES . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-
-    LPAREN          shift and go to state 36
-    IDENTIFIER      shift and go to state 42
-    MINUS           shift and go to state 31
-    NUMBER          shift and go to state 29
-
-    expression                     shift and go to state 75
-
-state 58
-
-    (34) expression -> expression GREATERTHAN . expression
-    (30) expression -> . LPAREN expression RPAREN
-    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1138,23 +1129,24 @@ state 58
 
     expression                     shift and go to state 76
 
-state 59
+state 58
 
-    (32) expression -> expression ISEQUAL . expression
+    (34) expression -> expression LESSTHAN . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1163,23 +1155,24 @@ state 59
 
     expression                     shift and go to state 77
 
-state 60
+state 59
 
-    (35) expression -> expression LESSEQUAL . expression
+    (35) expression -> expression GREATERTHAN . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1188,23 +1181,24 @@ state 60
 
     expression                     shift and go to state 78
 
-state 61
+state 60
 
-    (37) expression -> expression PLUS . expression
+    (32) expression -> expression ISEQUAL . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1213,23 +1207,24 @@ state 61
 
     expression                     shift and go to state 79
 
-state 62
+state 61
 
-    (38) expression -> expression MINUS . expression
+    (36) expression -> expression LESSEQUAL . expression
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
@@ -1238,7 +1233,59 @@ state 62
 
     expression                     shift and go to state 80
 
+state 62
+
+    (38) expression -> expression PLUS . expression
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+
+    LPAREN          shift and go to state 36
+    IDENTIFIER      shift and go to state 42
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 81
+
 state 63
+
+    (39) expression -> expression MINUS . expression
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+
+    LPAREN          shift and go to state 36
+    IDENTIFIER      shift and go to state 42
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+
+    expression                     shift and go to state 82
+
+state 64
 
     (26) statement -> LOOP LBRACE . statementlist RBRACE
     (21) statementlist -> . empty
@@ -1254,18 +1301,19 @@ state 63
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -1278,13 +1326,13 @@ state 63
     NUMBER          shift and go to state 29
     IF              shift and go to state 37
 
-    statementlist                  shift and go to state 81
+    statementlist                  shift and go to state 83
     ifelse                         shift and go to state 32
     statement                      shift and go to state 33
     expression                     shift and go to state 40
     empty                          shift and go to state 35
 
-state 64
+state 65
 
     (25) statement -> RETURN expression SEMICOLON .
 
@@ -1300,77 +1348,82 @@ state 64
     RBRACE          reduce using rule 25 (statement -> RETURN expression SEMICOLON .)
 
 
-state 65
+state 66
 
     (31) expression -> IDENTIFIER LPAREN arglist . RPAREN
 
-    RPAREN          shift and go to state 82
+    RPAREN          shift and go to state 84
 
 
-state 66
+state 67
 
     (18) arglist -> expression .
     (19) arglist -> expression . COMMA arglist
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
     RPAREN          reduce using rule 18 (arglist -> expression .)
-    COMMA           shift and go to state 83
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    COMMA           shift and go to state 85
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
-state 67
+state 68
 
     (17) arglist -> empty .
 
     RPAREN          reduce using rule 17 (arglist -> empty .)
 
 
-state 68
+state 69
 
     (29) statement -> IDENTIFIER ASSIGN expression . SEMICOLON
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    SEMICOLON       shift and go to state 84
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    SEMICOLON       shift and go to state 86
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
-state 69
+state 70
 
     (30) expression -> LPAREN expression RPAREN .
 
     ISEQUAL         reduce using rule 30 (expression -> LPAREN expression RPAREN .)
+    NOTEQUAL        reduce using rule 30 (expression -> LPAREN expression RPAREN .)
     LESSTHAN        reduce using rule 30 (expression -> LPAREN expression RPAREN .)
     GREATERTHAN     reduce using rule 30 (expression -> LPAREN expression RPAREN .)
     LESSEQUAL       reduce using rule 30 (expression -> LPAREN expression RPAREN .)
@@ -1384,255 +1437,316 @@ state 69
     COMMA           reduce using rule 30 (expression -> LPAREN expression RPAREN .)
 
 
-state 70
-
-    (57) ifelse -> IF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup optelse
-    (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
-
-    RPAREN          shift and go to state 85
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
-
-
 state 71
 
-    (28) statement -> WHILE LPAREN expression . RPAREN LBRACE statementlist RBRACE
+    (49) ifelse -> IF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup optelse
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    RPAREN          shift and go to state 86
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    RPAREN          shift and go to state 87
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 72
 
-    (36) expression -> expression GREATEREQUAL expression .
+    (28) statement -> WHILE LPAREN expression . RPAREN LBRACE statementlist RBRACE
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    LESSTHAN        reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    GREATERTHAN     reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    LESSEQUAL       reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    GREATEREQUAL    reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    SEMICOLON       reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    RPAREN          reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    COMMA           reduce using rule 36 (expression -> expression GREATEREQUAL expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
-
-  ! PLUS            [ reduce using rule 36 (expression -> expression GREATEREQUAL expression .) ]
-  ! MINUS           [ reduce using rule 36 (expression -> expression GREATEREQUAL expression .) ]
-  ! TIMES           [ reduce using rule 36 (expression -> expression GREATEREQUAL expression .) ]
-  ! DIVIDE          [ reduce using rule 36 (expression -> expression GREATEREQUAL expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
+    RPAREN          shift and go to state 88
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 73
 
-    (40) expression -> expression DIVIDE expression .
+    (33) expression -> expression NOTEQUAL expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 40 (expression -> expression DIVIDE expression .)
-    LESSTHAN        reduce using rule 40 (expression -> expression DIVIDE expression .)
-    GREATERTHAN     reduce using rule 40 (expression -> expression DIVIDE expression .)
-    LESSEQUAL       reduce using rule 40 (expression -> expression DIVIDE expression .)
-    GREATEREQUAL    reduce using rule 40 (expression -> expression DIVIDE expression .)
-    PLUS            reduce using rule 40 (expression -> expression DIVIDE expression .)
-    MINUS           reduce using rule 40 (expression -> expression DIVIDE expression .)
-    TIMES           reduce using rule 40 (expression -> expression DIVIDE expression .)
-    DIVIDE          reduce using rule 40 (expression -> expression DIVIDE expression .)
-    SEMICOLON       reduce using rule 40 (expression -> expression DIVIDE expression .)
-    RPAREN          reduce using rule 40 (expression -> expression DIVIDE expression .)
-    COMMA           reduce using rule 40 (expression -> expression DIVIDE expression .)
+    ISEQUAL         reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    NOTEQUAL        reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    LESSTHAN        reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    GREATERTHAN     reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    LESSEQUAL       reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    GREATEREQUAL    reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    SEMICOLON       reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    RPAREN          reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    COMMA           reduce using rule 33 (expression -> expression NOTEQUAL expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 62 ]
-  ! TIMES           [ shift and go to state 56 ]
-  ! DIVIDE          [ shift and go to state 54 ]
+  ! PLUS            [ reduce using rule 33 (expression -> expression NOTEQUAL expression .) ]
+  ! MINUS           [ reduce using rule 33 (expression -> expression NOTEQUAL expression .) ]
+  ! TIMES           [ reduce using rule 33 (expression -> expression NOTEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 33 (expression -> expression NOTEQUAL expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
 
 
 state 74
 
-    (39) expression -> expression TIMES expression .
+    (37) expression -> expression GREATEREQUAL expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 39 (expression -> expression TIMES expression .)
-    LESSTHAN        reduce using rule 39 (expression -> expression TIMES expression .)
-    GREATERTHAN     reduce using rule 39 (expression -> expression TIMES expression .)
-    LESSEQUAL       reduce using rule 39 (expression -> expression TIMES expression .)
-    GREATEREQUAL    reduce using rule 39 (expression -> expression TIMES expression .)
-    PLUS            reduce using rule 39 (expression -> expression TIMES expression .)
-    MINUS           reduce using rule 39 (expression -> expression TIMES expression .)
-    TIMES           reduce using rule 39 (expression -> expression TIMES expression .)
-    DIVIDE          reduce using rule 39 (expression -> expression TIMES expression .)
-    SEMICOLON       reduce using rule 39 (expression -> expression TIMES expression .)
-    RPAREN          reduce using rule 39 (expression -> expression TIMES expression .)
-    COMMA           reduce using rule 39 (expression -> expression TIMES expression .)
+    ISEQUAL         reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    NOTEQUAL        reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    LESSTHAN        reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    GREATERTHAN     reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    LESSEQUAL       reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    GREATEREQUAL    reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    SEMICOLON       reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    RPAREN          reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    COMMA           reduce using rule 37 (expression -> expression GREATEREQUAL expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 62 ]
-  ! TIMES           [ shift and go to state 56 ]
-  ! DIVIDE          [ shift and go to state 54 ]
+  ! PLUS            [ reduce using rule 37 (expression -> expression GREATEREQUAL expression .) ]
+  ! MINUS           [ reduce using rule 37 (expression -> expression GREATEREQUAL expression .) ]
+  ! TIMES           [ reduce using rule 37 (expression -> expression GREATEREQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 37 (expression -> expression GREATEREQUAL expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
 
 
 state 75
 
-    (33) expression -> expression LESSTHAN expression .
+    (41) expression -> expression DIVIDE expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    LESSTHAN        reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    GREATERTHAN     reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    LESSEQUAL       reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    GREATEREQUAL    reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    SEMICOLON       reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    RPAREN          reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    COMMA           reduce using rule 33 (expression -> expression LESSTHAN expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    ISEQUAL         reduce using rule 41 (expression -> expression DIVIDE expression .)
+    NOTEQUAL        reduce using rule 41 (expression -> expression DIVIDE expression .)
+    LESSTHAN        reduce using rule 41 (expression -> expression DIVIDE expression .)
+    GREATERTHAN     reduce using rule 41 (expression -> expression DIVIDE expression .)
+    LESSEQUAL       reduce using rule 41 (expression -> expression DIVIDE expression .)
+    GREATEREQUAL    reduce using rule 41 (expression -> expression DIVIDE expression .)
+    PLUS            reduce using rule 41 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 41 (expression -> expression DIVIDE expression .)
+    TIMES           reduce using rule 41 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 41 (expression -> expression DIVIDE expression .)
+    SEMICOLON       reduce using rule 41 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 41 (expression -> expression DIVIDE expression .)
+    COMMA           reduce using rule 41 (expression -> expression DIVIDE expression .)
 
-  ! PLUS            [ reduce using rule 33 (expression -> expression LESSTHAN expression .) ]
-  ! MINUS           [ reduce using rule 33 (expression -> expression LESSTHAN expression .) ]
-  ! TIMES           [ reduce using rule 33 (expression -> expression LESSTHAN expression .) ]
-  ! DIVIDE          [ reduce using rule 33 (expression -> expression LESSTHAN expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 63 ]
+  ! TIMES           [ shift and go to state 57 ]
+  ! DIVIDE          [ shift and go to state 55 ]
 
 
 state 76
 
-    (34) expression -> expression GREATERTHAN expression .
+    (40) expression -> expression TIMES expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    LESSTHAN        reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    GREATERTHAN     reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    LESSEQUAL       reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    GREATEREQUAL    reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    SEMICOLON       reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    RPAREN          reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    COMMA           reduce using rule 34 (expression -> expression GREATERTHAN expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    ISEQUAL         reduce using rule 40 (expression -> expression TIMES expression .)
+    NOTEQUAL        reduce using rule 40 (expression -> expression TIMES expression .)
+    LESSTHAN        reduce using rule 40 (expression -> expression TIMES expression .)
+    GREATERTHAN     reduce using rule 40 (expression -> expression TIMES expression .)
+    LESSEQUAL       reduce using rule 40 (expression -> expression TIMES expression .)
+    GREATEREQUAL    reduce using rule 40 (expression -> expression TIMES expression .)
+    PLUS            reduce using rule 40 (expression -> expression TIMES expression .)
+    MINUS           reduce using rule 40 (expression -> expression TIMES expression .)
+    TIMES           reduce using rule 40 (expression -> expression TIMES expression .)
+    DIVIDE          reduce using rule 40 (expression -> expression TIMES expression .)
+    SEMICOLON       reduce using rule 40 (expression -> expression TIMES expression .)
+    RPAREN          reduce using rule 40 (expression -> expression TIMES expression .)
+    COMMA           reduce using rule 40 (expression -> expression TIMES expression .)
 
-  ! PLUS            [ reduce using rule 34 (expression -> expression GREATERTHAN expression .) ]
-  ! MINUS           [ reduce using rule 34 (expression -> expression GREATERTHAN expression .) ]
-  ! TIMES           [ reduce using rule 34 (expression -> expression GREATERTHAN expression .) ]
-  ! DIVIDE          [ reduce using rule 34 (expression -> expression GREATERTHAN expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 63 ]
+  ! TIMES           [ shift and go to state 57 ]
+  ! DIVIDE          [ shift and go to state 55 ]
 
 
 state 77
 
+    (34) expression -> expression LESSTHAN expression .
+    (32) expression -> expression . ISEQUAL expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
+
+    ISEQUAL         reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    NOTEQUAL        reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    LESSTHAN        reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    GREATERTHAN     reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    LESSEQUAL       reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    GREATEREQUAL    reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    SEMICOLON       reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    RPAREN          reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    COMMA           reduce using rule 34 (expression -> expression LESSTHAN expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
+
+  ! PLUS            [ reduce using rule 34 (expression -> expression LESSTHAN expression .) ]
+  ! MINUS           [ reduce using rule 34 (expression -> expression LESSTHAN expression .) ]
+  ! TIMES           [ reduce using rule 34 (expression -> expression LESSTHAN expression .) ]
+  ! DIVIDE          [ reduce using rule 34 (expression -> expression LESSTHAN expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+
+
+state 78
+
+    (35) expression -> expression GREATERTHAN expression .
+    (32) expression -> expression . ISEQUAL expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
+
+    ISEQUAL         reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    NOTEQUAL        reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    LESSTHAN        reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    GREATERTHAN     reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    LESSEQUAL       reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    GREATEREQUAL    reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    SEMICOLON       reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    RPAREN          reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    COMMA           reduce using rule 35 (expression -> expression GREATERTHAN expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
+
+  ! PLUS            [ reduce using rule 35 (expression -> expression GREATERTHAN expression .) ]
+  ! MINUS           [ reduce using rule 35 (expression -> expression GREATERTHAN expression .) ]
+  ! TIMES           [ reduce using rule 35 (expression -> expression GREATERTHAN expression .) ]
+  ! DIVIDE          [ reduce using rule 35 (expression -> expression GREATERTHAN expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+
+
+state 79
+
     (32) expression -> expression ISEQUAL expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
     ISEQUAL         reduce using rule 32 (expression -> expression ISEQUAL expression .)
+    NOTEQUAL        reduce using rule 32 (expression -> expression ISEQUAL expression .)
     LESSTHAN        reduce using rule 32 (expression -> expression ISEQUAL expression .)
     GREATERTHAN     reduce using rule 32 (expression -> expression ISEQUAL expression .)
     LESSEQUAL       reduce using rule 32 (expression -> expression ISEQUAL expression .)
@@ -1640,145 +1754,156 @@ state 77
     SEMICOLON       reduce using rule 32 (expression -> expression ISEQUAL expression .)
     RPAREN          reduce using rule 32 (expression -> expression ISEQUAL expression .)
     COMMA           reduce using rule 32 (expression -> expression ISEQUAL expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
   ! PLUS            [ reduce using rule 32 (expression -> expression ISEQUAL expression .) ]
   ! MINUS           [ reduce using rule 32 (expression -> expression ISEQUAL expression .) ]
   ! TIMES           [ reduce using rule 32 (expression -> expression ISEQUAL expression .) ]
   ! DIVIDE          [ reduce using rule 32 (expression -> expression ISEQUAL expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-
-
-state 78
-
-    (35) expression -> expression LESSEQUAL expression .
-    (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
-
-    ISEQUAL         reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    LESSTHAN        reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    GREATERTHAN     reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    LESSEQUAL       reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    GREATEREQUAL    reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    SEMICOLON       reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    RPAREN          reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    COMMA           reduce using rule 35 (expression -> expression LESSEQUAL expression .)
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
-
-  ! PLUS            [ reduce using rule 35 (expression -> expression LESSEQUAL expression .) ]
-  ! MINUS           [ reduce using rule 35 (expression -> expression LESSEQUAL expression .) ]
-  ! TIMES           [ reduce using rule 35 (expression -> expression LESSEQUAL expression .) ]
-  ! DIVIDE          [ reduce using rule 35 (expression -> expression LESSEQUAL expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-
-
-state 79
-
-    (37) expression -> expression PLUS expression .
-    (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
-
-    ISEQUAL         reduce using rule 37 (expression -> expression PLUS expression .)
-    LESSTHAN        reduce using rule 37 (expression -> expression PLUS expression .)
-    GREATERTHAN     reduce using rule 37 (expression -> expression PLUS expression .)
-    LESSEQUAL       reduce using rule 37 (expression -> expression PLUS expression .)
-    GREATEREQUAL    reduce using rule 37 (expression -> expression PLUS expression .)
-    PLUS            reduce using rule 37 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 37 (expression -> expression PLUS expression .)
-    SEMICOLON       reduce using rule 37 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 37 (expression -> expression PLUS expression .)
-    COMMA           reduce using rule 37 (expression -> expression PLUS expression .)
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
-
-  ! TIMES           [ reduce using rule 37 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 37 (expression -> expression PLUS expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 62 ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
 
 
 state 80
 
-    (38) expression -> expression MINUS expression .
+    (36) expression -> expression LESSEQUAL expression .
     (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    ISEQUAL         reduce using rule 38 (expression -> expression MINUS expression .)
-    LESSTHAN        reduce using rule 38 (expression -> expression MINUS expression .)
-    GREATERTHAN     reduce using rule 38 (expression -> expression MINUS expression .)
-    LESSEQUAL       reduce using rule 38 (expression -> expression MINUS expression .)
-    GREATEREQUAL    reduce using rule 38 (expression -> expression MINUS expression .)
-    PLUS            reduce using rule 38 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 38 (expression -> expression MINUS expression .)
-    SEMICOLON       reduce using rule 38 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 38 (expression -> expression MINUS expression .)
-    COMMA           reduce using rule 38 (expression -> expression MINUS expression .)
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    ISEQUAL         reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    NOTEQUAL        reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    LESSTHAN        reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    GREATERTHAN     reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    LESSEQUAL       reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    GREATEREQUAL    reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    SEMICOLON       reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    RPAREN          reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    COMMA           reduce using rule 36 (expression -> expression LESSEQUAL expression .)
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
-  ! TIMES           [ reduce using rule 38 (expression -> expression MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 38 (expression -> expression MINUS expression .) ]
-  ! ISEQUAL         [ shift and go to state 59 ]
-  ! LESSTHAN        [ shift and go to state 57 ]
-  ! GREATERTHAN     [ shift and go to state 58 ]
-  ! LESSEQUAL       [ shift and go to state 60 ]
-  ! GREATEREQUAL    [ shift and go to state 53 ]
-  ! PLUS            [ shift and go to state 61 ]
-  ! MINUS           [ shift and go to state 62 ]
+  ! PLUS            [ reduce using rule 36 (expression -> expression LESSEQUAL expression .) ]
+  ! MINUS           [ reduce using rule 36 (expression -> expression LESSEQUAL expression .) ]
+  ! TIMES           [ reduce using rule 36 (expression -> expression LESSEQUAL expression .) ]
+  ! DIVIDE          [ reduce using rule 36 (expression -> expression LESSEQUAL expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
 
 
 state 81
 
-    (26) statement -> LOOP LBRACE statementlist . RBRACE
+    (38) expression -> expression PLUS expression .
+    (32) expression -> expression . ISEQUAL expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    RBRACE          shift and go to state 87
+    ISEQUAL         reduce using rule 38 (expression -> expression PLUS expression .)
+    NOTEQUAL        reduce using rule 38 (expression -> expression PLUS expression .)
+    LESSTHAN        reduce using rule 38 (expression -> expression PLUS expression .)
+    GREATERTHAN     reduce using rule 38 (expression -> expression PLUS expression .)
+    LESSEQUAL       reduce using rule 38 (expression -> expression PLUS expression .)
+    GREATEREQUAL    reduce using rule 38 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 38 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 38 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 38 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 38 (expression -> expression PLUS expression .)
+    COMMA           reduce using rule 38 (expression -> expression PLUS expression .)
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
+
+  ! TIMES           [ reduce using rule 38 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 38 (expression -> expression PLUS expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 63 ]
 
 
 state 82
 
+    (39) expression -> expression MINUS expression .
+    (32) expression -> expression . ISEQUAL expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
+
+    ISEQUAL         reduce using rule 39 (expression -> expression MINUS expression .)
+    NOTEQUAL        reduce using rule 39 (expression -> expression MINUS expression .)
+    LESSTHAN        reduce using rule 39 (expression -> expression MINUS expression .)
+    GREATERTHAN     reduce using rule 39 (expression -> expression MINUS expression .)
+    LESSEQUAL       reduce using rule 39 (expression -> expression MINUS expression .)
+    GREATEREQUAL    reduce using rule 39 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 39 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 39 (expression -> expression MINUS expression .)
+    SEMICOLON       reduce using rule 39 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 39 (expression -> expression MINUS expression .)
+    COMMA           reduce using rule 39 (expression -> expression MINUS expression .)
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
+
+  ! TIMES           [ reduce using rule 39 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 39 (expression -> expression MINUS expression .) ]
+  ! ISEQUAL         [ shift and go to state 60 ]
+  ! NOTEQUAL        [ shift and go to state 53 ]
+  ! LESSTHAN        [ shift and go to state 58 ]
+  ! GREATERTHAN     [ shift and go to state 59 ]
+  ! LESSEQUAL       [ shift and go to state 61 ]
+  ! GREATEREQUAL    [ shift and go to state 54 ]
+  ! PLUS            [ shift and go to state 62 ]
+  ! MINUS           [ shift and go to state 63 ]
+
+
+state 83
+
+    (26) statement -> LOOP LBRACE statementlist . RBRACE
+
+    RBRACE          shift and go to state 89
+
+
+state 84
+
     (31) expression -> IDENTIFIER LPAREN arglist RPAREN .
 
     ISEQUAL         reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
+    NOTEQUAL        reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
     LESSTHAN        reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
     GREATERTHAN     reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
     LESSEQUAL       reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
@@ -1792,7 +1917,7 @@ state 82
     COMMA           reduce using rule 31 (expression -> IDENTIFIER LPAREN arglist RPAREN .)
 
 
-state 83
+state 85
 
     (19) arglist -> expression COMMA . arglist
     (17) arglist -> . empty
@@ -1802,17 +1927,18 @@ state 83
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     RPAREN          reduce using rule 16 (empty -> .)
     LPAREN          shift and go to state 36
@@ -1820,11 +1946,11 @@ state 83
     MINUS           shift and go to state 31
     NUMBER          shift and go to state 29
 
-    arglist                        shift and go to state 88
-    expression                     shift and go to state 66
-    empty                          shift and go to state 67
+    arglist                        shift and go to state 90
+    expression                     shift and go to state 67
+    empty                          shift and go to state 68
 
-state 84
+state 86
 
     (29) statement -> IDENTIFIER ASSIGN expression SEMICOLON .
 
@@ -1840,21 +1966,21 @@ state 84
     RBRACE          reduce using rule 29 (statement -> IDENTIFIER ASSIGN expression SEMICOLON .)
 
 
-state 85
+state 87
 
-    (57) ifelse -> IF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup optelse
+    (49) ifelse -> IF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup optelse
 
-    LBRACE          shift and go to state 89
+    LBRACE          shift and go to state 91
 
 
-state 86
+state 88
 
     (28) statement -> WHILE LPAREN expression RPAREN . LBRACE statementlist RBRACE
 
-    LBRACE          shift and go to state 90
+    LBRACE          shift and go to state 92
 
 
-state 87
+state 89
 
     (26) statement -> LOOP LBRACE statementlist RBRACE .
 
@@ -1870,16 +1996,16 @@ state 87
     RBRACE          reduce using rule 26 (statement -> LOOP LBRACE statementlist RBRACE .)
 
 
-state 88
+state 90
 
     (19) arglist -> expression COMMA arglist .
 
     RPAREN          reduce using rule 19 (arglist -> expression COMMA arglist .)
 
 
-state 89
+state 91
 
-    (57) ifelse -> IF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup optelse
+    (49) ifelse -> IF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup optelse
     (21) statementlist -> . empty
     (22) statementlist -> . statement statementlist
     (16) empty -> .
@@ -1893,18 +2019,19 @@ state 89
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -1917,13 +2044,13 @@ state 89
     NUMBER          shift and go to state 29
     IF              shift and go to state 37
 
-    statementlist                  shift and go to state 91
+    statementlist                  shift and go to state 93
     ifelse                         shift and go to state 32
     statement                      shift and go to state 33
     expression                     shift and go to state 40
     empty                          shift and go to state 35
 
-state 90
+state 92
 
     (28) statement -> WHILE LPAREN expression RPAREN LBRACE . statementlist RBRACE
     (21) statementlist -> . empty
@@ -1939,18 +2066,19 @@ state 90
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -1963,34 +2091,34 @@ state 90
     NUMBER          shift and go to state 29
     IF              shift and go to state 37
 
-    statementlist                  shift and go to state 92
+    statementlist                  shift and go to state 94
     ifelse                         shift and go to state 32
     statement                      shift and go to state 33
     expression                     shift and go to state 40
     empty                          shift and go to state 35
 
-state 91
+state 93
 
-    (57) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup optelse
+    (49) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup optelse
 
-    RBRACE          shift and go to state 93
+    RBRACE          shift and go to state 95
 
 
-state 92
+state 94
 
     (28) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist . RBRACE
 
-    RBRACE          shift and go to state 94
+    RBRACE          shift and go to state 96
 
 
-state 93
+state 95
 
-    (57) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup optelse
-    (53) elifgroup -> . empty
-    (54) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (49) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup optelse
+    (45) elifgroup -> . empty
+    (46) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
     (16) empty -> .
 
-    ELIF            shift and go to state 95
+    ELIF            shift and go to state 97
     ELSE            reduce using rule 16 (empty -> .)
     RETURN          reduce using rule 16 (empty -> .)
     LOOP            reduce using rule 16 (empty -> .)
@@ -2003,10 +2131,10 @@ state 93
     IF              reduce using rule 16 (empty -> .)
     RBRACE          reduce using rule 16 (empty -> .)
 
-    empty                          shift and go to state 96
-    elifgroup                      shift and go to state 97
+    empty                          shift and go to state 98
+    elifgroup                      shift and go to state 99
 
-state 94
+state 96
 
     (28) statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .
 
@@ -2022,38 +2150,38 @@ state 94
     RBRACE          reduce using rule 28 (statement -> WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE .)
 
 
-state 95
-
-    (54) elifgroup -> ELIF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
-
-    LPAREN          shift and go to state 98
-
-
-state 96
-
-    (53) elifgroup -> empty .
-
-    ELSE            reduce using rule 53 (elifgroup -> empty .)
-    RETURN          reduce using rule 53 (elifgroup -> empty .)
-    LOOP            reduce using rule 53 (elifgroup -> empty .)
-    BREAK           reduce using rule 53 (elifgroup -> empty .)
-    WHILE           reduce using rule 53 (elifgroup -> empty .)
-    IDENTIFIER      reduce using rule 53 (elifgroup -> empty .)
-    LPAREN          reduce using rule 53 (elifgroup -> empty .)
-    MINUS           reduce using rule 53 (elifgroup -> empty .)
-    NUMBER          reduce using rule 53 (elifgroup -> empty .)
-    IF              reduce using rule 53 (elifgroup -> empty .)
-    RBRACE          reduce using rule 53 (elifgroup -> empty .)
-
-
 state 97
 
-    (57) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup . optelse
-    (55) optelse -> . empty
-    (56) optelse -> . ELSE LBRACE statementlist RBRACE
+    (46) elifgroup -> ELIF . LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+
+    LPAREN          shift and go to state 100
+
+
+state 98
+
+    (45) elifgroup -> empty .
+
+    ELSE            reduce using rule 45 (elifgroup -> empty .)
+    RETURN          reduce using rule 45 (elifgroup -> empty .)
+    LOOP            reduce using rule 45 (elifgroup -> empty .)
+    BREAK           reduce using rule 45 (elifgroup -> empty .)
+    WHILE           reduce using rule 45 (elifgroup -> empty .)
+    IDENTIFIER      reduce using rule 45 (elifgroup -> empty .)
+    LPAREN          reduce using rule 45 (elifgroup -> empty .)
+    MINUS           reduce using rule 45 (elifgroup -> empty .)
+    NUMBER          reduce using rule 45 (elifgroup -> empty .)
+    IF              reduce using rule 45 (elifgroup -> empty .)
+    RBRACE          reduce using rule 45 (elifgroup -> empty .)
+
+
+state 99
+
+    (49) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup . optelse
+    (47) optelse -> . empty
+    (48) optelse -> . ELSE LBRACE statementlist RBRACE
     (16) empty -> .
 
-    ELSE            shift and go to state 99
+    ELSE            shift and go to state 101
     RETURN          reduce using rule 16 (empty -> .)
     LOOP            reduce using rule 16 (empty -> .)
     BREAK           reduce using rule 16 (empty -> .)
@@ -2065,161 +2193,104 @@ state 97
     IF              reduce using rule 16 (empty -> .)
     RBRACE          reduce using rule 16 (empty -> .)
 
-    empty                          shift and go to state 101
-    optelse                        shift and go to state 100
+    empty                          shift and go to state 103
+    optelse                        shift and go to state 102
 
-state 98
+state 100
 
-    (54) elifgroup -> ELIF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (46) elifgroup -> ELIF LPAREN . expression RPAREN LBRACE statementlist RBRACE elifgroup
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
 
     LPAREN          shift and go to state 36
     IDENTIFIER      shift and go to state 42
     MINUS           shift and go to state 31
     NUMBER          shift and go to state 29
 
-    expression                     shift and go to state 102
-
-state 99
-
-    (56) optelse -> ELSE . LBRACE statementlist RBRACE
-
-    LBRACE          shift and go to state 103
-
-
-state 100
-
-    (57) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .
-
-    RETURN          reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    LOOP            reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    BREAK           reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    WHILE           reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    IDENTIFIER      reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    LPAREN          reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    MINUS           reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    NUMBER          reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    IF              reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-    RBRACE          reduce using rule 57 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
-
+    expression                     shift and go to state 104
 
 state 101
 
-    (55) optelse -> empty .
+    (48) optelse -> ELSE . LBRACE statementlist RBRACE
 
-    RETURN          reduce using rule 55 (optelse -> empty .)
-    LOOP            reduce using rule 55 (optelse -> empty .)
-    BREAK           reduce using rule 55 (optelse -> empty .)
-    WHILE           reduce using rule 55 (optelse -> empty .)
-    IDENTIFIER      reduce using rule 55 (optelse -> empty .)
-    LPAREN          reduce using rule 55 (optelse -> empty .)
-    MINUS           reduce using rule 55 (optelse -> empty .)
-    NUMBER          reduce using rule 55 (optelse -> empty .)
-    IF              reduce using rule 55 (optelse -> empty .)
-    RBRACE          reduce using rule 55 (optelse -> empty .)
+    LBRACE          shift and go to state 105
 
 
 state 102
 
-    (54) elifgroup -> ELIF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup
-    (32) expression -> expression . ISEQUAL expression
-    (33) expression -> expression . LESSTHAN expression
-    (34) expression -> expression . GREATERTHAN expression
-    (35) expression -> expression . LESSEQUAL expression
-    (36) expression -> expression . GREATEREQUAL expression
-    (37) expression -> expression . PLUS expression
-    (38) expression -> expression . MINUS expression
-    (39) expression -> expression . TIMES expression
-    (40) expression -> expression . DIVIDE expression
+    (49) ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .
 
-    RPAREN          shift and go to state 104
-    ISEQUAL         shift and go to state 59
-    LESSTHAN        shift and go to state 57
-    GREATERTHAN     shift and go to state 58
-    LESSEQUAL       shift and go to state 60
-    GREATEREQUAL    shift and go to state 53
-    PLUS            shift and go to state 61
-    MINUS           shift and go to state 62
-    TIMES           shift and go to state 56
-    DIVIDE          shift and go to state 54
+    RETURN          reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    LOOP            reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    BREAK           reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    WHILE           reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    IDENTIFIER      reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    LPAREN          reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    MINUS           reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    NUMBER          reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    IF              reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
+    RBRACE          reduce using rule 49 (ifelse -> IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse .)
 
 
 state 103
 
-    (56) optelse -> ELSE LBRACE . statementlist RBRACE
-    (21) statementlist -> . empty
-    (22) statementlist -> . statement statementlist
-    (16) empty -> .
-    (23) statement -> . expression SEMICOLON
-    (24) statement -> . ifelse
-    (25) statement -> . RETURN expression SEMICOLON
-    (26) statement -> . LOOP LBRACE statementlist RBRACE
-    (27) statement -> . BREAK SEMICOLON
-    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
-    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
-    (30) expression -> . LPAREN expression RPAREN
-    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
-    (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (47) optelse -> empty .
 
-    RBRACE          reduce using rule 16 (empty -> .)
-    RETURN          shift and go to state 28
-    LOOP            shift and go to state 41
-    BREAK           shift and go to state 39
-    WHILE           shift and go to state 38
-    IDENTIFIER      shift and go to state 34
-    LPAREN          shift and go to state 36
-    MINUS           shift and go to state 31
-    NUMBER          shift and go to state 29
-    IF              shift and go to state 37
+    RETURN          reduce using rule 47 (optelse -> empty .)
+    LOOP            reduce using rule 47 (optelse -> empty .)
+    BREAK           reduce using rule 47 (optelse -> empty .)
+    WHILE           reduce using rule 47 (optelse -> empty .)
+    IDENTIFIER      reduce using rule 47 (optelse -> empty .)
+    LPAREN          reduce using rule 47 (optelse -> empty .)
+    MINUS           reduce using rule 47 (optelse -> empty .)
+    NUMBER          reduce using rule 47 (optelse -> empty .)
+    IF              reduce using rule 47 (optelse -> empty .)
+    RBRACE          reduce using rule 47 (optelse -> empty .)
 
-    statementlist                  shift and go to state 105
-    ifelse                         shift and go to state 32
-    statement                      shift and go to state 33
-    expression                     shift and go to state 40
-    empty                          shift and go to state 35
 
 state 104
 
-    (54) elifgroup -> ELIF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup
+    (46) elifgroup -> ELIF LPAREN expression . RPAREN LBRACE statementlist RBRACE elifgroup
+    (32) expression -> expression . ISEQUAL expression
+    (33) expression -> expression . NOTEQUAL expression
+    (34) expression -> expression . LESSTHAN expression
+    (35) expression -> expression . GREATERTHAN expression
+    (36) expression -> expression . LESSEQUAL expression
+    (37) expression -> expression . GREATEREQUAL expression
+    (38) expression -> expression . PLUS expression
+    (39) expression -> expression . MINUS expression
+    (40) expression -> expression . TIMES expression
+    (41) expression -> expression . DIVIDE expression
 
-    LBRACE          shift and go to state 106
+    RPAREN          shift and go to state 106
+    ISEQUAL         shift and go to state 60
+    NOTEQUAL        shift and go to state 53
+    LESSTHAN        shift and go to state 58
+    GREATERTHAN     shift and go to state 59
+    LESSEQUAL       shift and go to state 61
+    GREATEREQUAL    shift and go to state 54
+    PLUS            shift and go to state 62
+    MINUS           shift and go to state 63
+    TIMES           shift and go to state 57
+    DIVIDE          shift and go to state 55
 
 
 state 105
 
-    (56) optelse -> ELSE LBRACE statementlist . RBRACE
-
-    RBRACE          shift and go to state 107
-
-
-state 106
-
-    (54) elifgroup -> ELIF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup
+    (48) optelse -> ELSE LBRACE . statementlist RBRACE
     (21) statementlist -> . empty
     (22) statementlist -> . statement statementlist
     (16) empty -> .
@@ -2233,18 +2304,19 @@ state 106
     (30) expression -> . LPAREN expression RPAREN
     (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
     (32) expression -> . expression ISEQUAL expression
-    (33) expression -> . expression LESSTHAN expression
-    (34) expression -> . expression GREATERTHAN expression
-    (35) expression -> . expression LESSEQUAL expression
-    (36) expression -> . expression GREATEREQUAL expression
-    (37) expression -> . expression PLUS expression
-    (38) expression -> . expression MINUS expression
-    (39) expression -> . expression TIMES expression
-    (40) expression -> . expression DIVIDE expression
-    (41) expression -> . IDENTIFIER
-    (42) expression -> . MINUS expression
-    (43) expression -> . NUMBER
-    (57) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
 
     RBRACE          reduce using rule 16 (empty -> .)
     RETURN          shift and go to state 28
@@ -2257,43 +2329,104 @@ state 106
     NUMBER          shift and go to state 29
     IF              shift and go to state 37
 
-    statementlist                  shift and go to state 108
+    statementlist                  shift and go to state 107
     ifelse                         shift and go to state 32
     statement                      shift and go to state 33
     expression                     shift and go to state 40
     empty                          shift and go to state 35
 
+state 106
+
+    (46) elifgroup -> ELIF LPAREN expression RPAREN . LBRACE statementlist RBRACE elifgroup
+
+    LBRACE          shift and go to state 108
+
+
 state 107
 
-    (56) optelse -> ELSE LBRACE statementlist RBRACE .
-
-    RETURN          reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    LOOP            reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    BREAK           reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    WHILE           reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    IDENTIFIER      reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    LPAREN          reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    MINUS           reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    NUMBER          reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    IF              reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-    RBRACE          reduce using rule 56 (optelse -> ELSE LBRACE statementlist RBRACE .)
-
-
-state 108
-
-    (54) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup
+    (48) optelse -> ELSE LBRACE statementlist . RBRACE
 
     RBRACE          shift and go to state 109
 
 
+state 108
+
+    (46) elifgroup -> ELIF LPAREN expression RPAREN LBRACE . statementlist RBRACE elifgroup
+    (21) statementlist -> . empty
+    (22) statementlist -> . statement statementlist
+    (16) empty -> .
+    (23) statement -> . expression SEMICOLON
+    (24) statement -> . ifelse
+    (25) statement -> . RETURN expression SEMICOLON
+    (26) statement -> . LOOP LBRACE statementlist RBRACE
+    (27) statement -> . BREAK SEMICOLON
+    (28) statement -> . WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE
+    (29) statement -> . IDENTIFIER ASSIGN expression SEMICOLON
+    (30) expression -> . LPAREN expression RPAREN
+    (31) expression -> . IDENTIFIER LPAREN arglist RPAREN
+    (32) expression -> . expression ISEQUAL expression
+    (33) expression -> . expression NOTEQUAL expression
+    (34) expression -> . expression LESSTHAN expression
+    (35) expression -> . expression GREATERTHAN expression
+    (36) expression -> . expression LESSEQUAL expression
+    (37) expression -> . expression GREATEREQUAL expression
+    (38) expression -> . expression PLUS expression
+    (39) expression -> . expression MINUS expression
+    (40) expression -> . expression TIMES expression
+    (41) expression -> . expression DIVIDE expression
+    (42) expression -> . IDENTIFIER
+    (43) expression -> . MINUS expression
+    (44) expression -> . NUMBER
+    (49) ifelse -> . IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse
+
+    RBRACE          reduce using rule 16 (empty -> .)
+    RETURN          shift and go to state 28
+    LOOP            shift and go to state 41
+    BREAK           shift and go to state 39
+    WHILE           shift and go to state 38
+    IDENTIFIER      shift and go to state 34
+    LPAREN          shift and go to state 36
+    MINUS           shift and go to state 31
+    NUMBER          shift and go to state 29
+    IF              shift and go to state 37
+
+    statementlist                  shift and go to state 110
+    ifelse                         shift and go to state 32
+    statement                      shift and go to state 33
+    expression                     shift and go to state 40
+    empty                          shift and go to state 35
+
 state 109
 
-    (54) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup
-    (53) elifgroup -> . empty
-    (54) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
+    (48) optelse -> ELSE LBRACE statementlist RBRACE .
+
+    RETURN          reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    LOOP            reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    BREAK           reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    WHILE           reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    IDENTIFIER      reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    LPAREN          reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    MINUS           reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    NUMBER          reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    IF              reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+    RBRACE          reduce using rule 48 (optelse -> ELSE LBRACE statementlist RBRACE .)
+
+
+state 110
+
+    (46) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist . RBRACE elifgroup
+
+    RBRACE          shift and go to state 111
+
+
+state 111
+
+    (46) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE . elifgroup
+    (45) elifgroup -> . empty
+    (46) elifgroup -> . ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup
     (16) empty -> .
 
-    ELIF            shift and go to state 95
+    ELIF            shift and go to state 97
     ELSE            reduce using rule 16 (empty -> .)
     RETURN          reduce using rule 16 (empty -> .)
     LOOP            reduce using rule 16 (empty -> .)
@@ -2306,22 +2439,22 @@ state 109
     IF              reduce using rule 16 (empty -> .)
     RBRACE          reduce using rule 16 (empty -> .)
 
-    empty                          shift and go to state 96
-    elifgroup                      shift and go to state 110
+    empty                          shift and go to state 98
+    elifgroup                      shift and go to state 112
 
-state 110
+state 112
 
-    (54) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .
+    (46) elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .
 
-    ELSE            reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    RETURN          reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    LOOP            reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    BREAK           reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    WHILE           reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    IDENTIFIER      reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    LPAREN          reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    MINUS           reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    NUMBER          reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    IF              reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
-    RBRACE          reduce using rule 54 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    ELSE            reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    RETURN          reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    LOOP            reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    BREAK           reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    WHILE           reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    IDENTIFIER      reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    LPAREN          reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    MINUS           reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    NUMBER          reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    IF              reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
+    RBRACE          reduce using rule 46 (elifgroup -> ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup .)
 

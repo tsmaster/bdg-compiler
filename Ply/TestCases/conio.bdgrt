@@ -1,0 +1,4 @@
+void print_integer(int num);
+void print_line();
+void print_char(int c);
+

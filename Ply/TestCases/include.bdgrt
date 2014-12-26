@@ -1,0 +1,8 @@
+@include "conio.bdgrt"
+
+int main() {
+  print_char(64+15);
+  print_char(64+11);
+  print_line();
+  return 0;
+}  
