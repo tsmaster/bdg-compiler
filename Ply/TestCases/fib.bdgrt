@@ -1,5 +1,20 @@
 void print_integer(int num);
 void print_line();
+void print_char(int c);
+
+int assert_equal(int a, int b) {
+  if (a == b) {
+    print_char(64+15);
+    print_char(64+11);
+    print_line();
+    return 1;
+  } else {
+    print_char(58);
+    print_char(40);
+    print_line();
+    return -1;
+  }
+}
 
 int fib(int x) {
   if (x < 0) {
@@ -13,8 +28,12 @@ int fib(int x) {
   }
 }
 
+int x;
+
 int main() {
-  print_integer(fib(5));
+  x = fib(5);
+  print_integer(x);
   print_line();
+  assert_equal(x, 8);
   return 0;
 }
