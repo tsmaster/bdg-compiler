@@ -32,7 +32,9 @@ tokens = (
     'COMMA',
     'ISEQUAL',
     'LESSTHAN',
-    'MORETHAN',
+    'GREATERTHAN',
+    'LESSEQUAL',
+    'GREATEREQUAL',
     'IDENTIFIER'
 )
 
@@ -49,7 +51,9 @@ t_DIVIDE = r'\/'
 t_COMMA = ','
 t_ISEQUAL = '=='
 t_LESSTHAN = '<'
-t_MORETHAN = '>'
+t_GREATERTHAN = '>'
+t_LESSEQUAL = '<='
+t_GREATEREQUAL = '>='
 literals = r'+-*/^~!(){}=[]\|;'
 
 def t_COMMENT(t):
@@ -95,6 +99,13 @@ def t_error(t):
     t.lexer.skip(1)
 
 lexer = lex.lex()
+
+precedence = (
+    ('left', 'ISEQUAL', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
+    ('left','PLUS','MINUS'),
+    ('left','TIMES','DIVIDE'),
+    ('right','UMINUS'),
+    )
 
 def p_toplevelgroup_funcdecl(t):
     'toplevelgroup : funcdecl toplevelgroup'
@@ -232,13 +243,30 @@ def p_statement_assign(t):
     '''statement : IDENTIFIER ASSIGN expression SEMICOLON'''
     t[0] = ast.AssignStatement(t.lineno, t[1], t[3])
 
+def p_expression_parens(t):
+    '''expression : LPAREN expression RPAREN'''
+    t[0] = t[2]
+
 def p_expression_functioncall(t):
     '''expression : IDENTIFIER LPAREN arglist RPAREN'''
     t[0] = ast.FunctionCall(t[1], t[3])
 
+#def p_expression_binaryop(t):
+#    '''expression : expression compare expression
+#                  | expression arithop expression'''
+#    node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
+#    t[0] = node
+
 def p_expression_binaryop(t):
-    '''expression : expression compare expression
-                  | expression arithop expression'''
+    '''expression : expression ISEQUAL expression
+                  | expression LESSTHAN expression
+                  | expression GREATERTHAN expression
+                  | expression LESSEQUAL expression
+                  | expression GREATEREQUAL expression
+                  | expression PLUS expression
+                  | expression MINUS expression
+                  | expression TIMES expression
+                  | expression DIVIDE expression'''
     node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
     t[0] = node
 
@@ -248,7 +276,7 @@ def p_expression_variable(t):
     t[0] = ast.RValueVar(t[1], t.lineno)
 
 def p_expression_negop(t):
-    '''expression : MINUS expression'''
+    '''expression : MINUS expression %prec UMINUS'''
     t[0] = ast.NegativeExprNode(t.lineno, t[2])
 
 def p_expression_number(t):
@@ -258,7 +286,9 @@ def p_expression_number(t):
 def p_compare(t):
     '''compare : ISEQUAL
                | LESSTHAN
-               | MORETHAN'''
+               | GREATERTHAN
+               | LESSEQUAL
+               | GREATEREQUAL'''
     t[0] = t[1]
 
 def p_arithop(t):

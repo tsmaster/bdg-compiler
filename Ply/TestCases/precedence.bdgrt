@@ -1,0 +1,47 @@
+void print_integer(int num);
+void print_line();
+void print_char(int c);
+
+int x;
+
+int assert_equal(int a, int b) {
+  if (a == b) {
+    print_char(64+15);
+    print_char(64+11);
+    print_line();
+    return 1;
+  } else {
+    print_char(58);
+    print_char(40);
+    print_line();
+    return -1;
+  }
+}
+
+int main() {
+  x = 3*2+1;
+  print_integer(x);
+  print_line();
+  assert_equal(x,7);
+  x = 1+2*3;
+  print_integer(x);
+  print_line();
+  assert_equal(x,7);
+  x = 3+2*5-4;
+  print_integer(x);
+  print_line();
+  assert_equal(x,9);
+  x = 3+4*5/2 - 1;
+  print_integer(x);
+  print_line();
+  assert_equal(x,12);
+  x = 1+2*3;
+  print_integer(x);
+  print_line();
+  assert_equal(x, 7);
+  x = 2 * -3;
+  print_integer(x);
+  print_line();
+  assert_equal(x, -6);
+  return 0;
+}

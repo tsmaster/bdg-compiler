@@ -31,6 +31,12 @@ vars.o: TestCases/vars.bdgrt
 comments.o: TestCases/comments.bdgrt
 	python compiler.py TestCases/comments.bdgrt comments.o
 
+parens.o: TestCases/parens.bdgrt
+	python compiler.py TestCases/parens.bdgrt parens.o
+
+precedence.o: TestCases/precedence.bdgrt
+	python compiler.py TestCases/precedence.bdgrt precedence.o
+
 fact.exe: fact.o support.o
 	gcc -o fact.exe support.o fact.o
 
@@ -54,6 +60,12 @@ vars.exe: vars.o support.o
 
 comments.exe: comments.o support.o
 	gcc -o comments.exe support.o comments.o
+
+parens.exe: parens.o support.o
+	gcc -o parens.exe support.o parens.o
+
+precedence.exe: precedence.o support.o
+	gcc -o precedence.exe support.o precedence.o
 
 clean:
 	rm -rf *.o *.exe

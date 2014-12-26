@@ -17,6 +17,7 @@ void print_integer(int num);
 void print_line();
 void print_char(int ascii);
 
+int dot_y;
 
 int ball_x;
 int ball_y;
@@ -28,42 +29,93 @@ int ball_angle;
 int vx;
 int vy;
 
+int svx;
+
 int paddle_y_left;
 int paddle_y_right;
 
+int PADDLE_SIZE;
+int PADDLE_LEFT_X;
+int PADDLE_RIGHT_X;
+
 int pvel;
+
+int score_l;
+int score_r;
 
 int PI;
 int TWOPI;
 int PI_OVER_TWO;
 int PI_OVER_SIX;
 
+# 0 - BDG
+# 1 - Title
+# 2 - Game
+# 3 - Game Over
+int phase;
+
+int PHASE_BDG; # 0
+int PHASE_TITLE; # 1
+int PHASE_GAMEPLAY; # 2
+int PHASE_GAME_OVER; # 3
+
+int abs(int v) {
+  if (v < 0) {
+    return -v;
+  } else {
+    return v;
+  }
+}
+
 int set_velocity_from_angle() {
     vx = m_cos(ball_angle, ball_speed);
     vy = m_sin(ball_angle, ball_speed);
-
-    # print_integer(ball_angle);
-    # print_char(32);
-    # print_integer(vx);
-    # print_char(32);
-    # print_integer(vy);
-    # print_line();
     return 0;
 }
 
+int perturb(int milliradians) {
+  ball_angle = ball_angle + rand_int(milliradians);
+  ball_angle = ball_angle - rand_int(milliradians);
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  return 0;
+}
+
+int sgn(int x) {
+  if (x < 0) {
+    return -1;
+  } elif (x > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 int reflect_ball_y() {
+  svx = vx;
   ball_angle = TWOPI - ball_angle;
+  perturb(100);
   if (ball_angle < 0) {
     ball_angle = ball_angle + TWOPI;
   } elif (ball_angle > TWOPI) {
     ball_angle = ball_angle - TWOPI;
   }
   set_velocity_from_angle();
+  if (abs(vx) < 3) {
+    vx = 3 * sgn(svx);
+  }
+  if (vx == 0) {
+    vx = 3;
+  }
   return 0;
 }
 
 int reflect_ball_x() {
   ball_angle = PI - ball_angle;
+  perturb(600);
   if (ball_angle < 0) {
     ball_angle = ball_angle + TWOPI;
   } elif (ball_angle > TWOPI) {
@@ -72,8 +124,101 @@ int reflect_ball_x() {
   set_velocity_from_angle();
 }
 
+int launch_ball() {
+  ball_x = 320;
+  ball_y = 240;
+  ball_angle = PI_OVER_TWO * rand_int(4);
+  ball_angle = ball_angle + rand_int(PI_OVER_SIX);
+  ball_angle = ball_angle + PI_OVER_SIX;
+  set_velocity_from_angle();
+
+  return 0;
+}
+
+int show_score() {
+  print_char(64+20);
+  print_integer(score_l);
+  print_char(32);
+  print_integer(score_r);
+  print_line();
+  return 0;
+}
+
+int draw_num(int n, int x, int y, int scale, int r, int g, int b) {
+  if (n==0) {
+    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
+    sdl_draw_rect(x + scale * 4, y + scale, scale, scale * 5, r, g, b);
+    sdl_draw_rect(x + scale, y + 6 * scale, 3 * scale, scale, r, g, b);
+    sdl_draw_rect(x, y + scale, scale, 5 * scale, r, g, b);
+    sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + 2 * scale, y + 3 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + 3 * scale, y + 2 * scale, scale, scale, r, g, b);
+  } elif (n==1) {
+    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + scale, y, scale, scale * 7, r, g, b);
+    sdl_draw_rect(x, y + 6 * scale, 3 * scale, scale, r, g, b);
+  } elif (n==2) {
+    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
+    sdl_draw_rect(x + 4 * scale, y + scale, scale, 2 * scale, r, g, b);
+    sdl_draw_rect(x + 2 * scale, y + 3 * scale, 2 * scale, scale, r, g, b);
+    sdl_draw_rect(x + scale, y + 4 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x, y + 5 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x, y + 6 * scale, 5 * scale, scale, r, g, b);
+  } elif (n==3) {
+    sdl_draw_rect(x, y + scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + scale, y, 3 * scale, scale, r, g, b);
+    sdl_draw_rect(x + 4 * scale, y + scale, scale, 2 * scale, r, g, b);
+    sdl_draw_rect(x + 2 * scale, y + 3 * scale, 2 * scale, scale, r, g, b);
+    sdl_draw_rect(x + 4 * scale, y + 4 * scale, scale, 2 * scale, r, g, b);
+    sdl_draw_rect(x + scale, y + 6 * scale, 3 * scale, scale, r, g, b);
+    sdl_draw_rect(x, y + 5 * scale, scale, scale, r, g, b);
+  } elif (n==4) {
+    sdl_draw_rect(x + 3 * scale, y, scale, 7 * scale, r, g, b);
+    sdl_draw_rect(x, y + 4 * scale, 5 * scale, scale, r, g, b);
+    sdl_draw_rect(x, y + 3 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + scale, y + 2 * scale, scale, scale, r, g, b);
+    sdl_draw_rect(x + 2 * scale, y + scale, scale, scale, r, g, b);
+  }
+
+  return 0;
+}
+
+int draw_score() {
+  draw_num(score_l, 120, 20, 5, 200, 128, 128);
+  draw_num(score_r, 640 - (120 + 5), 20, 5, 128, 128, 200);
+  return 0;
+}
+
+int score_left() {
+  score_l = score_l + 1;
+  #show_score();
+  launch_ball();	
+  return 0;
+}
+
+int score_right() {
+  score_r = score_r + 1;
+  #show_score();
+  launch_ball();
+  return 0;
+}
+
 int draw_background() {
   clear_window(64, 128, 64);
+
+  dot_y = 0;
+  loop {
+    sdl_draw_rect(320 - 5,
+                  dot_y - 5,
+		  10,
+		  10,
+		  128, 200, 128);
+    dot_y = dot_y + 24;
+    if (dot_y > 480) {
+      break;
+    }
+  }
   return 0;
 }
 
@@ -95,11 +240,50 @@ int draw_paddle_right() {
   return 0;
 }
 
+int update_paddles() {
+  if (vx < 0) {
+    if (paddle_y_left < ball_y) {
+      paddle_y_left = paddle_y_left + pvel;
+    } else {
+      paddle_y_left = paddle_y_left - pvel;
+    }
+  } else {
+    if (paddle_y_right < ball_y) {
+      paddle_y_right = paddle_y_right + pvel;
+    } else {
+      paddle_y_right = paddle_y_right - pvel;
+    }
+  }
+  return 0;
+}
+
+int hit_left_paddle() {
+  if (abs(ball_x - PADDLE_LEFT_X) < ball_size) {
+    if (abs(ball_y - paddle_y_left) < PADDLE_SIZE / 2) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int hit_right_paddle() {
+  if (abs(ball_x - PADDLE_RIGHT_X) < ball_size) {
+    if (abs(ball_y - paddle_y_right) < PADDLE_SIZE / 2) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
 int main() {
   PI = 3142;
   TWOPI = 6283;
   PI_OVER_SIX = 524;
   PI_OVER_TWO = 1571;
+
+  PADDLE_SIZE = 128;
+  PADDLE_LEFT_X = 48;
+  PADDLE_RIGHT_X = 640-48;
 
   srand_from_time();
   open_window(640, 480);
@@ -107,22 +291,17 @@ int main() {
                rand_int(256),
 	       rand_int(256));
 
-  ball_x = 320;
-  ball_y = 240;
   ball_size = 32;
 
   paddle_y_left = 240;
   paddle_y_right = 240;
-
-  ball_angle = PI_OVER_TWO * rand_int(4);
-  ball_angle = ball_angle + rand_int(PI_OVER_SIX);
-  ball_angle = ball_angle + PI_OVER_SIX;
   
-  ball_speed = 8;
+  ball_speed = 10;
+  launch_ball();
 
-  set_velocity_from_angle();
-
-  pvel = 5;
+  pvel = 3;
+  score_l = 0;
+  score_r = 0;
 
   loop {
     sdl_tick_input();
@@ -130,6 +309,7 @@ int main() {
       break;
     }
     draw_background();
+    draw_score();
     draw_paddle_left();
     draw_paddle_right();
     draw_ball();
@@ -137,28 +317,28 @@ int main() {
     ball_x = ball_x + vx;
 
     if (ball_x > 640 - 64) {
-       ball_x = 640 - 64;
-       reflect_ball_x();
+      # maybe hit right paddle
+      if (hit_right_paddle() == 1) {
+        ball_x = 640 - 64;
+	if (vx > 0) {
+	  reflect_ball_x();
+        }
+      } elif (ball_x > 640) {
+        score_left();
+      } 
     } elif (ball_x < 64) {
-       ball_x = 64;
-       reflect_ball_x();
-    }
+      # maybe hit left paddle
+      if (hit_left_paddle() == 1) {
+        ball_x = 64;
+	if (vx < 0) {
+          reflect_ball_x();
+	}
+      } elif (ball_x < 0) {
+        score_right();
+      }
+    } 
 
     ball_y = ball_y + vy;
-    if (vx < 0) {
-      if (paddle_y_left < ball_y) {
-        paddle_y_left = paddle_y_left + pvel;
-      } else {
-        paddle_y_left = paddle_y_left - pvel;
-      }
-    } else {
-      if (paddle_y_right < ball_y) {
-        paddle_y_right = paddle_y_right + pvel;
-      } else {
-        paddle_y_right = paddle_y_right - pvel;
-      }
-    }
-
     if (ball_y > 480) {
        ball_y = 480;
        reflect_ball_y();
@@ -166,6 +346,7 @@ int main() {
        ball_y = 0;
        reflect_ball_y();
     }
+    update_paddles();
 
     delay(20);
     flip();    

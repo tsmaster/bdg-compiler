@@ -392,7 +392,11 @@ class BinaryExprNode(ASTNode):
         elif self.opstr == '<':
             return gLlvmBuilder.icmp(llvm.core.ICMP_SLT, code0, code1, "cmplttmp")
         elif self.opstr == '>':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_SGT, code0, code1, "cmplttmp")
+            return gLlvmBuilder.icmp(llvm.core.ICMP_SGT, code0, code1, "cmpgttmp")
+        elif self.opstr == '<=':
+            return gLlvmBuilder.icmp(llvm.core.ICMP_SLE, code0, code1, "cmpletmp")
+        elif self.opstr == '>=':
+            return gLlvmBuilder.icmp(llvm.core.ICMP_SGE, code0, code1, "cmpgetmp")
         else:
             print "invalid operator:", self.opstr
             print "maybe?", dir(gLlvmBuilder)
