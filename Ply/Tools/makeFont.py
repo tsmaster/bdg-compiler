@@ -12,12 +12,41 @@ padding=1
 lines = ["0123456789",
          "ABCDEFGHIJ",
          "KLMNOPQRST",
-         "UVWXYZ+-=_"]
+         "UVWXYZ+-=_",
+         r"!@#$%^&*()",
+         "][|/\\:;\"'",
+         r"<>.,?~"]
 
 rename = {'+': 'PLUS',
           '-': 'MINUS',
           '=': 'EQUALS',
-          '_': 'UNDER'}
+          '_': 'UNDER',
+          '!': 'BANG',
+          '@': 'AT',
+          '#': 'OCTOTHORPE',
+          '$': 'DOLLAR',
+          '%': 'PERCENT',
+          '^': 'CARET',
+          '&': 'AMPERSAND',
+          '*': 'STAR',
+          '(': 'LPAREN',
+          ')': 'RPAREN',
+          '[': 'LBRACKET',
+          ']': 'RBRACKET',
+          '|': 'PIPE',
+          '/': 'SLASH',
+          '\\': 'BACKSLASH',
+          ':': 'COLON',
+          ';': 'SEMICOLON',
+          '"': 'QUOTE',
+          "'": 'SINGLEQUOTE',
+          '<': 'LESS',
+          '>': 'GREATER',
+          '.': 'PERIOD',
+          ',': 'COMMA',
+          '?': 'QUESTIONMARK',
+          '~': 'TILDE'
+}
         
 
 def get_bits(cx, cy):
