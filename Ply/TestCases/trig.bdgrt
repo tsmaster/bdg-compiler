@@ -2,3 +2,22 @@ int m_sin(int milliradians, int scale);
 int m_cos(int milliradians, int scale);
 
 int m_atan2(int y, int x);
+
+# TODO: move these to a math library
+int sgn(int x) {
+  if (x < 0) {
+    return -1;
+  } elif (x > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int abs(int v) {
+  if (v < 0) {
+    return -v;
+  } else {
+    return v;
+  }
+}

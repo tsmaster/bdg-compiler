@@ -9,6 +9,9 @@ SDL_Window* gpSDLWindow = NULL;
 SDL_Surface* gpSDLSurface = NULL;
 SDL_Renderer* gpSDLRenderer = NULL;
 int gQuitSignalled = 0;
+const char *gKeysDown;
+int numKeys;
+
 
 int open_window(int width, int height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -32,17 +35,12 @@ int open_window(int width, int height) {
     printf("Cannot create renderer: %s\n", SDL_GetError());
     return -3;
   }
+
+  gKeysDown = SDL_GetKeyboardState(&numKeys);
   return 0;
 }
 
 void clear_window(int red, int green, int blue) {
-  /*
-  SDL_FillRect(gpSDLSurface, 
-	       NULL, 
-	       SDL_MapRGB(gpSDLSurface->format,
-			  red & 0xff, green& 0xff, blue & 0xff));
-  */
-  
    //Clear screen
   SDL_SetRenderDrawColor( gpSDLRenderer, 
 			  red & 0xFF, green & 0xFF, blue & 0xFF, 0xFF );
@@ -57,8 +55,15 @@ void flip() {
 void sdl_tick_input() {
   SDL_Event e;
   while (SDL_PollEvent(&e) != 0) {
-    if (e.type == SDL_QUIT) {
+    switch (e.type) {
+    case SDL_QUIT:
       gQuitSignalled = 1;
+      break;
+    case SDL_KEYDOWN:
+      //printf("key down: %d\n",e.key.keysym.scancode);
+      break;
+    case SDL_KEYUP:
+      break;
     }
   }
 }
@@ -85,10 +90,12 @@ void delay(int ms) {
   SDL_Delay(ms);
 }
 
+int sdl_keydown(int key) {
+  return gKeysDown[key]> 0 ? 1 : 0;
+}
 
 
 //
-
 int m_sin(int milliradians, int scale) {
   return (int)(sin(milliradians / 1000.0f) * scale + 0.5f);
 }

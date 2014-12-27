@@ -30,6 +30,8 @@ tokens = (
     'STRING',
     'VOID',
     'COMMA',
+    'LOGICAND',
+    'LOGICOR',
     'ISEQUAL',
     'NOTEQUAL',
     'LESSTHAN',
@@ -50,6 +52,8 @@ t_MINUS = r'\-'
 t_TIMES = r'\*'
 t_DIVIDE = r'\/'
 t_COMMA = ','
+t_LOGICAND = r'\&\&'
+t_LOGICOR = r'\|\|'
 t_ISEQUAL = '=='
 t_NOTEQUAL = '!='
 t_LESSTHAN = '<'
@@ -260,6 +264,8 @@ def p_expression_binaryop(t):
                   | expression GREATERTHAN expression
                   | expression LESSEQUAL expression
                   | expression GREATEREQUAL expression
+                  | expression LOGICAND expression
+                  | expression LOGICOR expression
                   | expression PLUS expression
                   | expression MINUS expression
                   | expression TIMES expression
@@ -372,8 +378,8 @@ def compile(filename, basename, outname):
                 topLevelObjs.append(obj)
             print
     
-    for tlo in topLevelObjs:
-        print "tlo:",tlo.name
+    #for tlo in topLevelObjs:
+    #    print "tlo:",tlo.name
 
     makeObj(outname, None)
     """

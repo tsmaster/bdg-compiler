@@ -387,6 +387,10 @@ class BinaryExprNode(ASTNode):
             return gLlvmBuilder.mul(code0, code1, "multmp")
         elif self.opstr == '/':
             return gLlvmBuilder.sdiv(code0, code1, "divtmp")
+        elif self.opstr == '&&':
+            return gLlvmBuilder.and_(code0, code1, "andtmp")
+        elif self.opstr == '||':
+            return gLlvmBuilder.or_(code0, code1, "ortmp")
         elif self.opstr == '==':
             return gLlvmBuilder.icmp(llvm.core.ICMP_EQ, code0, code1, "cmptmp")
         elif self.opstr == '<':
