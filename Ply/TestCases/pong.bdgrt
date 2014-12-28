@@ -292,11 +292,120 @@ int calc_deflection_right() {
   set_velocity_from_angle();
 }
 
+int draw_bdg() {
+  draw_background();
+  return 0;
+}
+
+int draw_title() {
+  draw_background();
+  return 0;
+}
+
+int draw_gameplay() {
+  draw_background();
+  draw_score();
+  draw_paddle_left();
+  draw_paddle_right();
+  draw_ball();
+  return 0;
+}
+
+int draw_gameover() {
+  draw_background();
+  return 0;
+}
+
+int draw() {
+  if (phase == PHASE_BDG) {
+    draw_bdg();
+  } elif (phase == PHASE_TITLE) {
+    draw_title();
+  } elif (phase == PHASE_GAMEPLAY) {
+    draw_gameplay();
+  } elif (phase == PHASE_GAME_OVER) {
+    draw_gameover();
+  }
+  return 0;
+}
+
+int update_bdg() {
+  return 0;
+}
+
+int update_title() {
+  return 0;
+}
+
+int update_gameplay() {
+  ball_x = ball_x + vx;
+
+  if (ball_x > 640 - 64) {
+    # maybe hit right paddle
+    if (hit_right_paddle() == 1) {
+      ball_x = 640 - 64;
+      if (vx > 0) {
+        reflect_ball_x();
+        calc_deflection_right();
+      }
+    } elif (ball_x > 640) {
+      score_left();
+    }
+  } elif (ball_x < 64) {
+    # maybe hit left paddle
+    if (hit_left_paddle() == 1) {
+      ball_x = 64;
+      if (vx < 0) {
+        reflect_ball_x();
+        calc_deflection_left();
+      }
+    } elif (ball_x < 0) {
+      score_right();
+    }
+  }
+
+  ball_y = ball_y + vy;
+  if (ball_y > 480) {
+     ball_y = 480;
+     reflect_ball_y();
+  } elif (ball_y < 0) {
+     ball_y = 0;
+     reflect_ball_y();
+  }
+
+  update_paddles();
+
+  return 0;
+}
+
+int update_gameover() {
+  return 0;
+}
+
+int update() {
+  if (phase == PHASE_BDG) {
+    update_bdg();
+  } elif (phase == PHASE_TITLE) {
+    update_title();
+  } elif (phase == PHASE_GAMEPLAY) {
+    update_gameplay();
+  } elif (phase == PHASE_GAME_OVER) {
+    update_gameover();
+  }
+  return 0;
+}
+
 int main() {
   PI = 3142;
   TWOPI = 6283;
   PI_OVER_SIX = 524;
   PI_OVER_TWO = 1571;
+
+  PHASE_BDG = 0;
+  PHASE_TITLE = 1;
+  PHASE_GAMEPLAY = 2;
+  PHASE_GAME_OVER = 3;
+  phase = PHASE_GAMEPLAY;
 
   MAX_DEFLECTION = 1000;
   MAX_ANGLE = 1200;
@@ -331,47 +440,9 @@ int main() {
     if (sdl_quit_signalled() == 1) {
       break;
     }
-    draw_background();
-    draw_score();
-    draw_paddle_left();
-    draw_paddle_right();
-    draw_ball();
 
-    ball_x = ball_x + vx;
-
-    if (ball_x > 640 - 64) {
-      # maybe hit right paddle
-      if (hit_right_paddle() == 1) {
-        ball_x = 640 - 64;
-	if (vx > 0) {
-	  reflect_ball_x();
-          calc_deflection_right();
-        }
-      } elif (ball_x > 640) {
-        score_left();
-      }
-    } elif (ball_x < 64) {
-      # maybe hit left paddle
-      if (hit_left_paddle() == 1) {
-        ball_x = 64;
-	if (vx < 0) {
-          reflect_ball_x();
-          calc_deflection_left();
-	}
-      } elif (ball_x < 0) {
-        score_right();
-      }
-    }
-
-    ball_y = ball_y + vy;
-    if (ball_y > 480) {
-       ball_y = 480;
-       reflect_ball_y();
-    } elif (ball_y < 0) {
-       ball_y = 0;
-       reflect_ball_y();
-    }
-    update_paddles();
+    draw();
+    update();
 
     delay(20);
     flip();
