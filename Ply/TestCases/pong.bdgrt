@@ -32,10 +32,18 @@ int PADDLE_SIZE;
 int PADDLE_LEFT_X;
 int PADDLE_RIGHT_X;
 
+int phase_counter;
+
 int pvel;
 
 int score_l;
 int score_r;
+
+int max_score;
+
+int key_pressed_a;
+int key_pressed_k;
+int key_pressed_p;
 
 int MAX_DEFLECTION;
 int MAX_ANGLE;
@@ -135,7 +143,6 @@ int score_left() {
 
 int score_right() {
   score_r = score_r + 1;
-  #show_score();
   launch_ball();
   return 0;
 }
@@ -155,11 +162,6 @@ int draw_background() {
       break;
     }
   }
-
-  draw_char(64 + 16, 320 - 84 + 0  , 20, 7, 255, 255, 0);
-  draw_char(64 + 15, 320 - 84 + 42 , 20, 7, 255, 255, 0);
-  draw_char(64 + 14, 320 - 84 + 84 , 20, 7, 255, 255, 0);
-  draw_char(64 + 7,  320 - 84 + 126, 20, 7, 255, 255, 0);
 
   return 0;
 }
@@ -293,12 +295,100 @@ int calc_deflection_right() {
 }
 
 int draw_bdg() {
-  draw_background();
+  clear_window(64, 128, 64);
+
+  draw_char(66, 80, 48, 16, 255, 255, 255);
+  draw_char(73, 176, 48, 16, 255, 255, 255);
+  draw_char(71, 272, 48, 16, 255, 255, 255);
+  draw_char(68, 80, 176, 16, 255, 255, 255);
+  draw_char(73, 176, 176, 16, 255, 255, 255);
+  draw_char(67, 272, 176, 16, 255, 255, 255);
+  draw_char(69, 368, 176, 16, 255, 255, 255);
+  draw_char(71, 80, 304, 16, 255, 255, 255);
+  draw_char(65, 176, 304, 16, 255, 255, 255);
+  draw_char(77, 272, 304, 16, 255, 255, 255);
+  draw_char(69, 368, 304, 16, 255, 255, 255);
+  draw_char(83, 464, 304, 16, 255, 255, 255);
+
   return 0;
 }
 
 int draw_title() {
-  draw_background();
+  clear_window(64, 128, 64);
+
+  # PONG
+  draw_char(80, 80, 20, 20, 0, 0, 0);
+  draw_char(79, 200, 20, 20, 0, 0, 0);
+  draw_char(78, 320, 20, 20, 0, 0, 0);
+  draw_char(71, 440, 20, 20, 0, 0, 0);
+
+  # OPTIONS
+  if (paddle_left_is_human == 1) {
+    draw_char(60, 140, 280, 5, 0, 0, 0);
+    draw_char(65, 170, 280, 5, 0, 0, 0);
+    draw_char(62, 200, 280, 5, 0, 0, 0);
+    draw_char(80, 260, 280, 5, 0, 0, 0);
+    draw_char(49, 290, 280, 5, 0, 0, 0);
+    draw_char(72, 350, 280, 5, 0, 0, 0);
+    draw_char(85, 380, 280, 5, 0, 0, 0);
+    draw_char(77, 410, 280, 5, 0, 0, 0);
+    draw_char(65, 440, 280, 5, 0, 0, 0);
+    draw_char(78, 470, 280, 5, 0, 0, 0);
+  } else {
+    draw_char(60, 185, 280, 5, 0, 0, 0);
+    draw_char(65, 215, 280, 5, 0, 0, 0);
+    draw_char(62, 245, 280, 5, 0, 0, 0);
+    draw_char(80, 305, 280, 5, 0, 0, 0);
+    draw_char(49, 335, 280, 5, 0, 0, 0);
+    draw_char(65, 395, 280, 5, 0, 0, 0);
+    draw_char(73, 425, 280, 5, 0, 0, 0);
+  }
+
+  if (paddle_right_is_human == 1) {
+    draw_char(60, 140, 320, 5, 0, 0, 0);
+    draw_char(75, 170, 320, 5, 0, 0, 0);
+    draw_char(62, 200, 320, 5, 0, 0, 0);
+    draw_char(80, 260, 320, 5, 0, 0, 0);
+    draw_char(50, 290, 320, 5, 0, 0, 0);
+    draw_char(72, 350, 320, 5, 0, 0, 0);
+    draw_char(85, 380, 320, 5, 0, 0, 0);
+    draw_char(77, 410, 320, 5, 0, 0, 0);
+    draw_char(65, 440, 320, 5, 0, 0, 0);
+    draw_char(78, 470, 320, 5, 0, 0, 0);
+  } else {
+    draw_char(60, 185, 320, 5, 0, 0, 0);
+    draw_char(75, 215, 320, 5, 0, 0, 0);
+    draw_char(62, 245, 320, 5, 0, 0, 0);
+    draw_char(80, 305, 320, 5, 0, 0, 0);
+    draw_char(50, 335, 320, 5, 0, 0, 0);
+    draw_char(65, 395, 320, 5, 0, 0, 0);
+    draw_char(73, 425, 320, 5, 0, 0, 0);
+  }
+
+  draw_char(60, 140, 360, 5, 0, 0, 0);
+  draw_char(80, 170, 360, 5, 0, 0, 0);
+  draw_char(62, 200, 360, 5, 0, 0, 0);
+  draw_char(80, 260, 360, 5, 0, 0, 0);
+  draw_char(79, 290, 360, 5, 0, 0, 0);
+  draw_char(73, 320, 360, 5, 0, 0, 0);
+  draw_char(78, 350, 360, 5, 0, 0, 0);
+  draw_char(84, 380, 360, 5, 0, 0, 0);
+  draw_char(83, 410, 360, 5, 0, 0, 0);
+  draw_char(48 + max_score, 470, 360, 5, 0, 0, 0);
+
+  draw_char(60, 110, 400, 5, 0, 0, 0);
+  draw_char(83, 140, 400, 5, 0, 0, 0);
+  draw_char(80, 170, 400, 5, 0, 0, 0);
+  draw_char(67, 200, 400, 5, 0, 0, 0);
+  draw_char(62, 230, 400, 5, 0, 0, 0);
+  draw_char(84, 290, 400, 5, 0, 0, 0);
+  draw_char(79, 320, 400, 5, 0, 0, 0);
+  draw_char(83, 380, 400, 5, 0, 0, 0);
+  draw_char(84, 410, 400, 5, 0, 0, 0);
+  draw_char(65, 440, 400, 5, 0, 0, 0);
+  draw_char(82, 470, 400, 5, 0, 0, 0);
+  draw_char(84, 500, 400, 5, 0, 0, 0);
+
   return 0;
 }
 
@@ -312,7 +402,17 @@ int draw_gameplay() {
 }
 
 int draw_gameover() {
-  draw_background();
+  clear_window(64, 128, 64);
+
+  draw_char(71, 128, 112, 16, 128, 128, 128);
+  draw_char(65, 224, 112, 16, 128, 128, 128);
+  draw_char(77, 320, 112, 16, 128, 128, 128);
+  draw_char(69, 416, 112, 16, 128, 128, 128);
+  draw_char(79, 128, 240, 16, 128, 128, 128);
+  draw_char(86, 224, 240, 16, 128, 128, 128);
+  draw_char(69, 320, 240, 16, 128, 128, 128);
+  draw_char(82, 416, 240, 16, 128, 128, 128);
+
   return 0;
 }
 
@@ -329,11 +429,80 @@ int draw() {
   return 0;
 }
 
+int set_phase(int new_phase) {
+  # any sort of cleanup?
+
+  # initialize phase
+  phase_counter = 0;
+  phase = new_phase;
+  if (phase == PHASE_GAMEPLAY) {
+    score_l = 0;
+    score_r = 0;
+  } elif (phase == PHASE_TITLE) {
+    key_pressed_a = 1;
+    key_pressed_k = 1;
+    key_pressed_p = 1;
+  }
+  return 0;
+}
+
 int update_bdg() {
+  phase_counter = phase_counter + 1;
+
+  if (phase_counter > 200) {
+    set_phase(PHASE_TITLE);
+  }
   return 0;
 }
 
 int update_title() {
+  phase_counter = phase_counter + 1;
+
+  if (key_pressed_a == 1) {
+    if (sdl_keydown(4) == 0) {
+      key_pressed_a = 0;
+    }
+  } else {
+    if (sdl_keydown(4) == 1) {
+      # A
+      paddle_left_is_human = 1 - paddle_left_is_human;
+      key_pressed_a = 1;
+    }
+  }
+
+  if (key_pressed_k == 1) {
+    if (sdl_keydown(14) == 0) {
+      key_pressed_k = 0;
+    }
+  } else {
+    if (sdl_keydown(14) == 1) {
+      # K
+      paddle_right_is_human = 1 - paddle_right_is_human;
+      key_pressed_k = 1;
+    }
+  }
+
+  if (key_pressed_p == 1) {
+    if (sdl_keydown(19) == 0) {
+      key_pressed_p = 0;
+    }
+  } else {
+    if (sdl_keydown(19) == 1) {
+      print_line();
+      # P
+      max_score = max_score + 2;
+      if (max_score > 9) {
+        max_score = 5;
+      }
+      key_pressed_p = 1;
+    }
+  }
+
+  if (sdl_keydown(44) == 1) {
+    # Space, start this thing
+    set_phase(PHASE_GAMEPLAY);
+  }
+
   return 0;
 }
 
@@ -375,10 +544,20 @@ int update_gameplay() {
 
   update_paddles();
 
+  if ((score_l >= max_score) || (score_r >= max_score)) {
+    set_phase(PHASE_GAME_OVER);
+  }
+
   return 0;
 }
 
 int update_gameover() {
+  phase_counter = phase_counter + 1;
+
+  if (phase_counter > 200) {
+    set_phase(PHASE_TITLE);
+  }
+
   return 0;
 }
 
@@ -405,7 +584,9 @@ int main() {
   PHASE_TITLE = 1;
   PHASE_GAMEPLAY = 2;
   PHASE_GAME_OVER = 3;
-  phase = PHASE_GAMEPLAY;
+  phase = PHASE_BDG;
+
+  max_score = 5;
 
   MAX_DEFLECTION = 1000;
   MAX_ANGLE = 1200;
