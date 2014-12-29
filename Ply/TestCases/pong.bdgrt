@@ -8,42 +8,12 @@ int rand_int(int max);
 
 
 
-int dot_y;
-
-int ball_x;
-int ball_y;
-int ball_size;
-
-int ball_speed;
-int ball_angle;
-
-int vx;
-int vy;
-
-int svx;
-
-int paddle_left_is_human;
-int paddle_right_is_human;
-
-int paddle_y_left;
-int paddle_y_right;
-
+# Gameplay constants
+int BALL_SIZE;
 int PADDLE_SIZE;
 int PADDLE_LEFT_X;
 int PADDLE_RIGHT_X;
-
-int phase_counter;
-
-int pvel;
-
-int score_l;
-int score_r;
-
-int max_score;
-
-int key_pressed_a;
-int key_pressed_k;
-int key_pressed_p;
+int PADDLE_SPEED;
 
 int MAX_DEFLECTION;
 int MAX_ANGLE;
@@ -53,20 +23,56 @@ int TWOPI;
 int PI_OVER_TWO;
 int PI_OVER_SIX;
 
+int PHASE_BDG; # 0
+int PHASE_TITLE; # 1
+int PHASE_GAMEPLAY; # 2
+int PHASE_GAME_OVER; # 3
+
+
+# Frame variables
+int dot_y;
+
+# Game variables (persist from frame-to-frame, not interesting outside gameplay)
+int ball_x;
+int ball_y;
+
+int ball_speed;
+int ball_angle;
+
+int vx;
+int vy;
+
+int svx;
+
+int paddle_y_left;
+int paddle_y_right;
+
+int key_pressed_a;
+int key_pressed_k;
+int key_pressed_p;
+
+
+# Game options (variables that extend from outside gameplay)
+int paddle_left_is_human;
+int paddle_right_is_human;
+
 # 0 - BDG
 # 1 - Title
 # 2 - Game
 # 3 - Game Over
 int phase;
 
-int PHASE_BDG; # 0
-int PHASE_TITLE; # 1
-int PHASE_GAMEPLAY; # 2
-int PHASE_GAME_OVER; # 3
+int phase_counter;
+
+int score_l;
+int score_r;
+
+int max_score;
+
 
 int set_velocity_from_angle() {
     vx = m_cos(ball_angle, ball_speed);
-    vy = m_sin(ball_angle, ball_speed);
+     vy = m_sin(ball_angle, ball_speed);
     return 0;
 }
 
@@ -167,9 +173,9 @@ int draw_background() {
 }
 
 int draw_ball() {
-   sdl_draw_rect(ball_x - ball_size / 2,
-                 ball_y - ball_size / 2,
-		 ball_size, ball_size,
+   sdl_draw_rect(ball_x - BALL_SIZE / 2,
+                 ball_y - BALL_SIZE / 2,
+		 BALL_SIZE, BALL_SIZE,
 		 200, 200, 200);
    return 0;
 }
@@ -188,17 +194,17 @@ int update_paddles() {
   if (vx < 0) {
     if (paddle_left_is_human == 0) {
       if (paddle_y_left < ball_y - PADDLE_SIZE / 2) {
-        paddle_y_left = paddle_y_left + pvel;
+        paddle_y_left = paddle_y_left + PADDLE_SPEED;
       } elif (paddle_y_left > ball_y + PADDLE_SIZE / 2) {
-        paddle_y_left = paddle_y_left - pvel;
+        paddle_y_left = paddle_y_left - PADDLE_SPEED;
       }
     }
   } else {
     if (paddle_right_is_human == 0) {
       if (paddle_y_right < ball_y - PADDLE_SIZE / 2) {
-        paddle_y_right = paddle_y_right + pvel;
+        paddle_y_right = paddle_y_right + PADDLE_SPEED;
       } elif (paddle_y_right > ball_y + PADDLE_SIZE / 2) {
-        paddle_y_right = paddle_y_right - pvel;
+        paddle_y_right = paddle_y_right - PADDLE_SPEED;
       }
     }
   }
@@ -207,20 +213,20 @@ int update_paddles() {
   if (paddle_left_is_human == 1) {
     if (sdl_keydown(4) == 1) {
       # A
-      paddle_y_left = paddle_y_left - pvel;
+      paddle_y_left = paddle_y_left - PADDLE_SPEED;
     } elif (sdl_keydown(29) == 1) {
       # Z
-      paddle_y_left = paddle_y_left + pvel;
+      paddle_y_left = paddle_y_left + PADDLE_SPEED;
     }
   }
 
   if (paddle_right_is_human == 1) {
     if (sdl_keydown(14) == 1) {
       # K
-      paddle_y_right = paddle_y_right - pvel;
+      paddle_y_right = paddle_y_right - PADDLE_SPEED;
     } elif (sdl_keydown(16) == 1) {
       # M
-      paddle_y_right = paddle_y_right + pvel;
+      paddle_y_right = paddle_y_right + PADDLE_SPEED;
     }
   }
 
@@ -240,7 +246,7 @@ int update_paddles() {
 }
 
 int hit_left_paddle() {
-  if (abs(ball_x - PADDLE_LEFT_X) < ball_size) {
+  if (abs(ball_x - PADDLE_LEFT_X) < BALL_SIZE) {
     if (abs(ball_y - paddle_y_left) < PADDLE_SIZE / 2) {
       return 1;
     }
@@ -249,7 +255,7 @@ int hit_left_paddle() {
 }
 
 int hit_right_paddle() {
-  if (abs(ball_x - PADDLE_RIGHT_X) < ball_size) {
+  if (abs(ball_x - PADDLE_RIGHT_X) < BALL_SIZE) {
     if (abs(ball_y - paddle_y_right) < PADDLE_SIZE / 2) {
       return 1;
     }
@@ -601,7 +607,7 @@ int main() {
                rand_int(256),
 	       rand_int(256));
 
-  ball_size = 32;
+  BALL_SIZE = 32;
 
   paddle_y_left = 240;
   paddle_y_right = 240;
@@ -609,7 +615,7 @@ int main() {
   ball_speed = 10;
   launch_ball();
 
-  pvel = 5;
+  PADDLE_SPEED = 5;
   score_l = 0;
   score_r = 0;
 
