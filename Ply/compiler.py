@@ -347,7 +347,13 @@ def makeObj(name, mainFunc):
     obj = ast.gLlvmModule.to_native_object(objFile)
     objFile.close()
 
-def compile(filename, basename, outname):
+def makeBC(name, mainFunc):
+    print "making BC", name
+    bcFile = open(name, 'wb')
+    bc = ast.gLlvmModule.to_bitcode(bcFile)
+    bcFile.close()
+
+def compile(filename, basename, outname, bc_name):
     sourcecode = load_file(filename)
     ast.gLlvmModule = llvm.core.Module.new(basename)
     lexer.input(sourcecode)
@@ -359,7 +365,7 @@ def compile(filename, basename, outname):
             break
         #print tok
 
-    print "parsing:"
+    #print "parsing:"
     #for linenum, line in enumerate(sourcecode.split('\n')):
     #    print "%03d : %s " % (linenum+1, line)
 
@@ -367,10 +373,10 @@ def compile(filename, basename, outname):
 
     topLevelObjs = []
 
-    print "about to generate code"
+    #print "about to generate code"
     if tree:
         for tlt in tree:
-            print "making decl for",tlt.name
+            #print "making decl for",tlt.name
             tlt.generateDecl()
         for tlt in tree:
             obj = tlt.generateCode()
@@ -381,7 +387,11 @@ def compile(filename, basename, outname):
     #for tlo in topLevelObjs:
     #    print "tlo:",tlo.name
 
-    makeObj(outname, None)
+    if bc_name:
+        makeBC(bc_name, None)
+    if outname:
+        makeObj(outname, None)
+
     """
     for tlo in topLevelObjs:
         print "visiting",tlo.name
@@ -402,6 +412,9 @@ def make_module_name(filename):
 def make_obj_filename(module_name):
     return module_name + '.o'
 
+def make_bc_filename(module_name):
+    return module_name + '.bc'
+
 if __name__ == '__main__':
     if len(sys.argv) <2 or len(sys.argv) > 3:
         print_usage()
@@ -410,6 +423,16 @@ if __name__ == '__main__':
     module_name = make_module_name(input_filename)
     if len(sys.argv) == 2:
         obj_filename = make_obj_filename(module_name)
+        bc_filename = make_bc_filename(module_name)
     else:
-        obj_filename = sys.argv[2]
-    compile(input_filename, module_name, obj_filename)
+        if sys.argv[2].endswith('.bc'):
+            bc_filename = sys.argv[2]
+            obj_filename = None
+        elif sys.argv[2].endswith('.o'):
+            obj_filename = sys.argv[2]
+            bc_filename = None
+        else:
+            print_usage()
+            sys.exit
+
+    compile(input_filename, module_name, obj_filename, bc_filename)

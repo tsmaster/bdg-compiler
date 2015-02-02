@@ -40,11 +40,11 @@ class FuncDeclNode(ASTNode):
         self.name = name
         self.arglist = arglist
         if arglist is None:
-            print "arglist is none in FuncDeclNode"
+            # print "arglist is none in FuncDeclNode"
             self.arglist = []
 
     def generateCode(self, breakBlock=None):
-        print "generating code for funcdecl",self.arglist
+        #print "generating code for funcdecl",self.arglist
         argtypelist = []
         argnamelist = []
         for arg in self.arglist:
@@ -54,7 +54,7 @@ class FuncDeclNode(ASTNode):
         functype = llvm.core.Type.function(self.rettype, argtypelist)
         #funcobj = llvm.core.Function.new(gLlvmModule, functype, self.name)
         funcobj = llvm.core.Function.get_or_insert(gLlvmModule, functype, self.name)
-        print "made a function declaration for name:", self.name
+        #print "made a function declaration for name:", self.name
 
         self.llvmNode = funcobj
         if funcobj.name != self.name:
@@ -86,15 +86,15 @@ class GlobalVarDeclNode(ASTNode):
         super(GlobalVarDeclNode, self).__init__(linenum, "GlobalVarDeclNode")
         self.typeName = typeName
         self.name = name
-        print "made global var decl:", self.typeName, name
+        #print "made global var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
         var = gLlvmModule.add_global_variable(typeObj, self.name)
         var.initializer = llvm.core.Constant.undef(typeObj)
         gGlobalVars[self.name] = var
-        print "made var:",var
-        print
+        #print "made var:",var
+        #print
 
     def __str__(self):
         return "(%s) %s" % (self.type, self.name)
@@ -151,8 +151,8 @@ class FuncDefNode(ASTNode):
 
         try:
             retval = self.body.generateCode(breakBlock)
-            print "generated code for func def: %s" % self.name, retval
-            print funcobj
+            #print "generated code for func def: %s" % self.name, retval
+            #print funcobj
 
             if not(retval is None):
                 gLlvmBuilder.ret(retval)
@@ -172,11 +172,13 @@ class IfElse:
         self.eliflist = eliflist
         self.elsebody = elsebody
 
+        """
         print "ifelse block"
         print "conditional:", self.conditional
         print "body:", self.body
         print "eliflist:", self.eliflist
         print "elsebody:", self.elsebody
+        """
 
         self.conditions = [conditional]
         self.bodies = [body]
@@ -206,8 +208,8 @@ class IfElse:
     def generateCode(self, breakBlock=None):
         funcObj = gLlvmBuilder.basic_block.function
 
-        print "generating code for condition"
-        print self.conditions
+        #print "generating code for condition"
+        #print self.conditions
 
         condCount = len(self.conditions)
         thenBlocks = []
@@ -365,7 +367,7 @@ class BinaryExprNode(ASTNode):
         return '['+str(self.nodes[0])+str(self.opstr)+str(self.nodes[1])+']'
 
     def generateCode(self, breakBlock=None):
-        print "making binexpr", self.opstr
+        # print "making binexpr", self.opstr
         code0 = self.nodes[0].generateCode(None)
         code1 = self.nodes[1].generateCode(None)
         print code0

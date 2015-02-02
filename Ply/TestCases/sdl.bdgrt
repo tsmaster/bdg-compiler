@@ -1,4 +1,6 @@
 int open_window(int width, int height);
+void sdl_clear_window(int red, int green, int blue);
+# prefer sdl_clear_window
 void clear_window(int red, int green, int blue);
 void flip();
 void sdl_tick_input();
