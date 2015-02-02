@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html
 
 #obj files (in alphabetical order, please)
 
@@ -91,12 +91,6 @@ many_call.bc: TestCases/many_call.bdgrt
 
 pong_web.bc: TestCases/pong_web.bdgrt
 	python compiler.py TestCases/pong_web.bdgrt pong_web.bc
-
-pong_web_bdg.bc: TestCases/pong_web_bdg.bdgrt
-	python compiler.py TestCases/pong_web_bdg.bdgrt pong_web_bdg.bc
-
-pong_web_bdg_sdl1.bc: TestCases/pong_web_bdg_sdl1.bdgrt
-	python compiler.py TestCases/pong_web_bdg_sdl1.bdgrt pong_web_bdg_sdl1.bc
 
 # HTML files
 fact.html: fact.bc support.c
