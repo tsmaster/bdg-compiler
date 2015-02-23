@@ -16,3 +16,7 @@ void print_char(int x) {
 void print_line() {
   printf("\n");
 }  
+
+void print_float(float x) {
+  printf("%f", x);
+}

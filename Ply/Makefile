@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html
 
 #obj files (in alphabetical order, please)
 
@@ -32,6 +32,9 @@ parens.o: TestCases/parens.bdgrt
 pong.o: TestCases/pong.bdgrt
 	python compiler.py TestCases/pong.bdgrt pong.o
 
+pong_adv.o: TestCases/pong_adv.bdgrt
+	python compiler.py TestCases/pong_adv.bdgrt pong_adv.o
+
 precedence.o: TestCases/precedence.bdgrt
 	python compiler.py TestCases/precedence.bdgrt precedence.o
 
@@ -43,6 +46,9 @@ sdl_wrapper.o: sdl_wrapper.c
 
 support.o: support.c
 	gcc -g -c support.c
+
+test_mult.o: TestCases/test_mult.bdgrt
+	python compiler.py TestCases/test_mult.bdgrt test_mult.o
 
 vars.o: TestCases/vars.bdgrt
 	python compiler.py TestCases/vars.bdgrt vars.o
@@ -76,8 +82,14 @@ parens.exe: parens.o support.o
 pong.exe: pong.o sdl_wrapper.o support.o
 	gcc -o pong.exe pong.o support.o sdl_wrapper.o -lSDL2 -lm
 
+pong_adv.exe: pong_adv.o sdl_wrapper.o support.o
+	gcc -o pong_adv.exe pong_adv.o support.o sdl_wrapper.o -lSDL2 -lm
+
 precedence.exe: precedence.o support.o
 	gcc -o precedence.exe support.o precedence.o
+
+test_mult.exe: test_mult.o support.o
+	gcc -o test_mult.exe support.o test_mult.o
 
 vars.exe: vars.o support.o
 	gcc -o vars.exe support.o vars.o
@@ -103,6 +115,9 @@ pong.html: pong_web.bc sdl_main_loop.c support.c
 	${EMCC} sdl_main_loop.c support.c pong_web.bc \
     -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s LEGACY_GL_EMULATION=1 -o pong.html
 
+pong_adv.html: pong_adv.bc sdl_main_loop.c support.c
+	${EMCC} sdl_main_loop.c support.c pong_adv.bc \
+    -s USE_SDL=2 -s USE_SLD_IMAGE=2 -s LEGACY_GL_EMULATION=1 -o pong_adv.html
 
 # Clean
 clean:

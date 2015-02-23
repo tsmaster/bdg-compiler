@@ -21,3 +21,28 @@ int abs(int v) {
     return v;
   }
 }
+
+
+int m_sin_f(float radians);
+int m_cos_f(float radians);
+
+int m_atan2_f(float y, float x);
+
+# TODO: move these to a math library
+int sgn_f(float x) {
+  if (x < 0.0) {
+    return -1;
+  } elif (x > 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int abs_f(float v) {
+  if (v < 0.0) {
+    return -v;
+  } else {
+    return v;
+  }
+}

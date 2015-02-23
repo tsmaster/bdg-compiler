@@ -6,6 +6,8 @@ import ast
 import llvm.core
 import llvm.ee
 
+# UNUSED (?)
+
 tokens = (
     'NUMBER',
     'IF',
@@ -56,12 +58,12 @@ reserved = {
     'else' : 'ELSE',
     'return' : 'RETURN',
     'int' : 'INT',
-    'float' : 'FLOAT', 
+    'float' : 'FLOAT',
     'void' : 'VOID',
     'string' : 'STRING',
-    
 }
 
+# NOT USED ?!
 def t_IDENTIFIER(t):
     '[a-zA-Z_][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value, 'IDENTIFIER')
@@ -79,6 +81,7 @@ def t_newline(t):
 
 t_ignore = ' \t\r'
 
+# UNUSED (?)
 #Error Handling
 def t_error(t):
     print "Illegal character '%s'" % t.value[0]
@@ -217,6 +220,7 @@ def p_expression_variable(t):
     # rvalue
     t[0] = ast.RValueVar(t[1], t.lineno)
 
+# UNUSED (?)
 def p_expression_number(t):
     '''expression : NUMBER'''
     t[0] = t[1]

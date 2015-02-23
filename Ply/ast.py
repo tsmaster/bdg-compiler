@@ -29,6 +29,8 @@ def makeType(typedesc):
         return llvm.core.Type.int()
     if typedesc == 'void':
         return llvm.core.Type.void()
+    if typedesc == 'float':
+        return llvm.core.Type.float()
     print "making unknown type:",typedesc
     raise ValueError
 
@@ -108,7 +110,17 @@ class AssignStatement(ASTNode):
 
     def generateCode(self, breakBlock=None):
         if self.varname in gGlobalVars:
-            gLlvmBuilder.store(self.value.generateCode(None), gGlobalVars[self.varname])
+            # TODO - what's the None doing here?
+            valueCode = self.value.generateCode(None)
+            var = gGlobalVars[self.varname]
+            varType = var.type
+            try:
+                gLlvmBuilder.store(valueCode, gGlobalVars[self.varname])
+            except RuntimeError:
+                print "can't assign expression of type %s to variable %s of type %s" % (valueCode.type,
+                                                                                        self.varname,
+                                                                                        var.type)                
+                raise RunTimeError
         else:
             print "don't recognize variable:",self.varname
             raise RuntimeError
@@ -356,6 +368,20 @@ class ConstantIntegerNode(ASTNode):
     def generateCode(self, breakBlock=None):
         return self.llvmNode
 
+class ConstantFloatNode(ASTNode):
+    def __init__(self, value, linenum):
+        super(ConstantFloatNode, self).__init__(linenum, "ConstantFloatNode")
+        self.value = value
+        self.linenum = linenum
+        # print "constant float node:",value
+        self.llvmNode = llvm.core.Constant.real(llvm.core.Type.float(), value)
+
+    def __str__(self):
+        return str(self.llvmNode)
+
+    def generateCode(self, breakBlock=None):
+        return self.llvmNode
+
 
 class BinaryExprNode(ASTNode):
     def __init__(self, node1, node2, linenum, opstr):
@@ -367,14 +393,15 @@ class BinaryExprNode(ASTNode):
         return '['+str(self.nodes[0])+str(self.opstr)+str(self.nodes[1])+']'
 
     def generateCode(self, breakBlock=None):
-        # print "making binexpr", self.opstr
+        #print "making binexpr", self.opstr
         code0 = self.nodes[0].generateCode(None)
         code1 = self.nodes[1].generateCode(None)
-        print code0
-        print code0.type
-        print code1
-        print code1.type
+        #print code0
+        #print code0.type
+        #print code1
+        #print code1.type
         if not (code0.type == code1.type):
+            print "cannot convert types"
             print "code0 type:",code0.type
             print "code0:", code0
             print "code1 type:",code1.type
@@ -382,27 +409,81 @@ class BinaryExprNode(ASTNode):
             raise RuntimeError
         
         if self.opstr == '+':
-            return gLlvmBuilder.add(code0, code1, "addtmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.add(code0, code1, "addtmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fadd(code0, code1, "faddtmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '-':
-            return gLlvmBuilder.sub(code0, code1, "subtmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.sub(code0, code1, "subtmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fsub(code0, code1, "faddtmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '*':
-            return gLlvmBuilder.mul(code0, code1, "multmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.mul(code0, code1, "multmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fmul(code0, code1, "fmultmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '/':
-            return gLlvmBuilder.sdiv(code0, code1, "divtmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.sdiv(code0, code1, "divtmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fdiv(code0, code1, "fdivtmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '&&':
             return gLlvmBuilder.and_(code0, code1, "andtmp")
         elif self.opstr == '||':
             return gLlvmBuilder.or_(code0, code1, "ortmp")
         elif self.opstr == '==':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_EQ, code0, code1, "cmptmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.icmp(llvm.core.ICMP_EQ, code0, code1, "cmptmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fcmp(llvm.core.FCMP_OEQ, code0, code1, "fcmptmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '<':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_SLT, code0, code1, "cmplttmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.icmp(llvm.core.ICMP_SLT, code0, code1, "cmplttmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fcmp(llvm.core.FCMP_OLT, code0, code1, "fcmplttmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '>':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_SGT, code0, code1, "cmpgttmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.icmp(llvm.core.ICMP_SGT, code0, code1, "cmpgttmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fcmp(llvm.core.FCMP_OGT, code0, code1, "fcmpgttmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '<=':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_SLE, code0, code1, "cmpletmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.icmp(llvm.core.ICMP_SLE, code0, code1, "cmpletmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fcmp(llvm.core.FCMP_OLE, code0, code1, "fcmpletmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         elif self.opstr == '>=':
-            return gLlvmBuilder.icmp(llvm.core.ICMP_SGE, code0, code1, "cmpgetmp")
+            if code0.type == llvm.core.Type.int():
+                return gLlvmBuilder.icmp(llvm.core.ICMP_SGE, code0, code1, "cmpgetmp")
+            elif code0.type == llvm.core.Type.float():
+                return gLlvmBuilder.fcmp(llvm.core.FCMP_OGE, code0, code1, "fcmpgetmp")
+            else:
+                print code0.type,"is unknown type in",code0
+                raise RuntimeError
         else:
             print "invalid operator:", self.opstr
             print "maybe?", dir(gLlvmBuilder)

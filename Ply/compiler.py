@@ -88,9 +88,13 @@ def t_IDENTIFIER(t):
     return t
 
 def t_NUMBER(t):
-    r'\d+'
-    intval = int(t.value)
-    t.value = ast.ConstantIntegerNode(intval, t.lineno)
+    r'\d*\.?[0-9]+'
+    if '.' in t.value:
+        floatval = float(t.value)
+        t.value = ast.ConstantFloatNode(floatval, t.lineno)
+    else:
+        intval = int(t.value)
+        t.value = ast.ConstantIntegerNode(intval, t.lineno)
     return t
 
 def t_newline(t):
@@ -102,6 +106,7 @@ t_ignore = ' \t\r'
 #Error Handling
 def t_error(t):
     print "Illegal character '%s'" % t.value[0]
+    print "line:", t.lineno
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -137,6 +142,7 @@ def p_funcdecl(t):
   
   t[0] = ast.FuncDeclNode(typename, funcname, argdecllist, t.lexer.lineno)
 
+"""
 def makeType(typestr):
     if typestr == 'int':
         return llvm.core.Type.int()
@@ -144,7 +150,7 @@ def makeType(typestr):
         return llvm.core.Type.void()
     print "making unknown type:",typestr
     raise ValueError
-
+"""
 def makeProto(retTypeName, funcName, argDeclList):
   argDecls = []
   if argDeclList:
