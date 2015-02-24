@@ -8,6 +8,26 @@ funcDefs = {}
 
 gGlobalVars = {}
 
+gFrames = []
+
+gNameCounter = 0
+
+class Frame:
+    def __init__(self, name=None):
+        self.locals = {}
+        if not name:
+            global gNameCounter
+            name = "Frame_%04d" % gNameCounter 
+            gNameCounter += 1
+        usedNames = []
+        for f in gFrames:
+            usedNames.append(f.name)
+        c = 0
+        while name in usedNames:
+            name = "%s_%03d" % (name, c)
+            c += 1
+        self.name = name
+
 class ASTNode(object):
     def __init__(self, linenum, typename):
         self.linenum = linenum
@@ -102,15 +122,36 @@ class GlobalVarDeclNode(ASTNode):
         return "(%s) %s" % (self.type, self.name)
 
 
-class AssignStatement(ASTNode):
-    def __init__(self, linenum, varname, value):
-        super(AssignStatement, self).__init__(linenum, "AssignStatement")
-        self.varname = varname
-        self.value = value
+
+class LocalVarDeclNode(ASTNode):
+    def __init__(self, linenum, typeName, name):
+        super(LocalVarDeclNode, self).__init__(linenum, "LocalVarDeclNode")
+        self.typeName = typeName
+        self.name = name
+        #print "made local var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
+        #print "generating code for local variable decl:",self.typeName, self.name
+        typeObj = makeType(self.typeName)
+        #print "typeObj:",typeObj
+        sz=None
+        var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
+        #print "var:",var
+        frame = gFrames[-1]
+        #print "inserting into frame",frame.name
+        frame.locals[self.name] = var
+        #print "made var:",var
+        #print
+
+    def __str__(self):
+        return "(%s) %s (local)" % (self.type, self.name)
+
+
+"""
+
+            
         if self.varname in gGlobalVars:
-            # TODO - what's the None doing here?
+            # TODO - what's the None doing here? is it the breakblock?
             valueCode = self.value.generateCode(None)
             var = gGlobalVars[self.varname]
             varType = var.type
@@ -121,8 +162,59 @@ class AssignStatement(ASTNode):
                                                                                         self.varname,
                                                                                         var.type)                
                 raise RunTimeError
+        elif self.varname in gLocalVars:
+            valueCode = self.value.generateCode(None)
+            var = gLocalVars[self.varname]
+            varType = var.type
+            try:
+                gLlvmBuilder.store(valueCode, gLocalVars[self.varname])
+            except RuntimeError:
+                print "can't assign expression of type %s to local variable %s of type %s" % (valueCode.type,
+                                                                                              self.varname,
+                                                                                              var.type)
+                raise RunTimeError
+            
+
+
+"""
+
+
+def lookupVarByName(name):
+    #print "looking up",name
+    for i in range(len(gFrames)-1, -1, -1):
+        frame = gFrames[i]
+        if name in frame.locals:
+            #print "found in",frame.name
+            return frame.locals[name]
+    if name in gGlobalVars:
+        #print "found in globals"
+        return gGlobalVars[name]
+    #print "not found"
+    return None
+
+class AssignStatement(ASTNode):
+    def __init__(self, linenum, varname, value):
+        super(AssignStatement, self).__init__(linenum, "AssignStatement")
+        self.varname = varname
+        self.value = value
+
+    def generateCode(self, breakBlock=None):
+        var = lookupVarByName(self.varname)
+
+        if var:
+            valueCode = self.value.generateCode(None)
+            varType = var.type
+            try:
+                gLlvmBuilder.store(valueCode, var)
+            except RuntimeError:
+                print "can't assign expression of type %s to variable %s of type %s" % (valueCode.type,
+                                                                                        self.varname,
+                                                                                        var.type)                
+                raise RunTimeError
+            
         else:
-            print "don't recognize variable:",self.varname
+            print "don't recognize variable:",self.varname, self.linenum
+            print help(self.linenum)
             raise RuntimeError
 
     def __str__(self):
@@ -137,10 +229,12 @@ class RValueVar(ASTNode):
     def generateCode(self, breakBlock=None):
         if self.name in gNamedValues:
             return gNamedValues[self.name]
-        elif self.name in gGlobalVars:
-            return gLlvmBuilder.load(gGlobalVars[self.name])
+
+        var = lookupVarByName(self.name)
+        if var:
+            return gLlvmBuilder.load(var)
         else:
-            print "cannot find %s in gNamedValues or gGlobalVars" % self.name
+            print "cannot find %s in gNamedValues, gGlobalVars, or gLocalVars" % self.name
             raise RuntimeError
 
 
@@ -160,6 +254,9 @@ class FuncDefNode(ASTNode):
         block = funcobj.append_basic_block('entry')
         global gLlvmBuilder
         gLlvmBuilder = llvm.core.Builder.new(block)
+        frame = Frame(self.name)
+        #print "made a new frame:",frame.name
+        gFrames.append(frame)
 
         try:
             retval = self.body.generateCode(breakBlock)
@@ -173,6 +270,14 @@ class FuncDefNode(ASTNode):
         except:
             funcobj.delete()
             raise
+
+        if gFrames[-1] != frame:
+            print "last frame on stack is %s, should be %s" % (gFrames[-1].name, frame.name)
+            raise RuntimeError
+
+        #print "leaving frame",frame.name
+        
+        gFrames.pop(-1)
 
         return funcobj
 
@@ -253,16 +358,32 @@ class IfElse:
             gLlvmBuilder.cbranch(condition_bool, thenBlock, elseBlock)
 
             gLlvmBuilder.position_at_end(thenBlock)
+            frame = Frame("then")
+            #print "made a new frame:",frame.name
+            gFrames.append(frame)
             body.generateCode(breakBlock)
             if gLlvmBuilder.basic_block.terminator is None:
                 if mergeBlock is None:
                     mergeBlock = funcObj.append_basic_block('mergeblock')
                 gLlvmBuilder.branch(mergeBlock)
+            if gFrames[-1] != frame:
+                print "last frame on stack is %s, should be %s" % (gFrames[-1].name, frame.name)
+                raise RuntimeError
+            #print "leaving frame",frame.name
+            gFrames.pop(-1)
 
         elseBlock = testBlocks[-1]
         gLlvmBuilder.position_at_end(elseBlock)
         if self.elsebody:
+            frame = Frame("else")
+            #print "made a new frame:",frame.name
+            gFrames.append(frame)
             else_value = self.elsebody.generateCode(breakBlock)
+            if gFrames[-1] != frame:
+                print "last frame on stack is %s, should be %s" % (gFrames[-1].name, frame.name)
+                raise RuntimeError
+            #print "leaving frame",frame.name
+            gFrames.pop(-1)
         if gLlvmBuilder.basic_block.terminator is None:
             if mergeBlock is None:
                 mergeBlock = funcObj.append_basic_block('mergeblock')
@@ -305,11 +426,25 @@ class LoopStatement:
         funcObj = gLlvmBuilder.basic_block.function
         loopBlock = funcObj.append_basic_block('loopblock')
         endOfLoopBlock = funcObj.append_basic_block('endofloopblock')
+
+        frame = Frame('loop')
+        #print "made a new frame:",frame.name
+        gFrames.append(frame)
+        
         gLlvmBuilder.branch(loopBlock)
         gLlvmBuilder.position_at_end(loopBlock)
         self.statements.generateCode(breakBlock=endOfLoopBlock)
         gLlvmBuilder.branch(loopBlock)
         gLlvmBuilder.position_at_end(endOfLoopBlock)        
+
+        if gFrames[-1] != frame:
+            print "last frame on stack is %s, should be %s" % (gFrames[-1].name, frame.name)
+            raise RuntimeError
+
+        #print "leaving frame",frame.name
+        
+        gFrames.pop(-1)
+        
         return None
 
 class StatementList:
