@@ -142,15 +142,6 @@ def p_funcdecl(t):
   
   t[0] = ast.FuncDeclNode(typename, funcname, argdecllist, t.lexer.lineno)
 
-"""
-def makeType(typestr):
-    if typestr == 'int':
-        return llvm.core.Type.int()
-    if typestr == 'void':
-        return llvm.core.Type.void()
-    print "making unknown type:",typestr
-    raise ValueError
-"""
 def makeProto(retTypeName, funcName, argDeclList):
   argDecls = []
   if argDeclList:
