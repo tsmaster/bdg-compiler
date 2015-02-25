@@ -61,7 +61,7 @@ def pushFrame(name):
     return frame
 
 def popFrame(oldFrame):
-    if (len(gFrames<1)):
+    if (len(gFrames)<1):
         print "no frames on stack"
         raise RuntimeError
     if gFrames[-1] != oldFrame:
@@ -121,16 +121,22 @@ class FuncDeclNode(ASTNode):
 
 
 class GlobalVarDeclNode(ASTNode):
-    def __init__(self, linenum, typeName, name):
+    def __init__(self, linenum, typeName, name, initializer):
         super(GlobalVarDeclNode, self).__init__(linenum, "GlobalVarDeclNode")
         self.typeName = typeName
         self.name = name
+        self.initializer = initializer
         #print "made global var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
         var = gLlvmModule.add_global_variable(typeObj, self.name)
-        var.initializer = llvm.core.Constant.undef(typeObj)
+        if self.initializer is None:
+            var.initializer = llvm.core.Constant.undef(typeObj)
+        else:
+            valueCode = self.initializer.generateCode(None)
+            varType = var.type
+            var.initializer = valueCode
         gGlobalVars[self.name] = var
         #print "made var:",var
         #print
@@ -141,10 +147,11 @@ class GlobalVarDeclNode(ASTNode):
 
 
 class LocalVarDeclNode(ASTNode):
-    def __init__(self, linenum, typeName, name):
+    def __init__(self, linenum, typeName, name, initializer):
         super(LocalVarDeclNode, self).__init__(linenum, "LocalVarDeclNode")
         self.typeName = typeName
         self.name = name
+        self.initializer = initializer
         #print "made local var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
@@ -153,7 +160,7 @@ class LocalVarDeclNode(ASTNode):
         #print "typeObj:",typeObj
         sz=None
         frame = gFrames[-1]
-        if self.name in frame:
+        if self.name in frame.locals:
             print "variable '%s' already declared in frame '%s'"%(self.name, frame.name)
             raise RuntimeError
         var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
@@ -162,6 +169,15 @@ class LocalVarDeclNode(ASTNode):
         frame.locals[self.name] = var
         #print "made var:",var
         #print
+        if not(self.initializer is None):
+            valueCode = self.initializer.generateCode(None)
+            try:
+                gLlvmBuilder.store(valueCode, var)
+            except RuntimeError:
+                print "can't assign expression of type %s to variable %s of type %s" % (valueCode.type,
+                                                                                        self.varname,
+                                                                                        var.type)
+                raise
 
     def __str__(self):
         return "(%s) %s (local)" % (self.type, self.name)

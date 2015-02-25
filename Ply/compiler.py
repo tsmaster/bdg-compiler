@@ -205,7 +205,11 @@ def p_arglist_many(t):
 
 def p_globalvardecl(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2])
+    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], None)
+
+def p_globalvardecl_initialized(t):
+    '''globalvardecl : type IDENTIFIER ASSIGN expression SEMICOLON'''
+    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], t[4])
 
 def p_statementlist_empty(t):
     'statementlist : empty'
@@ -232,7 +236,11 @@ def p_statement_return(t):
 
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2])
+    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], None)
+
+def p_statement_localvardecl_initialized(t):
+    '''statement : type IDENTIFIER ASSIGN expression SEMICOLON'''
+    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], t[4])
 
 def p_statement_loop(t):
     '''statement : LOOP LBRACE statementlist RBRACE'''
