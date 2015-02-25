@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe
 
 #obj files (in alphabetical order, please)
 
@@ -47,6 +47,9 @@ sdl_wrapper.o: sdl_wrapper.c
 support.o: support.c
 	gcc -g -c support.c
 
+test_const.o: TestCases/test_const.bdgrt
+	python compiler.py TestCases/test_const.bdgrt test_const.o
+
 test_mult.o: TestCases/test_mult.bdgrt
 	python compiler.py TestCases/test_mult.bdgrt test_mult.o
 
@@ -87,6 +90,9 @@ pong_adv.exe: pong_adv.o sdl_wrapper.o support.o
 
 precedence.exe: precedence.o support.o
 	gcc -o precedence.exe support.o precedence.o
+
+test_const.exe: test_const.o support.o
+	gcc -o test_const.exe support.o test_const.o
 
 test_mult.exe: test_mult.o support.o
 	gcc -o test_mult.exe support.o test_mult.o

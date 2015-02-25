@@ -131,11 +131,9 @@ class GlobalVarDeclNode(ASTNode):
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
         var = gLlvmModule.add_global_variable(typeObj, self.name)
-        if self.initializer is None:
-            var.initializer = llvm.core.Constant.undef(typeObj)
-        else:
+        var.initializer = llvm.core.Constant.undef(typeObj)
+        if not (self.initializer is None):
             valueCode = self.initializer.generateCode(None)
-            varType = var.type
             var.initializer = valueCode
         gGlobalVars[self.name] = var
         #print "made var:",var
@@ -379,7 +377,7 @@ class IfElse:
                              
 class ReturnStatement:
     def __init__(self, expr):
-        self.expr = expr;
+        self.expr = expr
 
     def __str__(self):
         return "RETURN {%s}" % str(self.expr)
@@ -607,7 +605,17 @@ class NegativeExprNode(ASTNode):
 
     def generateCode(self, breakBlock=None):
         code = self.node.generateCode(None)
-        return gLlvmBuilder.mul(code, llvm.core.Constant.int(llvm.core.Type.int(), -1))
+
+        codeType = code.type
+        codeKind = codeType.kind
+        if codeKind == llvm.core.TYPE_INTEGER:
+            return code.neg()
+        elif codeKind == llvm.core.TYPE_FLOAT:
+            return code.fmul(llvm.core.Constant.real(llvm.core.Type.float(), -1.0))
+        else:
+            print "I don't know how to negate this type:",codeType
+            raise RuntimeError
+
 
 
 class topLevelGroup(ASTNode):
