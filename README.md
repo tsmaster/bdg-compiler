@@ -1,33 +1,11 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is the Big Dice Games Compiler Project of 2014-2015.
 
-DWL: there are three directories, the pong one is probably a dead end.
+There is a [public GitHub repository](https://github.com/tsmaster/bdg-compiler).
 
-The [Wiki](https://bitbucket.org/tsmaster/bdgrt/wiki/Home) probably has the most useful stuff.
+There is also a [private BitBucket repository](https://bitbucket.org/tsmaster/bdgrt/wiki/Home), which is useful for my (Dave's) own project planning.
 
-### What is this repository for? ###
+TODO: remove the LLVMPY directory, remove the Pong directory, which is only of historical use.
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-### How do I get set up? ###
-
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
-
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+The Ply directory is where anything interesting is.
