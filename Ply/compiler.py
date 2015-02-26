@@ -242,6 +242,10 @@ def p_statement_return(t):
     '''statement : RETURN expression SEMICOLON'''
     t[0] = ast.ReturnStatement(t[2])
 
+def p_statement_emptyreturn(t):
+    '''statement : RETURN SEMICOLON'''
+    t[0] = ast.ReturnStatement(None)
+
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
     t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], None)

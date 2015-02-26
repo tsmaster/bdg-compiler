@@ -1,0 +1,20 @@
+void print_integer(int i);
+void print_line();
+
+
+void foo() {
+  print_integer(1);
+  print_line();
+}
+
+void bar() {
+  print_integer(2);
+  print_line();
+  return;
+}
+
+int main() {
+  foo();
+  bar();
+  return 0;
+}

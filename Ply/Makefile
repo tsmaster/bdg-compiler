@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe test_void_func.exe test_float_func.exe
 
 #obj files (in alphabetical order, please)
 
@@ -53,6 +53,12 @@ test_const.o: TestCases/test_const.bdgrt
 test_mult.o: TestCases/test_mult.bdgrt
 	python compiler.py TestCases/test_mult.bdgrt test_mult.o
 
+test_float_func.o: TestCases/test_float_func.bdgrt
+	python compiler.py TestCases/test_float_func.bdgrt test_float_func.o
+
+test_void_func.o: TestCases/test_void_func.bdgrt
+	python compiler.py TestCases/test_void_func.bdgrt test_void_func.o
+
 vars.o: TestCases/vars.bdgrt
 	python compiler.py TestCases/vars.bdgrt vars.o
 
@@ -96,6 +102,12 @@ test_const.exe: test_const.o support.o
 
 test_mult.exe: test_mult.o support.o
 	gcc -o test_mult.exe support.o test_mult.o
+
+test_float_func.exe: test_float_func.o support.o
+	gcc -o test_float_func.exe support.o test_float_func.o
+
+test_void_func.exe: test_void_func.o support.o
+	gcc -o test_void_func.exe support.o test_void_func.o
 
 vars.exe: vars.o support.o
 	gcc -o vars.exe support.o vars.o

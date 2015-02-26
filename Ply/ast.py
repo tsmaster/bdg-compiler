@@ -297,9 +297,8 @@ class FuncDefNode(ASTNode):
             retval = self.body.generateCode(breakBlock)
             #print "generated code for func def: %s" % self.name, retval
             #print funcobj
-
-            if not(retval is None):
-                gLlvmBuilder.ret(retval)
+            if gLlvmBuilder.basic_block.terminator is None:
+                gLlvmBuilder.ret_void()
 
             funcobj.verify()
         except:
@@ -419,7 +418,10 @@ class ReturnStatement:
         return "RETURN {%s}" % str(self.expr)
 
     def generateCode(self, breakBlock=None):
-        gLlvmBuilder.ret(self.expr.generateCode(None))
+        if (self.expr is None):
+            gLlvmBuilder.ret_void()
+        else:
+            gLlvmBuilder.ret(self.expr.generateCode(None))
 
 class BreakStatement:
     def __init__(self):

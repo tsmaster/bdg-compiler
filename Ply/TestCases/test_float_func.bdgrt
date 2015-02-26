@@ -1,0 +1,31 @@
+void print_float(float f);
+void print_line();
+
+const float PI = 3.141592654;
+
+float convert_f_to_c(float f) {
+  float c = (f-32.0) * 5.0 / 9.0;
+  return c;
+}
+
+float convert_c_to_f(float c) {
+  float f = c * 9.0 / 5.0 + 32.0;
+  return f;
+}
+
+float convert_deg_to_rad(float deg) {
+  return PI * deg / 180.0;
+}
+
+float convert_rad_to_deg(float rad) {
+  return 180.0 * rad / PI;
+}
+
+int main() {
+  print_float(convert_f_to_c(70.0)); print_line();
+  print_float(convert_c_to_f(100.0)); print_line();
+
+  print_float(convert_deg_to_rad(30.0)); print_line();
+  print_float(convert_rad_to_deg(6.28)); print_line();
+  return 0;
+}
