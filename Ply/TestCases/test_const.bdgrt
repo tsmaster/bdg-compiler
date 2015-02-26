@@ -2,13 +2,21 @@ void print_float(float num);
 void print_integer(int i);
 void print_line();
 
-int x = 8;
-float y = -3.0;
+const int x = 8;
+const float y = -3.0;
 
 int main() {
   print_integer(x);
   print_line();
   print_float(y);
+  print_line();
+
+  const int a = 1;
+  print_integer(a);
+  print_line();
+
+  int b = a * 2;
+  print_integer(b);
   print_line();
   return 0;
 }

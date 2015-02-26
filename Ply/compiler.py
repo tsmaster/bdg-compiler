@@ -38,7 +38,9 @@ tokens = (
     'GREATERTHAN',
     'LESSEQUAL',
     'GREATEREQUAL',
-    'IDENTIFIER'
+    'CONST',
+    'STATIC',
+    'IDENTIFIER',
 )
 
 t_LPAREN = r'\('
@@ -79,7 +81,9 @@ reserved = {
     'string' : 'STRING',
     'loop' : 'LOOP',
     'while' : 'WHILE',
-    'break' : 'BREAK'
+    'break' : 'BREAK',
+    'const' : 'CONST',
+    'static' : 'STATIC'
 }
 
 def t_IDENTIFIER(t):
@@ -203,13 +207,17 @@ def p_arglist_many(t):
     'arglist : expression COMMA arglist'
     t[0] = [t[1]] + t[3]
 
-def p_globalvardecl(t):
+def p_globalvardecl_var(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], None)
+    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], None)
 
-def p_globalvardecl_initialized(t):
+def p_globalvardecl_constinitialized(t):
+    '''globalvardecl : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
+    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
+
+def p_globalvardecl_varinitialized(t):
     '''globalvardecl : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], t[4])
+    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
 
 def p_statementlist_empty(t):
     'statementlist : empty'
@@ -236,11 +244,15 @@ def p_statement_return(t):
 
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], None)
+    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], None)
 
 def p_statement_localvardecl_initialized(t):
     '''statement : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], t[4])
+    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
+
+def p_statement_localvardecl_constinitialized(t):
+    '''statement : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
+    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
 
 def p_statement_loop(t):
     '''statement : LOOP LBRACE statementlist RBRACE'''

@@ -15,6 +15,7 @@ gNameCounter = 0
 class Frame:
     def __init__(self, name=None):
         self.locals = {}
+        self.consts = {}
         if not name:
             global gNameCounter
             name = "Frame_%04d" % gNameCounter 
@@ -121,12 +122,17 @@ class FuncDeclNode(ASTNode):
 
 
 class GlobalVarDeclNode(ASTNode):
-    def __init__(self, linenum, typeName, name, initializer):
+    def __init__(self, linenum, qualifiers, typeName, name, initializer):
         super(GlobalVarDeclNode, self).__init__(linenum, "GlobalVarDeclNode")
         self.typeName = typeName
         self.name = name
         self.initializer = initializer
+        if qualifiers:
+            self.qualifiers = qualifiers
+        else:
+            self.qualifiers = []
         #print "made global var decl:", self.typeName, name
+        #print "qualifiers:", qualifiers
 
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
@@ -135,8 +141,12 @@ class GlobalVarDeclNode(ASTNode):
         if not (self.initializer is None):
             valueCode = self.initializer.generateCode(None)
             var.initializer = valueCode
+        if 'const' in self.qualifiers:
+            #print "setting constant"
+            var.global_constant = True
         gGlobalVars[self.name] = var
         #print "made var:",var
+        #print dir(var)
         #print
 
     def __str__(self):
@@ -145,11 +155,15 @@ class GlobalVarDeclNode(ASTNode):
 
 
 class LocalVarDeclNode(ASTNode):
-    def __init__(self, linenum, typeName, name, initializer):
+    def __init__(self, linenum, qualifiers, typeName, name, initializer):
         super(LocalVarDeclNode, self).__init__(linenum, "LocalVarDeclNode")
         self.typeName = typeName
         self.name = name
         self.initializer = initializer
+        if qualifiers:
+            self.qualifiers = qualifiers
+        else:
+            self.qualifiers = []
         #print "made local var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
@@ -158,15 +172,24 @@ class LocalVarDeclNode(ASTNode):
         #print "typeObj:",typeObj
         sz=None
         frame = gFrames[-1]
-        if self.name in frame.locals:
+        if ((self.name in frame.locals) or
+            (self.name in frame.consts)):
             print "variable '%s' already declared in frame '%s'"%(self.name, frame.name)
             raise RuntimeError
         var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
         #print "var:",var
         #print "inserting into frame",frame.name
-        frame.locals[self.name] = var
+        #print dir(var)
+        if 'const' in self.qualifiers:
+            #print "inserting into consts"
+            frame.consts[self.name] = var
+            #print frame.consts
+        else:
+            #print "inserting into vars"
+            frame.locals[self.name] = var
         #print "made var:",var
         #print
+
         if not(self.initializer is None):
             valueCode = self.initializer.generateCode(None)
             try:
@@ -186,12 +209,15 @@ def lookupVarByName(name):
         frame = gFrames[i]
         if name in frame.locals:
             #print "found in",frame.name
-            return frame.locals[name]
+            return frame.locals[name], False
+        if name in frame.consts:
+            return frame.consts[name], True
     if name in gGlobalVars:
         #print "found in globals"
-        return gGlobalVars[name]
+        var = gGlobalVars[name]
+        return var, var.global_constant
     #print "not found"
-    return None
+    return None, False
 
 class AssignStatement(ASTNode):
     def __init__(self, linenum, varname, value):
@@ -200,7 +226,17 @@ class AssignStatement(ASTNode):
         self.value = value
 
     def generateCode(self, breakBlock=None):
-        var = lookupVarByName(self.varname)
+        var,isConst = lookupVarByName(self.varname)
+
+        if isConst:
+            print "can't assign expression %s to const variable %s" % (self.value,
+                                                                       self.varname)
+            raise RuntimeError
+
+        print "assigning to",var
+        print var.type
+        print var.type.kind
+        print dir(var)
 
         if var:
             valueCode = self.value.generateCode(None)
@@ -231,7 +267,7 @@ class RValueVar(ASTNode):
         if self.name in gNamedValues:
             return gNamedValues[self.name]
 
-        var = lookupVarByName(self.name)
+        var, isConst = lookupVarByName(self.name)
         if var:
             return gLlvmBuilder.load(var)
         else:
