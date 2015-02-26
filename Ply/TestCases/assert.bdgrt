@@ -1,0 +1,18 @@
+void print_integer(int num);
+void print_line();
+void print_char(int c);
+
+int assert_equal(int a, int b) {
+  if (a == b) {
+    print_char(64+15);
+    print_char(64+11);
+    print_line();
+    return 1;
+  } else {
+    print_char(58);
+    print_char(40);
+    print_line();
+    return -1;
+  }
+}
+

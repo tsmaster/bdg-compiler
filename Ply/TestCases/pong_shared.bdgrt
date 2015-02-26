@@ -1,0 +1,637 @@
+@include "conio.bdgrt"
+@include "font.bdgrt"
+@include "trig.bdgrt"
+@include "sdl.bdgrt"
+
+void srand_from_time();
+int rand_int(int max);
+
+
+
+# Gameplay constants
+int BALL_SIZE;
+int PADDLE_SIZE;
+int PADDLE_LEFT_X;
+int PADDLE_RIGHT_X;
+int PADDLE_SPEED;
+
+int MAX_DEFLECTION;
+int MAX_ANGLE;
+
+int PI;
+int TWOPI;
+int PI_OVER_TWO;
+int PI_OVER_SIX;
+
+int PHASE_BDG; # 0
+int PHASE_TITLE; # 1
+int PHASE_GAMEPLAY; # 2
+int PHASE_GAME_OVER; # 3
+
+
+# Frame variables
+int dot_y;
+
+# Game variables (persist from frame-to-frame, not interesting outside gameplay)
+int ball_x;
+int ball_y;
+
+int ball_speed;
+int ball_angle;
+
+int vx;
+int vy;
+
+int svx;
+
+int paddle_y_left;
+int paddle_y_right;
+
+int key_pressed_a;
+int key_pressed_k;
+int key_pressed_p;
+
+
+# Game options (variables that extend from outside gameplay)
+int paddle_left_is_human;
+int paddle_right_is_human;
+
+# 0 - BDG
+# 1 - Title
+# 2 - Game
+# 3 - Game Over
+int phase;
+
+int phase_counter;
+
+int score_l;
+int score_r;
+
+int max_score;
+
+
+int set_velocity_from_angle() {
+    vx = m_cos(ball_angle, ball_speed);
+     vy = m_sin(ball_angle, ball_speed);
+    return 0;
+}
+
+int perturb(int milliradians) {
+  ball_angle = ball_angle + rand_int(milliradians);
+  ball_angle = ball_angle - rand_int(milliradians);
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  return 0;
+}
+
+int reflect_ball_y() {
+  ball_angle = TWOPI - ball_angle;
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  set_velocity_from_angle();
+  return 0;
+}
+
+int reflect_ball_x() {
+  ball_angle = PI - ball_angle;
+  if (ball_angle < 0) {
+    ball_angle = ball_angle + TWOPI;
+  } elif (ball_angle > TWOPI) {
+    ball_angle = ball_angle - TWOPI;
+  }
+  set_velocity_from_angle();
+}
+
+int launch_ball() {
+  ball_x = 320;
+  ball_y = 240;
+  ball_angle = PI_OVER_TWO * rand_int(4);
+  ball_angle = ball_angle + rand_int(PI_OVER_SIX);
+  ball_angle = ball_angle + PI_OVER_SIX;
+  set_velocity_from_angle();
+
+  return 0;
+}
+
+int show_score() {
+  print_char(64+20);
+  print_integer(score_l);
+  print_char(32);
+  print_integer(score_r);
+  print_line();
+  return 0;
+}
+
+int draw_num(int n, int x, int y, int scale, int r, int g, int b) {
+  if (n < 10) {
+    draw_char(48 + n, x, y, scale, r, g, b);
+  }
+  return 0;
+}
+
+int draw_score() {
+  draw_num(score_l, 120, 20, 5, 200, 128, 128);
+  draw_num(score_r, 640 - (120 + 5), 20, 5, 128, 128, 200);
+  return 0;
+}
+
+int score_left() {
+  score_l = score_l + 1;
+  launch_ball();
+  return 0;
+}
+
+int score_right() {
+  score_r = score_r + 1;
+  launch_ball();
+  return 0;
+}
+
+int draw_background() {
+  sdl_clear_window(64, 128, 64);
+
+  dot_y = 0;
+  loop {
+    sdl_draw_rect(320 - 5,
+                  dot_y - 5,
+		  10,
+		  10,
+		  128, 200, 128);
+    dot_y = dot_y + 24;
+    if (dot_y > 480) {
+      break;
+    }
+  }
+
+  return 0;
+}
+
+int draw_ball() {
+   sdl_draw_rect(ball_x - BALL_SIZE / 2,
+                 ball_y - BALL_SIZE / 2,
+		 BALL_SIZE, BALL_SIZE,
+		 200, 200, 200);
+   return 0;
+}
+
+int draw_paddle_left() {
+  sdl_draw_rect(32, paddle_y_left - 128/2, 32, 128, 200, 128, 128);
+  return 0;
+}
+
+int draw_paddle_right() {
+  sdl_draw_rect(640 - 64, paddle_y_right - 128/2, 32, 128, 128, 128, 200);
+  return 0;
+}
+
+int update_paddles() {
+  if (vx < 0) {
+    if (paddle_left_is_human == 0) {
+      if (paddle_y_left < ball_y - PADDLE_SIZE / 2) {
+        paddle_y_left = paddle_y_left + PADDLE_SPEED;
+      } elif (paddle_y_left > ball_y + PADDLE_SIZE / 2) {
+        paddle_y_left = paddle_y_left - PADDLE_SPEED;
+      }
+    }
+  } else {
+    if (paddle_right_is_human == 0) {
+      if (paddle_y_right < ball_y - PADDLE_SIZE / 2) {
+        paddle_y_right = paddle_y_right + PADDLE_SPEED;
+      } elif (paddle_y_right > ball_y + PADDLE_SIZE / 2) {
+        paddle_y_right = paddle_y_right - PADDLE_SPEED;
+      }
+    }
+  }
+
+  # player_control
+  if (paddle_left_is_human == 1) {
+    if (sdl_keydown(4) == 1) {
+      # A
+      paddle_y_left = paddle_y_left - PADDLE_SPEED;
+    } elif (sdl_keydown(29) == 1) {
+      # Z
+      paddle_y_left = paddle_y_left + PADDLE_SPEED;
+    }
+  }
+
+  if (paddle_right_is_human == 1) {
+    if (sdl_keydown(14) == 1) {
+      # K
+      paddle_y_right = paddle_y_right - PADDLE_SPEED;
+    } elif (sdl_keydown(16) == 1) {
+      # M
+      paddle_y_right = paddle_y_right + PADDLE_SPEED;
+    }
+  }
+
+  if (paddle_y_left < 0) {
+    paddle_y_left = 0;
+  } elif (paddle_y_left > 480) {
+    paddle_y_left = 480;
+  }
+
+  if (paddle_y_right < 0) {
+    paddle_y_right = 0;
+  } elif (paddle_y_right > 480) {
+    paddle_y_right = 480;
+  }
+
+  return 0;
+}
+
+int hit_left_paddle() {
+  if (abs(ball_x - PADDLE_LEFT_X) < BALL_SIZE) {
+    if (abs(ball_y - paddle_y_left) < PADDLE_SIZE / 2) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int hit_right_paddle() {
+  if (abs(ball_x - PADDLE_RIGHT_X) < BALL_SIZE) {
+    if (abs(ball_y - paddle_y_right) < PADDLE_SIZE / 2) {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int normalize_angle() {
+  loop {
+    if (ball_angle < 0) {
+      ball_angle = ball_angle + TWOPI;
+    } elif (ball_angle >= TWOPI) {
+      ball_angle = ball_angle - TWOPI;
+    }
+    if ((ball_angle >= 0) && (ball_angle < TWOPI)) {
+      break;
+    }
+  }
+  return 0;
+}
+
+int calc_deflection_left() {
+  normalize_angle();
+  ball_angle = ball_angle + (2 * (ball_y - paddle_y_left) * MAX_DEFLECTION) / PADDLE_SIZE;
+  normalize_angle();
+  if ((ball_angle < PI) && (ball_angle > MAX_ANGLE)) {
+    ball_angle = MAX_ANGLE;
+  } elif ((ball_angle >= PI) && (ball_angle < TWOPI - MAX_ANGLE)) {
+    ball_angle = TWOPI - MAX_ANGLE;
+  }
+  set_velocity_from_angle();
+}
+
+int calc_deflection_right() {
+  ball_angle = ball_angle + (2 * (paddle_y_right - ball_y) * MAX_DEFLECTION) / PADDLE_SIZE;
+  normalize_angle();
+  if (ball_angle < PI - MAX_ANGLE) {
+    ball_angle = PI - MAX_ANGLE;
+  } elif (ball_angle > PI + MAX_ANGLE) {
+    ball_angle = PI + MAX_ANGLE;
+  }
+  set_velocity_from_angle();
+}
+
+int draw_bdg() {
+  sdl_clear_window(64, 128, 64);
+
+  draw_char(66, 80, 48, 16, 255, 255, 255);
+  draw_char(73, 176, 48, 16, 255, 255, 255);
+  draw_char(71, 272, 48, 16, 255, 255, 255);
+  draw_char(68, 80, 176, 16, 255, 255, 255);
+  draw_char(73, 176, 176, 16, 255, 255, 255);
+  draw_char(67, 272, 176, 16, 255, 255, 255);
+  draw_char(69, 368, 176, 16, 255, 255, 255);
+  draw_char(71, 80, 304, 16, 255, 255, 255);
+  draw_char(65, 176, 304, 16, 255, 255, 255);
+  draw_char(77, 272, 304, 16, 255, 255, 255);
+  draw_char(69, 368, 304, 16, 255, 255, 255);
+  draw_char(83, 464, 304, 16, 255, 255, 255);
+
+  return 0;
+}
+
+int draw_title() {
+  sdl_clear_window(64, 128, 64);
+
+  # PONG
+  draw_char(80, 80, 20, 20, 0, 0, 0);
+  draw_char(79, 200, 20, 20, 0, 0, 0);
+  draw_char(78, 320, 20, 20, 0, 0, 0);
+  draw_char(71, 440, 20, 20, 0, 0, 0);
+
+  # OPTIONS
+  if (paddle_left_is_human == 1) {
+    draw_char(60, 140, 280, 5, 0, 0, 0);
+    draw_char(65, 170, 280, 5, 0, 0, 0);
+    draw_char(62, 200, 280, 5, 0, 0, 0);
+    draw_char(80, 260, 280, 5, 0, 0, 0);
+    draw_char(49, 290, 280, 5, 0, 0, 0);
+    draw_char(72, 350, 280, 5, 0, 0, 0);
+    draw_char(85, 380, 280, 5, 0, 0, 0);
+    draw_char(77, 410, 280, 5, 0, 0, 0);
+    draw_char(65, 440, 280, 5, 0, 0, 0);
+    draw_char(78, 470, 280, 5, 0, 0, 0);
+  } else {
+    draw_char(60, 185, 280, 5, 0, 0, 0);
+    draw_char(65, 215, 280, 5, 0, 0, 0);
+    draw_char(62, 245, 280, 5, 0, 0, 0);
+    draw_char(80, 305, 280, 5, 0, 0, 0);
+    draw_char(49, 335, 280, 5, 0, 0, 0);
+    draw_char(65, 395, 280, 5, 0, 0, 0);
+    draw_char(73, 425, 280, 5, 0, 0, 0);
+  }
+
+  if (paddle_right_is_human == 1) {
+    draw_char(60, 140, 320, 5, 0, 0, 0);
+    draw_char(75, 170, 320, 5, 0, 0, 0);
+    draw_char(62, 200, 320, 5, 0, 0, 0);
+    draw_char(80, 260, 320, 5, 0, 0, 0);
+    draw_char(50, 290, 320, 5, 0, 0, 0);
+    draw_char(72, 350, 320, 5, 0, 0, 0);
+    draw_char(85, 380, 320, 5, 0, 0, 0);
+    draw_char(77, 410, 320, 5, 0, 0, 0);
+    draw_char(65, 440, 320, 5, 0, 0, 0);
+    draw_char(78, 470, 320, 5, 0, 0, 0);
+  } else {
+    draw_char(60, 185, 320, 5, 0, 0, 0);
+    draw_char(75, 215, 320, 5, 0, 0, 0);
+    draw_char(62, 245, 320, 5, 0, 0, 0);
+    draw_char(80, 305, 320, 5, 0, 0, 0);
+    draw_char(50, 335, 320, 5, 0, 0, 0);
+    draw_char(65, 395, 320, 5, 0, 0, 0);
+    draw_char(73, 425, 320, 5, 0, 0, 0);
+  }
+
+  draw_char(60, 140, 360, 5, 0, 0, 0);
+  draw_char(80, 170, 360, 5, 0, 0, 0);
+  draw_char(62, 200, 360, 5, 0, 0, 0);
+  draw_char(80, 260, 360, 5, 0, 0, 0);
+  draw_char(79, 290, 360, 5, 0, 0, 0);
+  draw_char(73, 320, 360, 5, 0, 0, 0);
+  draw_char(78, 350, 360, 5, 0, 0, 0);
+  draw_char(84, 380, 360, 5, 0, 0, 0);
+  draw_char(83, 410, 360, 5, 0, 0, 0);
+  draw_char(48 + max_score, 470, 360, 5, 0, 0, 0);
+
+  draw_char(60, 110, 400, 5, 0, 0, 0);
+  draw_char(83, 140, 400, 5, 0, 0, 0);
+  draw_char(80, 170, 400, 5, 0, 0, 0);
+  draw_char(67, 200, 400, 5, 0, 0, 0);
+  draw_char(62, 230, 400, 5, 0, 0, 0);
+  draw_char(84, 290, 400, 5, 0, 0, 0);
+  draw_char(79, 320, 400, 5, 0, 0, 0);
+  draw_char(83, 380, 400, 5, 0, 0, 0);
+  draw_char(84, 410, 400, 5, 0, 0, 0);
+  draw_char(65, 440, 400, 5, 0, 0, 0);
+  draw_char(82, 470, 400, 5, 0, 0, 0);
+  draw_char(84, 500, 400, 5, 0, 0, 0);
+
+  return 0;
+}
+
+int draw_gameplay() {
+  draw_background();
+  draw_score();
+  draw_paddle_left();
+  draw_paddle_right();
+  draw_ball();
+  return 0;
+}
+
+int draw_gameover() {
+  sdl_clear_window(64, 128, 64);
+
+  draw_char(71, 128, 112, 16, 128, 128, 128);
+  draw_char(65, 224, 112, 16, 128, 128, 128);
+  draw_char(77, 320, 112, 16, 128, 128, 128);
+  draw_char(69, 416, 112, 16, 128, 128, 128);
+  draw_char(79, 128, 240, 16, 128, 128, 128);
+  draw_char(86, 224, 240, 16, 128, 128, 128);
+  draw_char(69, 320, 240, 16, 128, 128, 128);
+  draw_char(82, 416, 240, 16, 128, 128, 128);
+
+  return 0;
+}
+
+int draw() {
+  if (phase == PHASE_BDG) {
+    draw_bdg();
+  } elif (phase == PHASE_TITLE) {
+    draw_title();
+  } elif (phase == PHASE_GAMEPLAY) {
+    draw_gameplay();
+  } elif (phase == PHASE_GAME_OVER) {
+    draw_gameover();
+  }
+  return 0;
+}
+
+int set_phase(int new_phase) {
+  # any sort of cleanup?
+
+  # initialize phase
+  phase_counter = 0;
+  phase = new_phase;
+  if (phase == PHASE_GAMEPLAY) {
+    score_l = 0;
+    score_r = 0;
+  } elif (phase == PHASE_TITLE) {
+    key_pressed_a = 1;
+    key_pressed_k = 1;
+    key_pressed_p = 1;
+  }
+  return 0;
+}
+
+int update_bdg() {
+  phase_counter = phase_counter + 1;
+
+  if (phase_counter > 200) {
+    set_phase(PHASE_TITLE);
+  }
+  return 0;
+}
+
+int update_title() {
+  phase_counter = phase_counter + 1;
+
+  if (key_pressed_a == 1) {
+    if (sdl_keydown(4) == 0) {
+      key_pressed_a = 0;
+    }
+  } else {
+    if (sdl_keydown(4) == 1) {
+      # A
+      paddle_left_is_human = 1 - paddle_left_is_human;
+      key_pressed_a = 1;
+    }
+  }
+
+  if (key_pressed_k == 1) {
+    if (sdl_keydown(14) == 0) {
+      key_pressed_k = 0;
+    }
+  } else {
+    if (sdl_keydown(14) == 1) {
+      # K
+      paddle_right_is_human = 1 - paddle_right_is_human;
+      key_pressed_k = 1;
+    }
+  }
+
+  if (key_pressed_p == 1) {
+    if (sdl_keydown(19) == 0) {
+      key_pressed_p = 0;
+    }
+  } else {
+    if (sdl_keydown(19) == 1) {
+      print_line();
+      # P
+      max_score = max_score + 2;
+      if (max_score > 9) {
+        max_score = 5;
+      }
+      key_pressed_p = 1;
+    }
+  }
+
+  if (sdl_keydown(44) == 1) {
+    # Space, start this thing
+    set_phase(PHASE_GAMEPLAY);
+  }
+
+  return 0;
+}
+
+int update_gameplay() {
+  ball_x = ball_x + vx;
+
+  if (ball_x > 640 - 64) {
+    # maybe hit right paddle
+    if (hit_right_paddle() == 1) {
+      ball_x = 640 - 64;
+      if (vx > 0) {
+        reflect_ball_x();
+        calc_deflection_right();
+      }
+    } elif (ball_x > 640) {
+      score_left();
+    }
+  } elif (ball_x < 64) {
+    # maybe hit left paddle
+    if (hit_left_paddle() == 1) {
+      ball_x = 64;
+      if (vx < 0) {
+        reflect_ball_x();
+        calc_deflection_left();
+      }
+    } elif (ball_x < 0) {
+      score_right();
+    }
+  }
+
+  ball_y = ball_y + vy;
+  if (ball_y > 480) {
+     ball_y = 480;
+     reflect_ball_y();
+  } elif (ball_y < 0) {
+     ball_y = 0;
+     reflect_ball_y();
+  }
+
+  update_paddles();
+
+  if ((score_l >= max_score) || (score_r >= max_score)) {
+    set_phase(PHASE_GAME_OVER);
+  }
+
+  return 0;
+}
+
+int update_gameover() {
+  phase_counter = phase_counter + 1;
+
+  if (phase_counter > 200) {
+    set_phase(PHASE_TITLE);
+  }
+
+  return 0;
+}
+
+int update() {
+  if (phase == PHASE_BDG) {
+    update_bdg();
+  } elif (phase == PHASE_TITLE) {
+    update_title();
+  } elif (phase == PHASE_GAMEPLAY) {
+    update_gameplay();
+  } elif (phase == PHASE_GAME_OVER) {
+    update_gameover();
+  }
+  return 0;
+}
+
+int bdg_game_init() {
+  PI = 3142;
+  TWOPI = 6283;
+  PI_OVER_SIX = 524;
+  PI_OVER_TWO = 1571;
+
+  PHASE_BDG = 0;
+  PHASE_TITLE = 1;
+  PHASE_GAMEPLAY = 2;
+  PHASE_GAME_OVER = 3;
+  phase = PHASE_BDG;
+
+  max_score = 5;
+
+  MAX_DEFLECTION = 1000;
+  MAX_ANGLE = 1200;
+
+  PADDLE_SIZE = 128;
+  PADDLE_LEFT_X = 48;
+  PADDLE_RIGHT_X = 640 - 48;
+
+  srand_from_time();
+  BALL_SIZE = 32;
+
+  paddle_y_left = 240;
+  paddle_y_right = 240;
+
+  ball_speed = 10;
+  launch_ball();
+
+  PADDLE_SPEED = 5;
+  score_l = 0;
+  score_r = 0;
+
+  paddle_left_is_human = 0;
+  paddle_right_is_human = 0;
+  return 0;
+}
+
+int bdg_game_loop() {
+  sdl_tick_input();
+
+  #  if (sdl_quit_signalled() == 1) {
+  #    break;
+  #  }
+
+  draw();
+  update();
+  return 0;
+}
+
+int main() {
+  bdg_game_init();
+  bdg_loop(bdg_game_loop, 30);
+}

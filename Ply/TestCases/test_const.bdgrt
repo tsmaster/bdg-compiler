@@ -1,0 +1,14 @@
+void print_float(float num);
+void print_integer(int i);
+void print_line();
+
+int x = 8;
+float y = -3.0;
+
+int main() {
+  print_integer(x);
+  print_line();
+  print_float(y);
+  print_line();
+  return 0;
+}
