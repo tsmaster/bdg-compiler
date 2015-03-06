@@ -6,6 +6,8 @@ gNamedValues = {}
 
 funcDefs = {}
 
+classDict = {}
+
 gGlobalVars = {}
 
 gFrames = []
@@ -39,11 +41,38 @@ class ASTNode(object):
         print "going to raise",self
         raise Exception("No Code Generated (must subclass)")
 
+    def getPtr(self):
+        print "going to raise", self
+        raise Exception("No pointer (must subclass)")
+
     def generateDecl(self):
         return None
 
     def __str__(self):
         return self.typename
+
+def parseKind(k):
+    kindDict = {llvm.core.TYPE_VOID: 'void',
+                llvm.core.TYPE_FLOAT: 'float',
+                llvm.core.TYPE_DOUBLE: 'double',
+                llvm.core.TYPE_X86_FP80: 'x86_fp80',
+                llvm.core.TYPE_FP128: 'FP128',
+                llvm.core.TYPE_PPC_FP128: 'PPC_FP128',
+                llvm.core.TYPE_LABEL : 'LABEL ',
+                llvm.core.TYPE_INTEGER: 'INTEGER',
+                llvm.core.TYPE_FUNCTION: 'FUNCTION',
+                llvm.core.TYPE_STRUCT: 'STRUCT',
+                llvm.core.TYPE_ARRAY: 'ARRAY',
+                llvm.core.TYPE_POINTER: 'POINTER',
+                #llvm.core.TYPE_OPAQUE: 'OPAQUE',
+                llvm.core.TYPE_VECTOR: 'VECTOR',
+                llvm.core.TYPE_METADATA: 'METADATA',
+                }#llvm.core.TYPE_UNION: 'UNION'}
+                
+    if k in kindDict:
+        return kindDict[k]
+    return '???'
+
 
 def makeType(typedesc):
     if typedesc == 'int':
@@ -52,6 +81,8 @@ def makeType(typedesc):
         return llvm.core.Type.void()
     if typedesc == 'float':
         return llvm.core.Type.float()
+    if typedesc in classDict:
+        return classDict[typedesc]['struct']
     print "making unknown type:",typedesc
     raise ValueError
 
@@ -138,13 +169,17 @@ class GlobalVarDeclNode(ASTNode):
         typeObj = makeType(self.typeName)
         var = gLlvmModule.add_global_variable(typeObj, self.name)
         var.initializer = llvm.core.Constant.undef(typeObj)
+        metadata = {'type' : typeObj,
+                    'typeName' : self.typeName,
+                    'var' : var}
+
         if not (self.initializer is None):
             valueCode = self.initializer.generateCode(None)
             var.initializer = valueCode
         if 'const' in self.qualifiers:
             #print "setting constant"
             var.global_constant = True
-        gGlobalVars[self.name] = var
+        gGlobalVars[self.name] = metadata
         #print "made var:",var
         #print dir(var)
         #print
@@ -177,18 +212,28 @@ class LocalVarDeclNode(ASTNode):
             print "variable '%s' already declared in frame '%s'"%(self.name, frame.name)
             raise RuntimeError
         var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
+        metadata = {'type' : typeObj,
+                    'typeName' : self.typeName,
+                    'var' : var
+        }
+        
         #print "var:",var
         #print "inserting into frame",frame.name
         #print dir(var)
+        #print "var name:", var.name
+        #print "var type:", var.type
+
         if 'const' in self.qualifiers:
             #print "inserting into consts"
-            frame.consts[self.name] = var
+            frame.consts[self.name] = metadata
             #print frame.consts
+            metadata['const'] = True
         else:
-            #print "inserting into vars"
-            frame.locals[self.name] = var
-        #print "made var:",var
-        #print
+            #print "inserting %s into vars" % self.name
+            frame.locals[self.name] = metadata
+            metadata['const'] = False
+        print "made var:",var
+        print
 
         if not(self.initializer is None):
             valueCode = self.initializer.generateCode(None)
@@ -209,44 +254,80 @@ def lookupVarByName(name):
         frame = gFrames[i]
         if name in frame.locals:
             #print "found in",frame.name
-            return frame.locals[name], False
+            return frame.locals[name]
         if name in frame.consts:
-            return frame.consts[name], True
+            return frame.consts[name]
     if name in gGlobalVars:
         #print "found in globals"
         var = gGlobalVars[name]
-        return var, var.global_constant
+        return var
     #print "not found"
-    return None, False
+    return None
 
-class AssignStatement(ASTNode):
-    def __init__(self, linenum, varname, value):
-        super(AssignStatement, self).__init__(linenum, "AssignStatement")
-        self.varname = varname
-        self.value = value
+
+class MemberDecl(ASTNode):
+    def __init__(self, linenum, typename, membername):
+        super(MemberDecl, self).__init__(linenum, "MemberDecl")
+        self.typename = typename
+        self.membername = membername
 
     def generateCode(self, breakBlock=None):
-        var,isConst = lookupVarByName(self.varname)
+        #print "declaring member:", self.typename, self.membername
+        pass
 
-        if isConst:
-            print "can't assign expression %s to const variable %s" % (self.value,
-                                                                       self.varname)
-            raise RuntimeError
 
-        print "assigning to",var
-        print var.type
-        print var.type.kind
-        print dir(var)
+class ClassDecl(ASTNode):
+    def __init__(self, linenum, classname, memberlist):
+        super(ClassDecl, self).__init__(linenum, "ClassDecl")
+        self.classname = classname
+        self.memberlist = memberlist
 
-        if var:
-            valueCode = self.value.generateCode(None)
-            varType = var.type
+    def generateCode(self, breakBlock=None):
+        print "making class decl"
+        print self.classname
+        typelist = []
+        namedtypelist = []
+
+        
+
+        for m in self.memberlist:
+            print m.typename, m.membername
+            typelist.append(makeType(m.typename))
+            namedtypelist.append({'name': m.membername,
+                                  'typename': m.typename})
+
+        structObj = llvm.core.Type.struct(typelist, self.classname)
+        classObj = {'struct':structObj,
+                    'elements':namedtypelist}
+        classDict[self.classname] = classObj
+
+class AssignStatement(ASTNode):
+    def __init__(self, linenum, lvalue, rvalue):
+        super(AssignStatement, self).__init__(linenum, "AssignStatement")
+        self.lvalue = lvalue
+        self.rvalue = rvalue
+
+    def generateCode(self, breakBlock=None):
+        print "lval:", self.lvalue
+        #lvalPtr = self.lvalue.getPtr()
+        lvalPtr = self.lvalue.generateCode(breakBlock)
+        print "lvalptr:", lvalPtr #self.lvalue.generateCode(breakBlock)
+
+        print "assigning to", lvalPtr #self.lvalue
+        #print self.lvalue.type
+        #print self.lvalue.type.kind
+        #print dir(self.lvalue)
+
+        if lvalPtr:
+            rval = self.rvalue.generateCode(breakBlock)
+            print "rval:", rval
             try:
-                gLlvmBuilder.store(valueCode, var)
+                gLlvmBuilder.store(rval, lvalPtr)
             except RuntimeError:
-                print "can't assign expression of type %s to variable %s of type %s" % (valueCode.type,
-                                                                                        self.varname,
-                                                                                        var.type)                
+                print "can't assign expression of type %s to variable %s of type %s" % (rval.type,
+                                                                                        self.lvalue,
+                                                                                        self.lvalue.type
+                                                                                        )                
                 raise RunTimeError
             
         else:
@@ -258,21 +339,45 @@ class AssignStatement(ASTNode):
         return "%s := %s" % (self.varname, str(self.value))
         
 
-class RValueVar(ASTNode):
+class VarLookup(ASTNode):
     def __init__(self, name, linenum):
-        super(RValueVar, self).__init__(linenum, "RValueVar")
+        super(VarLookup, self).__init__(linenum, "VarLookup")
         self.name = name
 
     def generateCode(self, breakBlock=None):
-        if self.name in gNamedValues:
-            return gNamedValues[self.name]
+        varMetadata = lookupVarByName(self.name)
+        if varMetadata:
+            isConst = varMetadata['const']
 
-        var, isConst = lookupVarByName(self.name)
-        if var:
+            if isConst:
+                print "can't assign expression %s to const variable %s" % (self.value,
+                                                                           self.varname)
+                raise RuntimeError
+
+
+            var = varMetadata['var']
             return gLlvmBuilder.load(var)
         else:
             print "cannot find %s in gNamedValues, gGlobalVars, or gLocalVars" % self.name
             raise RuntimeError
+
+    def getMetadata(self):
+        return lookupVarByName(self)
+        
+
+    def getPtr(self):
+        print "getting ptr for",self.name
+        varMetadata = lookupVarByName(self.name)
+        print varMetadata
+
+        var = varMetadata['var']
+        print var
+        ptr = var._ptr
+        if ptr is None:
+            print "no ptr?"
+            raise RuntimeError
+        return ptr
+        #return var
 
 
 class FuncDefNode(ASTNode):
@@ -472,8 +577,69 @@ class StatementList:
             retval = s.generateCode(breakBlock)
         return retval
 
-class FunctionCall:
-    def __init__(self, functionname, arglist):
+class MemberRef(ASTNode):
+    def __init__(self, linenum, base, membername):
+        super(MemberRef, self).__init__(linenum, "MemberRef")
+        self.base = base
+        self.membername = membername
+
+    def generateCode(self, breakBlock):
+        print "generating member reference"
+        base = self.base.generateCode(breakBlock)
+        print "base object:", base
+        print "base type:", base.type
+        print "base type kind:", base.type.kind, parseKind(base.type.kind)
+        print "base type name:", base.type.name
+
+        btname = base.type.name
+
+        print "member name:", self.membername
+
+        if btname in classDict:
+            baseClassObj = classDict[btname]
+        else:
+            print "can't find class:", btname, self.linenum
+            raise RuntimeError
+
+        offset = -1
+
+        elts = baseClassObj['elements']
+        
+        for i,e in enumerate(elts):
+            print e,i
+            if e['name'] == self.membername:
+                offset = i
+                break
+        if offset == -1:
+            print "can't find %s in %s" % (self.membername, btname)
+            print self.linenum
+            raise RuntimeError
+
+        print "offset:",offset
+
+        baseClassStruct = baseClassObj['struct']
+        print "bcs:",baseClassStruct
+        #print "dir(bcs):",dir(baseClassStruct)
+
+        #p = gLlvmBuilder.gep(base, [offset])
+        p = gLlvmBuilder.extract_value(base, offset)
+        print "p",p
+
+        
+        #p = baseClassStruct.gep(base, offset)
+        #p = gLlvmBuilder.getelementptr(baseObject, offset)
+
+        print p
+        return p
+        #return base.elements[offset]
+
+    def getPtr(self):
+        base = self.base.generateCode(None)
+        return self.base.getPtr()
+
+class FunctionCall(ASTNode):
+    def __init__(self, linenum, functionname, arglist):
+        super(FunctionCall, self).__init__(linenum, "FunctionCall")
         self.name = functionname
         self.arglist = arglist
 

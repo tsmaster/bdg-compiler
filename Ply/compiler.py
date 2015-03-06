@@ -20,6 +20,8 @@ tokens = (
     'ASSIGN',
     'LBRACE',
     'RBRACE',
+    'LBRACKET',
+    'RBRACKET',
     'SEMICOLON',
     'PLUS',
     'MINUS',
@@ -40,7 +42,9 @@ tokens = (
     'GREATEREQUAL',
     'CONST',
     'STATIC',
+    'CLASS',
     'IDENTIFIER',
+    'DOT',
 )
 
 t_LPAREN = r'\('
@@ -48,6 +52,8 @@ t_RPAREN = r'\)'
 t_ASSIGN = r'='
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
+t_LBRACKET = r'\['
+t_RBRACKET = r'\]'
 t_SEMICOLON = ';'
 t_PLUS = r'\+'
 t_MINUS = r'\-'
@@ -62,6 +68,7 @@ t_LESSTHAN = '<'
 t_GREATERTHAN = '>'
 t_LESSEQUAL = '<='
 t_GREATEREQUAL = '>='
+t_DOT = r'\.'
 literals = r'+-*/^~!(){}=[]\|;'
 
 def t_COMMENT(t):
@@ -83,7 +90,8 @@ reserved = {
     'while' : 'WHILE',
     'break' : 'BREAK',
     'const' : 'CONST',
-    'static' : 'STATIC'
+    'static' : 'STATIC',
+    'class' : 'CLASS',
 }
 
 def t_IDENTIFIER(t):
@@ -122,6 +130,8 @@ precedence = (
     ('right','UMINUS'),
     )
 
+# TODO collapse?
+
 def p_toplevelgroup_funcdecl(t):
     'toplevelgroup : funcdecl toplevelgroup'
     t[0] = [t[1]] + t[2]
@@ -132,6 +142,10 @@ def p_toplevelgroup_funcdef(t):
 
 def p_toplevelgroup_vardecl(t):
     'toplevelgroup : globalvardecl toplevelgroup'
+    t[0] = [t[1]] + t[2]
+
+def p_toplevelgroup_classdecl(t):
+    'toplevelgroup : classdecl toplevelgroup'
     t[0] = [t[1]] + t[2]
 
 def p_toplevelgroup_empty(t):
@@ -207,6 +221,22 @@ def p_arglist_many(t):
     'arglist : expression COMMA arglist'
     t[0] = [t[1]] + t[3]
 
+def p_memberlist_decl(t):
+    'memberlist : memberdecl memberlist'
+    t[0] = [t[1]] + t[2]
+
+def p_memberlist_empty(t):
+    'memberlist : empty'
+    t[0] = []
+
+def p_memberdecl(t):
+    'memberdecl : type IDENTIFIER SEMICOLON'
+    t[0] = ast.MemberDecl(t.lineno, t[1], t[2])
+
+def p_classdecl(t):
+    'classdecl : CLASS IDENTIFIER LBRACE memberlist RBRACE'
+    t[0] = ast.ClassDecl(t.lineno, t[2], t[4])
+
 def p_globalvardecl_var(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
     t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], None)
@@ -239,7 +269,7 @@ def p_statement_ifelse(t):
     t[0] = t[1]
 
 def p_statement_return(t):
-    '''statement : RETURN expression SEMICOLON'''
+    '''statement : RETURN castexpression SEMICOLON'''
     t[0] = ast.ReturnStatement(t[2])
 
 def p_statement_emptyreturn(t):
@@ -271,45 +301,72 @@ def p_statement_while_loop(t):
     t[0] = ast.WhileLoop(t[3], t[6])
 
 def p_statement_assign(t):
-    '''statement : IDENTIFIER ASSIGN expression SEMICOLON'''
+    '''statement : unaryexpression ASSIGN castexpression SEMICOLON'''
     t[0] = ast.AssignStatement(t.lineno, t[1], t[3])
 
-def p_expression_parens(t):
-    '''expression : LPAREN expression RPAREN'''
+def p_primaryexpression_variable(t):
+    '''primaryexpression : IDENTIFIER'''
+    t[0] = ast.VarLookup(t[1], t.lineno)
+
+def p_primaryexpression_number(t):
+    '''primaryexpression : NUMBER'''
+    t[0] = t[1]
+
+def p_primaryexpression_parens(t):
+    '''primaryexpression : LPAREN expression RPAREN'''
     t[0] = t[2]
 
-def p_expression_functioncall(t):
-    '''expression : IDENTIFIER LPAREN arglist RPAREN'''
-    t[0] = ast.FunctionCall(t[1], t[3])
+def p_postfixexpression_primaryexpression(t):
+    '''postfixexpression : primaryexpression'''
+    t[0] = t[1]
+
+def p_postfixexpression_arrayref(t):
+    '''postfixexpression : expression LBRACKET expression RBRACKET'''
+    t[0] = ast.ArrayRef(t[1], t[3])
+
+def p_postfixexpression_emptyfunctioncall(t):
+    '''postfixexpression : expression LPAREN RPAREN'''
+    t[0] = ast.FunctionCall(t[1], None)
+
+def p_postfixexpression_functioncall(t):
+    '''postfixexpression : expression LPAREN arglist RPAREN'''
+    t[0] = ast.FunctionCall(t.lineno, t[1], t[3])
+
+def p_postfixexpression_memberref(t):
+    '''postfixexpression : castexpression DOT IDENTIFIER'''
+    t[0] = ast.MemberRef(t.lineno, t[1], t[3])
+
+def p_unaryexpression_postfix(t):
+    '''unaryexpression : postfixexpression'''
+    t[0] = t[1]
+
+def p_castexpression_unary(t):
+    '''castexpression : unaryexpression'''
+    t[0] = t[1]
+
+def p_castexpression_cast(t):
+    '''castexpression : LPAREN IDENTIFIER RPAREN castexpression'''
+    t[0] = ast.CastExpr(t.lineno, t[2], t[4])
 
 def p_expression_binaryop(t):
-    '''expression : expression ISEQUAL expression
-                  | expression NOTEQUAL expression
-                  | expression LESSTHAN expression
-                  | expression GREATERTHAN expression
-                  | expression LESSEQUAL expression
-                  | expression GREATEREQUAL expression
-                  | expression LOGICAND expression
-                  | expression LOGICOR expression
-                  | expression PLUS expression
-                  | expression MINUS expression
-                  | expression TIMES expression
-                  | expression DIVIDE expression'''
+    '''expression : castexpression ISEQUAL castexpression
+                  | castexpression NOTEQUAL castexpression
+                  | castexpression LESSTHAN castexpression
+                  | castexpression GREATERTHAN castexpression
+                  | castexpression LESSEQUAL castexpression
+                  | castexpression GREATEREQUAL castexpression
+                  | castexpression LOGICAND castexpression
+                  | castexpression LOGICOR castexpression
+                  | castexpression PLUS castexpression
+                  | castexpression MINUS castexpression
+                  | castexpression TIMES castexpression
+                  | castexpression DIVIDE castexpression'''
     node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
     t[0] = node
-
-def p_expression_variable(t):
-    '''expression : IDENTIFIER'''
-    # rvalue
-    t[0] = ast.RValueVar(t[1], t.lineno)
 
 def p_expression_negop(t):
     '''expression : MINUS expression %prec UMINUS'''
     t[0] = ast.NegativeExprNode(t.lineno, t[2])
-
-def p_expression_number(t):
-    '''expression : NUMBER'''
-    t[0] = t[1]
 
 def p_elifgroup_empty(t):
     '''elifgroup : empty'''
@@ -328,7 +385,7 @@ def p_optelse_single(t):
     t[0] = t[3]
 
 def p_ifelse_if(t):
-    '''ifelse : IF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup optelse'''
+    '''ifelse : IF LPAREN castexpression RPAREN LBRACE statementlist RBRACE elifgroup optelse'''
     #t[0] = ['if', t[3], 'then', t[6], 'elif', t[8], 'else', t[9]]
     t[0] = ast.IfElse(t[3], t[6], t[8], t[9])
 
@@ -408,7 +465,7 @@ def compile(filename, basename, outname, bc_name):
             if not (obj is None):
                 topLevelObjs.append(obj)
             print
-    
+
     #for tlo in topLevelObjs:
     #    print "tlo:",tlo.name
 
@@ -458,6 +515,6 @@ if __name__ == '__main__':
             bc_filename = None
         else:
             print_usage()
-            sys.exit
+            sys.exit(-1)
 
     compile(input_filename, module_name, obj_filename, bc_filename)
