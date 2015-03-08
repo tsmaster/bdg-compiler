@@ -1,0 +1,22 @@
+void print_float(float f);
+void print_line();
+
+class Vec2i {
+  int x;
+  int y;
+}
+
+class Vec2f {
+  float x;
+  float y;
+}
+
+int main() {
+  Vec2i scrpos;
+  Vec2f pos;
+
+  scrpos.x = 160;
+  pos.x = 1.0;
+  
+  return 0;
+}

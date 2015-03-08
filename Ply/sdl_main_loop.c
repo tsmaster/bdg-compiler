@@ -29,18 +29,12 @@ int gScreenHeight = 480;
 
 // functions:
 
-/*
-warning: unresolved symbol: sdl_tick_input
-warning: unresolved symbol: sdl_draw_rect
-warning: unresolved symbol: sdl_keydown
-warning: unresolved symbol: srand_from_time
-warning: unresolved symbol: rand_int
-
- */
-
-
 int rand_int(int max) {
   return rand() % max;
+}
+
+float rand_float(float max) {
+  return max / RAND_MAX * rand();
 }
 
 void srand_from_time() {
@@ -92,6 +86,14 @@ int m_sin(int milliradians, int scale) {
 
 int m_cos(int milliradians, int scale) {
   return (int)(cos(milliradians / 1000.0f) * scale + 0.5f);
+}
+
+float m_cos_f(float radians) {
+  return cos(radians);
+}
+
+float m_sin_f(float radians) {
+  return sin(radians);
 }
 
 int m_atan2(int y, int x) {

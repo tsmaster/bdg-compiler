@@ -1,8 +1,8 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import ast
-import llvm.core
-import llvm.ee
+
+import llvmlite.binding as llvm
 import sys
 import os
 
@@ -95,10 +95,10 @@ def t_NUMBER(t):
     r'\d*\.?[0-9]+'
     if '.' in t.value:
         floatval = float(t.value)
-        t.value = ast.ConstantFloatNode(floatval, t.lineno)
+        t.value = ast.ConstantFloatNode(floatval, t.lexer.lineno)
     else:
         intval = int(t.value)
-        t.value = ast.ConstantIntegerNode(intval, t.lineno)
+        t.value = ast.ConstantIntegerNode(intval, t.lexer.lineno)
     return t
 
 def t_newline(t):
@@ -110,7 +110,7 @@ t_ignore = ' \t\r'
 #Error Handling
 def t_error(t):
     print "Illegal character '%s'" % t.value[0]
-    print "line:", t.lineno
+    print "line:", t.lexer.lineno
     t.lexer.skip(1)
 
 lexer = lex.lex()
@@ -209,15 +209,15 @@ def p_arglist_many(t):
 
 def p_globalvardecl_var(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], None)
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
 
 def p_globalvardecl_constinitialized(t):
     '''globalvardecl : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
 
 def p_globalvardecl_varinitialized(t):
     '''globalvardecl : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4])
 
 def p_statementlist_empty(t):
     'statementlist : empty'
@@ -240,23 +240,23 @@ def p_statement_ifelse(t):
 
 def p_statement_return(t):
     '''statement : RETURN expression SEMICOLON'''
-    t[0] = ast.ReturnStatement(t[2])
+    t[0] = ast.ReturnStatement(t.lexer.lineno, t[2])
 
 def p_statement_emptyreturn(t):
     '''statement : RETURN SEMICOLON'''
-    t[0] = ast.ReturnStatement(None)
+    t[0] = ast.ReturnStatement(t.lexer.lineno, None)
 
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], None)
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
 
 def p_statement_localvardecl_initialized(t):
     '''statement : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4])
 
 def p_statement_localvardecl_constinitialized(t):
     '''statement : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
 
 def p_statement_loop(t):
     '''statement : LOOP LBRACE statementlist RBRACE'''
@@ -272,7 +272,7 @@ def p_statement_while_loop(t):
 
 def p_statement_assign(t):
     '''statement : IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.AssignStatement(t.lineno, t[1], t[3])
+    t[0] = ast.AssignStatement(t.lexer.lineno, t[1], t[3])
 
 def p_expression_parens(t):
     '''expression : LPAREN expression RPAREN'''
@@ -280,7 +280,7 @@ def p_expression_parens(t):
 
 def p_expression_functioncall(t):
     '''expression : IDENTIFIER LPAREN arglist RPAREN'''
-    t[0] = ast.FunctionCall(t[1], t[3])
+    t[0] = ast.FunctionCall(t.lexer.lineno, t[1], t[3])
 
 def p_expression_binaryop(t):
     '''expression : expression ISEQUAL expression
@@ -295,17 +295,17 @@ def p_expression_binaryop(t):
                   | expression MINUS expression
                   | expression TIMES expression
                   | expression DIVIDE expression'''
-    node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
+    node = ast.BinaryExprNode(t[1], t[3], t.lexer.lineno, t[2])
     t[0] = node
 
 def p_expression_variable(t):
     '''expression : IDENTIFIER'''
     # rvalue
-    t[0] = ast.RValueVar(t[1], t.lineno)
+    t[0] = ast.RValueVar(t[1], t.lexer.lineno)
 
 def p_expression_negop(t):
     '''expression : MINUS expression %prec UMINUS'''
-    t[0] = ast.NegativeExprNode(t.lineno, t[2])
+    t[0] = ast.NegativeExprNode(t.lexer.lineno, t[2])
 
 def p_expression_number(t):
     '''expression : NUMBER'''
@@ -333,7 +333,7 @@ def p_ifelse_if(t):
     t[0] = ast.IfElse(t[3], t[6], t[8], t[9])
 
 def p_error(t):
-    print("Syntax error at %s (line:%d)" % (t.value, t.lineno))
+    print("Syntax error at %s (line:%d)" % (t.value, t.lexer.lineno))
     print t
 
 yacc.yacc(start = 'toplevelgroup')
@@ -359,17 +359,34 @@ def load_file(filename, includeDict=None):
             included_path = os.path.join(file_path, included_filename)
             if not (included_path in includeDict):
                 included_file = load_file(included_path, includeDict)
-                out_buffer = out_buffer + '# INCLUDED FILE BEGINS: %s \n' % included_path
+                out_buffer = out_buffer + '### INCLUDED FILE BEGINS: %s \n' % included_path
                 out_buffer = out_buffer + included_file + '\n'
-                out_buffer = out_buffer + '# INCLUDED FILE ENDS: %s \n' % included_path
+                out_buffer = out_buffer + '### INCLUDED FILE ENDS: %s \n' % included_path
                 includeDict[included_path] = 1;
         else:
             out_buffer = out_buffer + line
     return out_buffer
 
 def makeObj(name, mainFunc):
+    target_machine = llvm.Target.from_default_triple().create_target_machine()
+    strmod = str(ast.gLlvmModule)
+
+    if 0:
+        print "module:"
+        print "==="
+        print strmod
+        print "==="
+    llmod = llvm.parse_assembly(strmod)
+
+    if 0:
+        print "assembly:"
+        print "==="
+        print target_machine.emit_assembly(llmod)
+        print "==="
+
+    objdata = target_machine.emit_object(llmod)
     objFile = open(name, 'wb')
-    obj = ast.gLlvmModule.to_native_object(objFile)
+    objFile.write(objdata)
     objFile.close()
 
 def makeBC(name, mainFunc):
@@ -380,15 +397,22 @@ def makeBC(name, mainFunc):
 
 def compile(filename, basename, outname, bc_name):
     sourcecode = load_file(filename)
-    ast.gLlvmModule = llvm.core.Module.new(basename)
-    lexer.input(sourcecode)
+    if 0:
+        for i,codeline in enumerate(sourcecode.split('\n')):
+            print "%05d %s" % (i+1, codeline)
+
+    ast.init_llvm(basename)
 
     # Tokenize
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        #print tok
+    if 0:
+        lexer.input(sourcecode)
+
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            #print tok
+
 
     #print "parsing:"
     #for linenum, line in enumerate(sourcecode.split('\n')):
@@ -404,10 +428,14 @@ def compile(filename, basename, outname, bc_name):
             #print "making decl for",tlt.name
             tlt.generateDecl()
         for tlt in tree:
-            obj = tlt.generateCode()
+            try:
+                obj = tlt.generateCode()
+            except TypeError:
+                print "error making code for",tlt.name
+                raise
             if not (obj is None):
                 topLevelObjs.append(obj)
-            print
+            #print
     
     #for tlo in topLevelObjs:
     #    print "tlo:",tlo.name
@@ -460,4 +488,10 @@ if __name__ == '__main__':
             print_usage()
             sys.exit
 
-    compile(input_filename, module_name, obj_filename, bc_filename)
+    try:
+        compile(input_filename, module_name, obj_filename, bc_filename)
+    except RuntimeError:
+        raise
+        exit(-1)
+
+    exit(0)

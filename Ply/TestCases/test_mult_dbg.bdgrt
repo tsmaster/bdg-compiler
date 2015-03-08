@@ -1,0 +1,9 @@
+int return17() {
+  return 17;
+}
+
+float f_offset = -32.0;
+
+int main() {
+  return 0;
+}

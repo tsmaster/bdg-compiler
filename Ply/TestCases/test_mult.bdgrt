@@ -55,4 +55,5 @@ int main() {
   }
   assert_equal(a, 10);
   disp_i(a);
+  return 0;
 }

@@ -6,5 +6,7 @@ void flip();
 void sdl_tick_input();
 int sdl_quit_signalled();
 void sdl_draw_rect(int left, int top, int width, int height, int r, int g, int b);
+void sdl_draw_rect_f(float left, float top, float width, float height, int r, int g, int b);
 void delay(int ms);
+void delay_f(float seconds);
 int sdl_keydown(int key);
