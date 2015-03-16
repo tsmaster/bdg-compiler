@@ -47,6 +47,10 @@ void clear_window(int red, int green, int blue) {
   SDL_RenderClear( gpSDLRenderer );
 }
 
+void sdl_clear_window(int r, int g, int b) {
+  clear_window(r, g, b);
+}
+
 void flip() {
   SDL_RenderPresent(gpSDLRenderer);
   SDL_UpdateWindowSurface(gpSDLWindow);
@@ -78,8 +82,21 @@ void sdl_draw_rect(int left, int top, int width, int height, int r, int g, int b
   SDL_RenderFillRect( gpSDLRenderer, &fillRect );
 }
 
+void sdl_draw_rect_f(float left, float top, float width, float height, int r, int g, int b) {
+  int i_left = (int) left;
+  int i_top = (int) top;
+  int i_width = (int) width;
+  int i_height = (int) height;
+
+  sdl_draw_rect(i_left, i_top, i_width, i_height, r, g, b);
+}
+
 int rand_int(int max) {
   return rand() % max;
+}
+
+float rand_float(float max) {
+  return max / RAND_MAX * rand();
 }
 
 void srand_from_time() {
@@ -88,6 +105,11 @@ void srand_from_time() {
 
 void delay(int ms) {
   SDL_Delay(ms);
+}
+
+void delay_f(float seconds) {
+  int ms = (int)(seconds*1000);
+  delay(ms);
 }
 
 int sdl_keydown(int key) {
@@ -102,6 +124,14 @@ int m_sin(int milliradians, int scale) {
 
 int m_cos(int milliradians, int scale) {
   return (int)(cos(milliradians / 1000.0f) * scale + 0.5f);
+}
+
+float m_cos_f(float radians) {
+  return cos(radians);
+}
+
+float m_sin_f(float radians) {
+  return sin(radians);
 }
 
 int m_atan2(int y, int x) {

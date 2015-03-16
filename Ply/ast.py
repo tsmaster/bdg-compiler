@@ -1,4 +1,8 @@
-import llvm.core
+import llvmlite.ir as ir
+import llvmlite.ir.context as ircontext
+import llvmlite.binding as llvm
+import numpy as np
+from ctypes import CFUNCTYPE, c_int, POINTER
 
 gLlvmModule = None
 gLlvmBuilder = None
@@ -13,6 +17,31 @@ gGlobalVars = {}
 gFrames = []
 
 gNameCounter = 0
+
+def isIntType(ty):
+    return isinstance(ty, ir.IntType)
+
+def isFloatType(ty):
+    return isinstance(ty, ir.FloatType)
+
+def isVariableType(ty):
+    return (isinstance(ty, ir.instructions.AllocaInstr) or
+            isinstance(ty, ir.GlobalVariable))
+
+def maybeDerefCode(c):
+    if (isinstance(c, ir.GlobalVariable) or 
+        isinstance(c, ir.instructions.AllocaInstr)):
+        return gLlvmBuilder.load(c)
+    return c
+
+def init_llvm(basename):
+    llvm.initialize()
+    llvm.initialize_native_target()
+    llvm.initialize_native_asmprinter()
+
+    global gLlvmModule
+    gLlvmModule = ir.Module(name=basename)
+
 
 class Frame:
     def __init__(self, name=None):
@@ -52,22 +81,11 @@ class ASTNode(object):
         return self.typename
 
 def parseKind(k):
-    kindDict = {llvm.core.TYPE_VOID: 'void',
-                llvm.core.TYPE_FLOAT: 'float',
-                llvm.core.TYPE_DOUBLE: 'double',
-                llvm.core.TYPE_X86_FP80: 'x86_fp80',
-                llvm.core.TYPE_FP128: 'FP128',
-                llvm.core.TYPE_PPC_FP128: 'PPC_FP128',
-                llvm.core.TYPE_LABEL : 'LABEL ',
-                llvm.core.TYPE_INTEGER: 'INTEGER',
-                llvm.core.TYPE_FUNCTION: 'FUNCTION',
-                llvm.core.TYPE_STRUCT: 'STRUCT',
-                llvm.core.TYPE_ARRAY: 'ARRAY',
-                llvm.core.TYPE_POINTER: 'POINTER',
-                #llvm.core.TYPE_OPAQUE: 'OPAQUE',
-                llvm.core.TYPE_VECTOR: 'VECTOR',
-                llvm.core.TYPE_METADATA: 'METADATA',
-                }#llvm.core.TYPE_UNION: 'UNION'}
+    kindDict = {ir.TYPE_UNKNOWN: 'unknown',
+                ir.TYPE_POINTER: 'pointer',
+                ir.TYPE_STRUCT: 'struct',
+                ir.TYPE_METADATA: 'metadata',
+               }
                 
     if k in kindDict:
         return kindDict[k]
@@ -76,13 +94,13 @@ def parseKind(k):
 
 def makeType(typedesc):
     if typedesc == 'int':
-        return llvm.core.Type.int()
+        return ir.IntType(32)
     if typedesc == 'void':
-        return llvm.core.Type.void()
+        return ir.VoidType()
     if typedesc == 'float':
-        return llvm.core.Type.float()
+        return ir.FloatType()
     if typedesc in classDict:
-        return classDict[typedesc]['struct']
+        return classDict[typedesc]['identifiedStruct']
     print "making unknown type:",typedesc
     raise ValueError
 
@@ -115,17 +133,30 @@ class FuncDeclNode(ASTNode):
             self.arglist = []
 
     def generateCode(self, breakBlock=None):
-        #print "generating code for funcdecl",self.arglist
+        #print "generating code for funcdecl",self.name, self.arglist
         argtypelist = []
         argnamelist = []
         for arg in self.arglist:
             argtypelist.append(makeType(arg.typestr))
             argnamelist.append(arg.name)
 
-        functype = llvm.core.Type.function(self.rettype, argtypelist)
-        #funcobj = llvm.core.Function.new(gLlvmModule, functype, self.name)
-        funcobj = llvm.core.Function.get_or_insert(gLlvmModule, functype, self.name)
-        #print "made a function declaration for name:", self.name
+        functype = ir.FunctionType(self.rettype, argtypelist)
+        #print "functype:",functype
+
+        #print "module functions:"
+        foundDup = False
+        for f in gLlvmModule.functions:
+            #print f.name, f
+            #print dir(f)
+            if self.name == f.name:
+                #print "found dup"
+                foundDup = True
+                funcobj = f
+                break
+
+        if not foundDup:
+            funcobj = ir.Function(gLlvmModule, functype, name=self.name)
+            #print "made a function declaration for name:", self.name
 
         self.llvmNode = funcobj
         if funcobj.name != self.name:
@@ -167,27 +198,34 @@ class GlobalVarDeclNode(ASTNode):
 
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
-        var = gLlvmModule.add_global_variable(typeObj, self.name)
-        var.initializer = llvm.core.Constant.undef(typeObj)
-        metadata = {'type' : typeObj,
-                    'typeName' : self.typeName,
-                    'var' : var}
+        globalVars = gLlvmModule.global_values
+        if self.name in globalVars:
+            print 'var already declared:',self.name
+            raise RuntimeError
 
+        var = ir.GlobalVariable(gLlvmModule, typeObj, self.name)
+        #print "var initializer:",typeObj
+        if isinstance(typeObj, ir.IntType):
+            var.initializer = ir.Constant(typeObj, 0)
+        elif isFloatType(typeObj):
+            var.initializer = ir.Constant(typeObj, 0.0)
+
+        #var.initializer = ir.Constant(typeObj, ir.Undefined())
         if not (self.initializer is None):
             valueCode = self.initializer.generateCode(None)
             var.initializer = valueCode
         if 'const' in self.qualifiers:
             #print "setting constant"
             var.global_constant = True
-        gGlobalVars[self.name] = metadata
+
+        gGlobalVars[self.name] = var
+
         #print "made var:",var
         #print dir(var)
         #print
 
     def __str__(self):
         return "(%s) %s" % (self.type, self.name)
-
-
 
 class LocalVarDeclNode(ASTNode):
     def __init__(self, linenum, qualifiers, typeName, name, initializer):
@@ -212,10 +250,10 @@ class LocalVarDeclNode(ASTNode):
             print "variable '%s' already declared in frame '%s'"%(self.name, frame.name)
             raise RuntimeError
         var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
-        metadata = {'type' : typeObj,
-                    'typeName' : self.typeName,
-                    'var' : var
-        }
+        #metadata = {'type' : typeObj,
+        #            'typeName' : self.typeName,
+        #            'var' : var
+        #}
         
         #print "var:",var
         #print "inserting into frame",frame.name
@@ -225,15 +263,15 @@ class LocalVarDeclNode(ASTNode):
 
         if 'const' in self.qualifiers:
             #print "inserting into consts"
-            frame.consts[self.name] = metadata
+            frame.consts[self.name] = var
             #print frame.consts
-            metadata['const'] = True
+            #metadata['const'] = True
         else:
             #print "inserting %s into vars" % self.name
-            frame.locals[self.name] = metadata
-            metadata['const'] = False
-        print "made var:",var
-        print
+            frame.locals[self.name] = var
+            #metadata['const'] = False
+        #print "made var:",var
+        #print
 
         if not(self.initializer is None):
             valueCode = self.initializer.generateCode(None)
@@ -257,6 +295,10 @@ def lookupVarByName(name):
             return frame.locals[name]
         if name in frame.consts:
             return frame.consts[name]
+    if name in gNamedValues:
+        #print "found in gNamedValues"
+        var = gNamedValues[name]
+        return var
     if name in gGlobalVars:
         #print "found in globals"
         var = gGlobalVars[name]
@@ -283,21 +325,24 @@ class ClassDecl(ASTNode):
         self.memberlist = memberlist
 
     def generateCode(self, breakBlock=None):
-        print "making class decl"
-        print self.classname
+        #print "making class decl"
+        #print self.classname
         typelist = []
         namedtypelist = []
 
-        
-
         for m in self.memberlist:
-            print m.typename, m.membername
+            #print m.typename, m.membername
             typelist.append(makeType(m.typename))
             namedtypelist.append({'name': m.membername,
                                   'typename': m.typename})
-
-        structObj = llvm.core.Type.struct(typelist, self.classname)
-        classObj = {'struct':structObj,
+        
+        literalStructObj = ir.LiteralStructType(typelist)
+        context = ircontext.global_context
+        identifiedStructObj = context.get_identified_type(self.classname)
+        identifiedStructObj.set_body(*literalStructObj.elements)
+        
+        classObj = {'literalStruct': literalStructObj,
+                    'identifiedStruct': identifiedStructObj,
                     'elements':namedtypelist}
         classDict[self.classname] = classObj
 
@@ -308,32 +353,46 @@ class AssignStatement(ASTNode):
         self.rvalue = rvalue
 
     def generateCode(self, breakBlock=None):
-        print "lval:", self.lvalue
-        #lvalPtr = self.lvalue.getPtr()
-        lvalPtr = self.lvalue.generateCode(breakBlock)
-        print "lvalptr:", lvalPtr #self.lvalue.generateCode(breakBlock)
+        #print "lval:", self.lvalue
 
-        print "assigning to", lvalPtr #self.lvalue
-        #print self.lvalue.type
-        #print self.lvalue.type.kind
-        #print dir(self.lvalue)
+        lValIsAggregate = False
 
-        if lvalPtr:
-            rval = self.rvalue.generateCode(breakBlock)
-            print "rval:", rval
+        if isinstance(self.lvalue, str):
+            name = self.lvalue
+            #print 'lval is a string:', name
+            var = lookupVarByName(name)
+        elif isinstance(self.lvalue, MemberRef):
+            #print 'found member reference'
+            var = self.lvalue.generateCode(breakBlock)
+            lValIsAggregate = True
+        else:
+            var = self.lvalue.generateCode(breakBlock)
+            name = self.lvalue.name
+
+        if not var:
+            print "don't know how to deal with", self.name, self.linenum
+            raise RuntimeError
+
+        rval = self.rvalue.generateCode(breakBlock)
+        #print "rval:", rval
+        #print "rval type:", rval.type
+
+        rval = maybeDerefCode(rval)
+        #print "dr rval:", rval
+        #print "rval type:", rval.type
+
+        if lValIsAggregate:
+            offset = 1 # var.bdg_offset
+            gLlvmBuilder.insert_value(var, rval, offset, name='insagg')
+        else:
             try:
-                gLlvmBuilder.store(rval, lvalPtr)
+                gLlvmBuilder.store(rval, var)
             except RuntimeError:
                 print "can't assign expression of type %s to variable %s of type %s" % (rval.type,
-                                                                                        self.lvalue,
-                                                                                        self.lvalue.type
-                                                                                        )                
-                raise RunTimeError
-            
-        else:
-            print "don't recognize variable:",self.varname, self.linenum
-            print help(self.linenum)
-            raise RuntimeError
+                                                                                    self.lvalue,
+                                                                                    self.lvalue.type
+                                                                                        )
+                raise RuntimeError
 
     def __str__(self):
         return "%s := %s" % (self.varname, str(self.value))
@@ -345,40 +404,25 @@ class VarLookup(ASTNode):
         self.name = name
 
     def generateCode(self, breakBlock=None):
-        varMetadata = lookupVarByName(self.name)
-        if varMetadata:
-            isConst = varMetadata['const']
+        var = lookupVarByName(self.name)
+        if var:
+            # TODO - const
+            #isConst = varMetadata['const']
+            #isConst = False
+            #
+            #if isConst:
+            #    print "can't assign expression %s to const variable %s" % (self.value,
+            #                                                               self.varname)
+            #    raise RuntimeError
 
-            if isConst:
-                print "can't assign expression %s to const variable %s" % (self.value,
-                                                                           self.varname)
-                raise RuntimeError
-
-
-            var = varMetadata['var']
-            return gLlvmBuilder.load(var)
+            return var # gLlvmBuilder.load(var)
         else:
-            print "cannot find %s in gNamedValues, gGlobalVars, or gLocalVars" % self.name
+            print "cannot find '%s' in gNamedValues, gGlobalVars, or gLocalVars" % self.name
             raise RuntimeError
 
     def getMetadata(self):
         return lookupVarByName(self)
         
-
-    def getPtr(self):
-        print "getting ptr for",self.name
-        varMetadata = lookupVarByName(self.name)
-        print varMetadata
-
-        var = varMetadata['var']
-        print var
-        ptr = var._ptr
-        if ptr is None:
-            print "no ptr?"
-            raise RuntimeError
-        return ptr
-        #return var
-
 
 class FuncDefNode(ASTNode):
     def __init__(self, prototype, funcname, body, linenum):
@@ -395,7 +439,9 @@ class FuncDefNode(ASTNode):
 
         block = funcobj.append_basic_block('entry')
         global gLlvmBuilder
-        gLlvmBuilder = llvm.core.Builder.new(block)
+        gLlvmBuilder = ir.IRBuilder()
+        gLlvmBuilder.position_at_end(block)
+
         frame = pushFrame(self.name)
 
         try:
@@ -403,14 +449,16 @@ class FuncDefNode(ASTNode):
             #print "generated code for func def: %s" % self.name, retval
             #print funcobj
             if gLlvmBuilder.basic_block.terminator is None:
+                #print "inserting a void return"
                 gLlvmBuilder.ret_void()
 
-            funcobj.verify()
+            #funcobj.verify()
         except:
-            funcobj.delete()
+            #funcobj.delete()
             raise
             
         popFrame(frame)
+        gLlvmBuilder = None
 
         return funcobj
 
@@ -445,13 +493,13 @@ class IfElse:
 
     def generateCondition(self, condition, funcObj):
         condCode = condition.generateCode(None)
-        if (condCode.type.kind == llvm.core.TYPE_INTEGER):
+        if isIntType(condCode.type):
             condition_bool = condCode
-        elif (condCode.type.kind == llvm.core.TYPE_FLOAT):
-            condition_bool = gLlvmBuilder.fcmp(llvm.core.FCMP_ONE, 
-                                               condCode,
-                                               llvm.core.Constant.float(llvm.core.Type.double(), 0.0),
-                                               'ifcond')
+        elif isFloatType(condCode.type):
+            condition_bool = gLlvmBuilder.fcmp_ordered('!=',
+                                                       condCode,
+                                                       llvm.core.Constant.float(llvm.core.Type.double(), 0.0),
+                                                       'ifcond')
         return condition_bool
         
 
@@ -515,8 +563,9 @@ class IfElse:
         return None
 
                              
-class ReturnStatement:
-    def __init__(self, expr):
+class ReturnStatement(ASTNode):
+    def __init__(self, linenum, expr):
+        super(ReturnStatement, self).__init__(linenum, "ReturnStatement")
         self.expr = expr
 
     def __str__(self):
@@ -526,7 +575,10 @@ class ReturnStatement:
         if (self.expr is None):
             gLlvmBuilder.ret_void()
         else:
-            gLlvmBuilder.ret(self.expr.generateCode(None))
+            #print "making a return",self.expr
+            code = self.expr.generateCode(None)
+            code = maybeDerefCode(code)
+            gLlvmBuilder.ret(code)
 
 class BreakStatement:
     def __init__(self):
@@ -577,6 +629,7 @@ class StatementList:
             retval = s.generateCode(breakBlock)
         return retval
 
+
 class MemberRef(ASTNode):
     def __init__(self, linenum, base, membername):
         super(MemberRef, self).__init__(linenum, "MemberRef")
@@ -584,29 +637,32 @@ class MemberRef(ASTNode):
         self.membername = membername
 
     def generateCode(self, breakBlock):
-        print "generating member reference"
+        #print "generating member reference"
         base = self.base.generateCode(breakBlock)
-        print "base object:", base
-        print "base type:", base.type
-        print "base type kind:", base.type.kind, parseKind(base.type.kind)
-        print "base type name:", base.type.name
+        #print "base object:", base
+        t = base.type
+        #print "base type:", base.type
 
-        btname = base.type.name
+        #print "member name:", self.membername
 
-        print "member name:", self.membername
+        if base.type.is_pointer:
+            t = base.type.pointee
 
-        if btname in classDict:
-            baseClassObj = classDict[btname]
+        #print t, t.name
+
+        found_type = None
+        if t.name in classDict:
+            found_type=classDict[t.name]
         else:
-            print "can't find class:", btname, self.linenum
+            print "can't find class:", t, t.name, self.linenum
             raise RuntimeError
 
         offset = -1
 
-        elts = baseClassObj['elements']
+        elts = found_type['elements']
         
         for i,e in enumerate(elts):
-            print e,i
+            #print e,i
             if e['name'] == self.membername:
                 offset = i
                 break
@@ -615,27 +671,20 @@ class MemberRef(ASTNode):
             print self.linenum
             raise RuntimeError
 
-        print "offset:",offset
+        #print "offset:",offset
 
-        baseClassStruct = baseClassObj['struct']
-        print "bcs:",baseClassStruct
-        #print "dir(bcs):",dir(baseClassStruct)
+        #print base.type
+        #print base.name
+        #print dir(base)
 
-        #p = gLlvmBuilder.gep(base, [offset])
-        p = gLlvmBuilder.extract_value(base, offset)
-        print "p",p
-
-        
-        #p = baseClassStruct.gep(base, offset)
-        #p = gLlvmBuilder.getelementptr(baseObject, offset)
-
-        print p
-        return p
-        #return base.elements[offset]
+        base.bdg_offset = offset
+        var = gLlvmBuilder.load(base)
+        return var
 
     def getPtr(self):
         base = self.base.generateCode(None)
         return self.base.getPtr()
+
 
 class FunctionCall(ASTNode):
     def __init__(self, linenum, functionname, arglist):
@@ -649,7 +698,22 @@ class FunctionCall(ASTNode):
 
     def generateCode(self, breakBlock):
         name = None
-        callee = gLlvmModule.get_function_named(self.name)
+        callee = None
+
+        if isinstance(self.name, str):
+            funcName = self.name
+        else:
+            # TODO - what is this?
+            funcName = self.name.name
+        for f in gLlvmModule.functions:
+            if f.name == funcName:
+                callee = f
+                break
+
+        if callee is None:
+            print "can't find function:",self.name
+            raise RuntimeError
+
         calleeArgLen = len(callee.args)
         if self.arglist is None:
             self.arglist = []
@@ -660,7 +724,25 @@ class FunctionCall(ASTNode):
             raise RuntimeError('Incorrect number of arguments in call to '+self.name)
 
         evaluatedArguments = map(lambda x: x.generateCode(None), self.arglist)
-        return gLlvmBuilder.call(callee, evaluatedArguments)
+        
+        for i, x in enumerate(evaluatedArguments):
+            #print "arg #%d " % i , x
+
+            if isinstance(x, ir.GlobalVariable):
+                #print "is a global"
+                evaluatedArguments[i] = gLlvmBuilder.load(x)
+            elif isinstance(x, ir.instructions.AllocaInstr):
+                #print "is a local"
+                evaluatedArguments[i] = gLlvmBuilder.load(x)
+            else:
+                #print x.type
+                pass
+                
+        try:
+            return gLlvmBuilder.call(callee, evaluatedArguments)
+        except TypeError:
+            print "Type Error in line", self.linenum
+            raise
 
 
 class ConstantIntegerNode(ASTNode):
@@ -669,7 +751,7 @@ class ConstantIntegerNode(ASTNode):
         self.value = value
         self.linenum = linenum
         # print "constant integer node:",value
-        self.llvmNode = llvm.core.Constant.int(llvm.core.Type.int(), value)
+        self.llvmNode = ir.Constant(ir.IntType(32), value)
         
     def __str__(self):
         return str(self.llvmNode)
@@ -683,7 +765,7 @@ class ConstantFloatNode(ASTNode):
         self.value = value
         self.linenum = linenum
         # print "constant float node:",value
-        self.llvmNode = llvm.core.Constant.real(llvm.core.Type.float(), value)
+        self.llvmNode = ir.Constant(ir.FloatType(), value)
 
     def __str__(self):
         return str(self.llvmNode)
@@ -709,42 +791,53 @@ class BinaryExprNode(ASTNode):
         #print code0.type
         #print code1
         #print code1.type
+        #print self.linenum
+
+        """
         if not (code0.type == code1.type):
-            print "cannot convert types"
+            print "cannot convert types on line", self.linenum
             print "code0 type:",code0.type
             print "code0:", code0
+            print "op:",self.opstr
             print "code1 type:",code1.type
             print "code1:", code1
             raise RuntimeError
-        
+        """
+
+        if isVariableType(code0):
+            code0 = gLlvmBuilder.load(code0)
+        if isVariableType(code1):
+            code1 = gLlvmBuilder.load(code1)
+
         if self.opstr == '+':
-            if code0.type == llvm.core.Type.int():
+            if isIntType(code0.type):
                 return gLlvmBuilder.add(code0, code1, "addtmp")
-            elif code0.type == llvm.core.Type.float():
+            elif isFloatType(code0.type):
                 return gLlvmBuilder.fadd(code0, code1, "faddtmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '-':
-            if code0.type == llvm.core.Type.int():
+            if isIntType(code0.type):
                 return gLlvmBuilder.sub(code0, code1, "subtmp")
-            elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fsub(code0, code1, "faddtmp")
+            elif isFloatType(code0.type):
+                #print "subtracting", code0, code1
+                return gLlvmBuilder.fsub(code0, code1, "fsubtmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '*':
-            if code0.type == llvm.core.Type.int():
+            if isIntType(code0.type):
                 return gLlvmBuilder.mul(code0, code1, "multmp")
-            elif code0.type == llvm.core.Type.float():
+            elif isFloatType(code0.type):
                 return gLlvmBuilder.fmul(code0, code1, "fmultmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '/':
-            if code0.type == llvm.core.Type.int():
+            if isIntType(code0.type):
                 return gLlvmBuilder.sdiv(code0, code1, "divtmp")
-            elif code0.type == llvm.core.Type.float():
+            elif isFloatType(code0.type):
                 return gLlvmBuilder.fdiv(code0, code1, "fdivtmp")
             else:
                 print code0.type,"is unknown type in",code0
@@ -754,42 +847,42 @@ class BinaryExprNode(ASTNode):
         elif self.opstr == '||':
             return gLlvmBuilder.or_(code0, code1, "ortmp")
         elif self.opstr == '==':
-            if code0.type == llvm.core.Type.int():
-                return gLlvmBuilder.icmp(llvm.core.ICMP_EQ, code0, code1, "cmptmp")
-            elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fcmp(llvm.core.FCMP_OEQ, code0, code1, "fcmptmp")
+            if isIntType(code0.type):
+                return gLlvmBuilder.icmp_signed('==', code0, code1, "cmptmp")
+            elif isFloatType(code0.type):
+                return gLlvmBuilder.fcmp_ordered(llvm.core.FCMP_OEQ, code0, code1, "fcmptmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '<':
-            if code0.type == llvm.core.Type.int():
-                return gLlvmBuilder.icmp(llvm.core.ICMP_SLT, code0, code1, "cmplttmp")
-            elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fcmp(llvm.core.FCMP_OLT, code0, code1, "fcmplttmp")
+            if isIntType(code0.type):
+                return gLlvmBuilder.icmp_signed('<', code0, code1, "cmplttmp")
+            elif isFloatType(code0.type):
+                return gLlvmBuilder.fcmp_ordered('<', code0, code1, "fcmplttmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '>':
-            if code0.type == llvm.core.Type.int():
-                return gLlvmBuilder.icmp(llvm.core.ICMP_SGT, code0, code1, "cmpgttmp")
-            elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fcmp(llvm.core.FCMP_OGT, code0, code1, "fcmpgttmp")
+            if isIntType(code0.type):
+                return gLlvmBuilder.icmp_signed('>', code0, code1, "cmpgttmp")
+            elif isFloatType(code0.type):
+                return gLlvmBuilder.fcmp_ordered('>', code0, code1, "fcmpgttmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '<=':
-            if code0.type == llvm.core.Type.int():
-                return gLlvmBuilder.icmp(llvm.core.ICMP_SLE, code0, code1, "cmpletmp")
+            if isIntType(code0.type):
+                return gLlvmBuilder.icmp_signed('<=', code0, code1, "cmpletmp")
             elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fcmp(llvm.core.FCMP_OLE, code0, code1, "fcmpletmp")
+                return gLlvmBuilder.fcmp_ordered('<=', code0, code1, "fcmpletmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
         elif self.opstr == '>=':
-            if code0.type == llvm.core.Type.int():
-                return gLlvmBuilder.icmp(llvm.core.ICMP_SGE, code0, code1, "cmpgetmp")
-            elif code0.type == llvm.core.Type.float():
-                return gLlvmBuilder.fcmp(llvm.core.FCMP_OGE, code0, code1, "fcmpgetmp")
+            if isIntType(code0.type):
+                return gLlvmBuilder.icmp_signed('>=', code0, code1, "cmpgetmp")
+            elif isFloatType(code0.type):
+                return gLlvmBuilder.fcmp_ordered('>=', code0, code1, "fcmpgetmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
@@ -811,11 +904,20 @@ class NegativeExprNode(ASTNode):
         code = self.node.generateCode(None)
 
         codeType = code.type
-        codeKind = codeType.kind
-        if codeKind == llvm.core.TYPE_INTEGER:
-            return code.neg()
-        elif codeKind == llvm.core.TYPE_FLOAT:
-            return code.fmul(llvm.core.Constant.real(llvm.core.Type.float(), -1.0))
+        if isIntType(codeType):
+            #print dir(code)
+            return gLlvmBuilder.sub(ir.Constant(ir.IntType(32), 0), code)
+        elif isFloatType(codeType):
+            if not (gLlvmBuilder is None):
+                #print "negating",code
+                #print code.constant
+                return gLlvmBuilder.fsub(ir.Constant(ir.FloatType(), 0.0), code)
+            else:
+                #print "negating at top level"
+                #print code
+                #print dir(code)
+                c = code.constant
+                return ir.Constant(ir.FloatType(), -c)
         else:
             print "I don't know how to negate this type:",codeType
             raise RuntimeError
@@ -824,8 +926,8 @@ class NegativeExprNode(ASTNode):
 
 class topLevelGroup(ASTNode):
     def __init__(self, funcdeflist):
-        print "top level group: ",funcdeflist
-
+        #print "top level group: ",funcdeflist
+        pass
     
 class argDeclNode(ASTNode):
     def __init__(self, typestr, argname):

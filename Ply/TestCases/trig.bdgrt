@@ -23,8 +23,8 @@ int abs(int v) {
 }
 
 
-int m_sin_f(float radians);
-int m_cos_f(float radians);
+float m_sin_f(float radians);
+float m_cos_f(float radians);
 
 int m_atan2_f(float y, float x);
 
@@ -32,14 +32,14 @@ int m_atan2_f(float y, float x);
 int sgn_f(float x) {
   if (x < 0.0) {
     return -1;
-  } elif (x > 0) {
+  } elif (x > 0.0) {
     return 1;
   } else {
     return 0;
   }
 }
 
-int abs_f(float v) {
+float abs_f(float v) {
   if (v < 0.0) {
     return -v;
   } else {

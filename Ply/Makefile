@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe test_void_func.exe test_float_func.exe
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe test_mult_dbg.exe test_void_func.exe test_float_func.exe
 
 #obj files (in alphabetical order, please)
 
@@ -16,6 +16,9 @@ fact_decl.o: TestCases/fact.bdgrt
 
 fib.o: TestCases/fib.bdgrt
 	python compiler.py TestCases/fib.bdgrt fib.o
+
+grm_dbg.o: TestCases/grm_dbg.bdgrt
+	python compiler.py TestCases/grm_dbg.bdgrt grm_dbg.o
 
 include.o: TestCases/include.bdgrt TestCases/conio.bdgrt
 	python compiler.py TestCases/include.bdgrt include.o
@@ -56,6 +59,9 @@ test_const.o: TestCases/test_const.bdgrt
 test_mult.o: TestCases/test_mult.bdgrt
 	python compiler.py TestCases/test_mult.bdgrt test_mult.o
 
+test_mult_dbg.o: TestCases/test_mult_dbg.bdgrt
+	python compiler.py TestCases/test_mult_dbg.bdgrt test_mult_dbg.o
+
 test_float_func.o: TestCases/test_float_func.bdgrt
 	python compiler.py TestCases/test_float_func.bdgrt test_float_func.o
 
@@ -78,6 +84,9 @@ fact_decl.exe: fact_decl.o support.o
 
 fib.exe: fib.o support.o
 	gcc -o fib.exe support.o fib.o
+
+grm_dbg.exe: grm_dbg.o support.o
+	gcc -o grm_dbg.exe support.o grm_dbg.o
 
 include.exe: include.o support.o
 	gcc -o include.exe support.o include.o
@@ -108,6 +117,9 @@ test_const.exe: test_const.o support.o
 
 test_mult.exe: test_mult.o support.o
 	gcc -o test_mult.exe support.o test_mult.o
+
+test_mult_dbg.exe: test_mult_dbg.o support.o
+	gcc -o test_mult_dbg.exe support.o test_mult_dbg.o
 
 test_float_func.exe: test_float_func.o support.o
 	gcc -o test_float_func.exe support.o test_float_func.o
@@ -145,4 +157,4 @@ pong_adv.html: pong_adv.bc sdl_main_loop.c support.c
 
 # Clean
 clean:
-	rm -rf *.o *.exe *.html *.bc *.js *.map
+	rm -rf *.o *.exe *.html *.bc *.js *.map parsetab.py parser.out

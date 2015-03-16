@@ -1,10 +1,15 @@
 import ply.lex as lex
 import ply.yacc as yacc
 import ast
-import llvm.core
-import llvm.ee
+
+import llvmlite.binding as llvm
 import sys
 import os
+
+SHOW_INPUT = 0
+SHOW_TOKENS = 0
+SHOW_MODULE = 0
+SHOW_ASSEMBLY = 0
 
 tokens = (
     'NUMBER',
@@ -41,10 +46,12 @@ tokens = (
     'LESSEQUAL',
     'GREATEREQUAL',
     'CONST',
-    'STATIC',
+    #'STATIC',
     'CLASS',
     'IDENTIFIER',
     'DOT',
+    'QUESTIONMARK',
+    'COLON',
 )
 
 t_LPAREN = r'\('
@@ -69,6 +76,8 @@ t_GREATERTHAN = '>'
 t_LESSEQUAL = '<='
 t_GREATEREQUAL = '>='
 t_DOT = r'\.'
+t_QUESTIONMARK = r'\?'
+t_COLON = r':'
 literals = r'+-*/^~!(){}=[]\|;'
 
 def t_COMMENT(t):
@@ -90,7 +99,7 @@ reserved = {
     'while' : 'WHILE',
     'break' : 'BREAK',
     'const' : 'CONST',
-    'static' : 'STATIC',
+    #'static' : 'STATIC',
     'class' : 'CLASS',
 }
 
@@ -103,10 +112,10 @@ def t_NUMBER(t):
     r'\d*\.?[0-9]+'
     if '.' in t.value:
         floatval = float(t.value)
-        t.value = ast.ConstantFloatNode(floatval, t.lineno)
+        t.value = ast.ConstantFloatNode(floatval, t.lexer.lineno)
     else:
         intval = int(t.value)
-        t.value = ast.ConstantIntegerNode(intval, t.lineno)
+        t.value = ast.ConstantIntegerNode(intval, t.lexer.lineno)
     return t
 
 def t_newline(t):
@@ -118,20 +127,32 @@ t_ignore = ' \t\r'
 #Error Handling
 def t_error(t):
     print "Illegal character '%s'" % t.value[0]
-    print "line:", t.lineno
+    print "line:", t.lexer.lineno
     t.lexer.skip(1)
 
 lexer = lex.lex()
 
 precedence = (
-    ('left', 'ISEQUAL', 'NOTEQUAL', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
+    ('left', 'ISEQUAL', 'NOTEQUAL'),
+    ('left', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
     ('left','PLUS','MINUS'),
     ('left','TIMES','DIVIDE'),
-    ('right','UMINUS'),
+    #('right','UMINUS'),
     )
 
-# TODO collapse?
+def p_toplevelgroup(t):
+    """ toplevelgroup : funcdecl toplevelgroup
+                      | funcdef toplevelgroup
+                      | globalvardecl toplevelgroup
+                      | classdecl toplevelgroup
+                      | empty
+    """
+    if len(t) == 3:
+        t[0] = [t[1]] + t[2]
+    else:
+        t[0] = []
 
+"""
 def p_toplevelgroup_funcdecl(t):
     'toplevelgroup : funcdecl toplevelgroup'
     t[0] = [t[1]] + t[2]
@@ -151,6 +172,8 @@ def p_toplevelgroup_classdecl(t):
 def p_toplevelgroup_empty(t):
     'toplevelgroup : empty'
     t[0] = []
+"""
+
 
 def p_funcdecl(t):
   'funcdecl : type IDENTIFIER LPAREN argdecllist RPAREN SEMICOLON'
@@ -170,14 +193,14 @@ def makeProto(retTypeName, funcName, argDeclList):
   return proto
   
 def p_funcdef(t):
-  'funcdef : type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statementlist RBRACE'
+  'funcdef : type IDENTIFIER LPAREN argdecllist RPAREN LBRACE statement_list RBRACE'
   typename = t[1]
   funcname = t[2]
   argdecllist = t[4]
-  statementlist = t[7]
+  statement_list = t[7]
 
   proto = ast.FuncDeclNode(typename, funcname, argdecllist, t.lexer.lineno)
-  funcDefNode = ast.FuncDefNode(proto, funcname, statementlist, t.lexer.lineno)
+  funcDefNode = ast.FuncDefNode(proto, funcname, statement_list, t.lexer.lineno)
   t[0] = funcDefNode
 
 def p_type(t):
@@ -239,26 +262,32 @@ def p_classdecl(t):
 
 def p_globalvardecl_var(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], None)
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
 
 def p_globalvardecl_constinitialized(t):
     '''globalvardecl : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
 
 def p_globalvardecl_varinitialized(t):
     '''globalvardecl : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.GlobalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4])
 
-def p_statementlist_empty(t):
-    'statementlist : empty'
-    t[0] = ast.StatementList([])
+# type-name (p 236, production 5)
 
-def p_statementlist_bootstrap(t):
-    'statementlist : statement statementlist'
-    if t[2] is None:
+def p_type_name(t):
+    '''type_name : IDENTIFIER'''
+    # TODO - expand this
+    t[0] = t[1]
+
+def p_statement_list(t):
+    '''statement_list : statement
+                      | statement statement_list'''
+    if len(t) == 2:
         t[0] = ast.StatementList([t[1]])
-        return
-    t[0] = ast.StatementList([t[1]] + t[2].statements)
+    else:
+        t[0] = ast.StatementList([t[1]] + t[2].statements)
+
+# statement (p 236, production 9)
 
 def p_statement_expression(t):
     '''statement : expression SEMICOLON'''
@@ -269,27 +298,27 @@ def p_statement_ifelse(t):
     t[0] = t[1]
 
 def p_statement_return(t):
-    '''statement : RETURN castexpression SEMICOLON'''
-    t[0] = ast.ReturnStatement(t[2])
+    '''statement : RETURN expression SEMICOLON'''
+    t[0] = ast.ReturnStatement(t.lexer.lineno, t[2])
 
 def p_statement_emptyreturn(t):
     '''statement : RETURN SEMICOLON'''
-    t[0] = ast.ReturnStatement(None)
+    t[0] = ast.ReturnStatement(t.lexer.lineno, None)
 
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], None)
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
 
 def p_statement_localvardecl_initialized(t):
     '''statement : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, None, t[1], t[2], t[4])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4])
 
 def p_statement_localvardecl_constinitialized(t):
     '''statement : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lineno, t[1], t[2], t[3], t[5])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
 
 def p_statement_loop(t):
-    '''statement : LOOP LBRACE statementlist RBRACE'''
+    '''statement : LOOP LBRACE statement_list RBRACE'''
     t[0] = ast.LoopStatement(t[3])
 
 def p_statement_break(t):
@@ -297,83 +326,126 @@ def p_statement_break(t):
     t[0] = ast.BreakStatement()
 
 def p_statement_while_loop(t):
-    '''statement : WHILE LPAREN expression RPAREN LBRACE statementlist RBRACE'''
+    '''statement : WHILE LPAREN expression RPAREN LBRACE statement_list RBRACE'''
     t[0] = ast.WhileLoop(t[3], t[6])
 
-def p_statement_assign(t):
-    '''statement : unaryexpression ASSIGN castexpression SEMICOLON'''
-    t[0] = ast.AssignStatement(t.lineno, t[1], t[3])
+# expressions (p 237 production 3)
 
-def p_primaryexpression_variable(t):
-    '''primaryexpression : IDENTIFIER'''
-    t[0] = ast.VarLookup(t[1], t.lineno)
-
-def p_primaryexpression_number(t):
-    '''primaryexpression : NUMBER'''
+def p_expression_assign(t):
+    '''expression : assignment_expression'''
     t[0] = t[1]
 
-def p_primaryexpression_parens(t):
-    '''primaryexpression : LPAREN expression RPAREN'''
-    t[0] = t[2]
+# assignment-expression (p 237 production 4)
 
-def p_postfixexpression_primaryexpression(t):
-    '''postfixexpression : primaryexpression'''
+def p_assignment_expression_1(t):
+    '''assignment_expression : conditional_expression'''
     t[0] = t[1]
 
-def p_postfixexpression_arrayref(t):
-    '''postfixexpression : expression LBRACKET expression RBRACKET'''
+def p_assignment_expression_2(t):
+    '''assignment_expression : unary_expression ASSIGN conditional_expression'''
+    t[0] = ast.AssignStatement(t.lexer.lineno, t[1], t[3])
+
+# conditional_expression (p 237 production 6)
+def p_conditional_expression(t):
+    '''conditional_expression : binary_expression
+                              | binary_expression QUESTIONMARK expression COLON conditional_expression
+    '''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = ast.TernaryOp(t[1], t[3], t[5], t.lexer.lineno)
+
+
+# binary expressions (standin for logical-OR-expression, p 237 production 8)
+def p_binary_expression(t):
+    '''binary_expression : cast_expression
+                         | binary_expression TIMES binary_expression
+                         | binary_expression DIVIDE binary_expression
+                         | binary_expression PLUS binary_expression
+                         | binary_expression MINUS binary_expression
+                         | binary_expression LESSTHAN binary_expression
+                         | binary_expression LESSEQUAL binary_expression
+                         | binary_expression GREATERTHAN binary_expression
+                         | binary_expression GREATEREQUAL binary_expression
+                         | binary_expression ISEQUAL binary_expression
+                         | binary_expression NOTEQUAL binary_expression
+                         | binary_expression LOGICAND binary_expression
+                         | binary_expression LOGICOR binary_expression
+    '''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = ast.BinaryExprNode(t[1], t[3], t.lexer.lineno, t[2])
+
+
+# cast expressions (p 238, production 4)
+
+def p_cast_expression(t):
+    '''cast_expression : unary_expression '''
+# TODO: debug cast_expression reduce/reduce conflict.
+#                       | LPAREN type_name RPAREN cast_expression'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = ast.CastTo(t[2], t[4], t.lexer.lineno)
+
+# unary expressions (p 238, production 5)
+
+def p_unary_expression_postfix(t):
+    '''unary_expression : postfix_expression'''
+    t[0] = t[1]
+
+def p_unary_expression_minus(t):
+    '''unary_expression : MINUS cast_expression'''
+    t[0] = ast.NegativeExprNode(t.lexer.lineno, t[2])
+
+# todo: unary_op unaryexpression
+
+# postfix expressions (p 238, production 7)
+def p_postfix_expression_primaryexpression(t):
+    '''postfix_expression : primary_expression'''
+    t[0] = t[1]
+
+def p_postfix_expression_arrayref(t):
+    '''postfix_expression : postfix_expression LBRACKET expression RBRACKET'''
     t[0] = ast.ArrayRef(t[1], t[3])
 
-def p_postfixexpression_emptyfunctioncall(t):
-    '''postfixexpression : expression LPAREN RPAREN'''
-    t[0] = ast.FunctionCall(t[1], None)
+def p_postfix_expression_emptyfunctioncall(t):
+    '''postfix_expression : postfix_expression LPAREN RPAREN'''
+    t[0] = ast.FunctionCall(t.lexer.lineno, t[1], None)
 
-def p_postfixexpression_functioncall(t):
-    '''postfixexpression : expression LPAREN arglist RPAREN'''
-    t[0] = ast.FunctionCall(t.lineno, t[1], t[3])
+def p_postfix_expression_functioncall(t):
+    '''postfix_expression : postfix_expression LPAREN arglist RPAREN'''
+    t[0] = ast.FunctionCall(t.lexer.lineno, t[1], t[3])
 
-def p_postfixexpression_memberref(t):
-    '''postfixexpression : castexpression DOT IDENTIFIER'''
-    t[0] = ast.MemberRef(t.lineno, t[1], t[3])
+def p_postfix_expression_memberref(t):
+    '''postfix_expression : postfix_expression DOT IDENTIFIER'''
+    t[0] = ast.MemberRef(t.lexer.lineno, t[1], t[3])
 
-def p_unaryexpression_postfix(t):
-    '''unaryexpression : postfixexpression'''
+# primary expressions (p 238, production 8)
+
+def p_primary_expression_variable(t):
+    '''primary_expression : IDENTIFIER'''
+    t[0] = ast.VarLookup(t[1], t.lexer.lineno)
+    #t[0] = t[1]
+
+def p_primary_expression_number(t):
+    '''primary_expression : NUMBER'''
+    #TODO generic constants
     t[0] = t[1]
 
-def p_castexpression_unary(t):
-    '''castexpression : unaryexpression'''
-    t[0] = t[1]
+def p_primary_expression_parens(t):
+    '''primary_expression : LPAREN expression RPAREN'''
+    t[0] = t[2]
 
-def p_castexpression_cast(t):
-    '''castexpression : LPAREN IDENTIFIER RPAREN castexpression'''
-    t[0] = ast.CastExpr(t.lineno, t[2], t[4])
-
-def p_expression_binaryop(t):
-    '''expression : castexpression ISEQUAL castexpression
-                  | castexpression NOTEQUAL castexpression
-                  | castexpression LESSTHAN castexpression
-                  | castexpression GREATERTHAN castexpression
-                  | castexpression LESSEQUAL castexpression
-                  | castexpression GREATEREQUAL castexpression
-                  | castexpression LOGICAND castexpression
-                  | castexpression LOGICOR castexpression
-                  | castexpression PLUS castexpression
-                  | castexpression MINUS castexpression
-                  | castexpression TIMES castexpression
-                  | castexpression DIVIDE castexpression'''
-    node = ast.BinaryExprNode(t[1], t[3], t.lineno, t[2])
-    t[0] = node
-
-def p_expression_negop(t):
-    '''expression : MINUS expression %prec UMINUS'''
-    t[0] = ast.NegativeExprNode(t.lineno, t[2])
+# ---
 
 def p_elifgroup_empty(t):
     '''elifgroup : empty'''
     t[0] = []
 
 def p_elifgroup_many(t):
-    '''elifgroup : ELIF LPAREN expression RPAREN LBRACE statementlist RBRACE elifgroup'''
+    '''elifgroup : ELIF LPAREN expression RPAREN LBRACE statement_list RBRACE elifgroup'''
     t[0] = [(t[3], t[6])] + t[8]
 
 def p_optelse_empty(t):
@@ -381,19 +453,30 @@ def p_optelse_empty(t):
     t[0] = []
 
 def p_optelse_single(t):
-    '''optelse : ELSE LBRACE statementlist RBRACE'''
+    '''optelse : ELSE LBRACE statement_list RBRACE'''
     t[0] = t[3]
 
 def p_ifelse_if(t):
-    '''ifelse : IF LPAREN castexpression RPAREN LBRACE statementlist RBRACE elifgroup optelse'''
-    #t[0] = ['if', t[3], 'then', t[6], 'elif', t[8], 'else', t[9]]
+    '''ifelse : IF LPAREN expression RPAREN LBRACE statement_list RBRACE elifgroup optelse'''
     t[0] = ast.IfElse(t[3], t[6], t[8], t[9])
 
 def p_error(t):
-    print("Syntax error at %s (line:%d)" % (t.value, t.lineno))
+    print("Syntax error at %s (line:%d)" % (t.value, t.lexer.lineno))
     print t
+    print t.type
+    print t.value
+    #print dir(t.lexer)
+    print "lex state:",t.lexer.lexstate
 
-yacc.yacc(start = 'toplevelgroup')
+yacc_debug = True
+yacc_optimize = False
+
+yacc.yacc(start = 'toplevelgroup',
+          debug = yacc_debug,
+          optimize=yacc_optimize,
+          #debuglog = yacc.PlyLogger(open('yacc_debug.log', 'wt')),
+          #errorlog = yacc.PlyLogger(open('yacc_error.log', 'wt'))
+          )
 
 def load_file(filename, includeDict=None):
     file_path, file_base = os.path.split(filename)
@@ -416,17 +499,34 @@ def load_file(filename, includeDict=None):
             included_path = os.path.join(file_path, included_filename)
             if not (included_path in includeDict):
                 included_file = load_file(included_path, includeDict)
-                out_buffer = out_buffer + '# INCLUDED FILE BEGINS: %s \n' % included_path
+                out_buffer = out_buffer + '### INCLUDED FILE BEGINS: %s \n' % included_path
                 out_buffer = out_buffer + included_file + '\n'
-                out_buffer = out_buffer + '# INCLUDED FILE ENDS: %s \n' % included_path
+                out_buffer = out_buffer + '### INCLUDED FILE ENDS: %s \n' % included_path
                 includeDict[included_path] = 1;
         else:
             out_buffer = out_buffer + line
     return out_buffer
 
 def makeObj(name, mainFunc):
+    target_machine = llvm.Target.from_default_triple().create_target_machine()
+    strmod = str(ast.gLlvmModule)
+
+    if SHOW_MODULE:
+        print "module:"
+        print "==="
+        print strmod
+        print "==="
+    llmod = llvm.parse_assembly(strmod)
+
+    if SHOW_ASSEMBLY:
+        print "assembly:"
+        print "==="
+        print target_machine.emit_assembly(llmod)
+        print "==="
+
+    objdata = target_machine.emit_object(llmod)
     objFile = open(name, 'wb')
-    obj = ast.gLlvmModule.to_native_object(objFile)
+    objFile.write(objdata)
     objFile.close()
 
 def makeBC(name, mainFunc):
@@ -437,19 +537,24 @@ def makeBC(name, mainFunc):
 
 def compile(filename, basename, outname, bc_name):
     sourcecode = load_file(filename)
-    ast.gLlvmModule = llvm.core.Module.new(basename)
-    lexer.input(sourcecode)
+    if SHOW_INPUT:
+        for i,codeline in enumerate(sourcecode.split('\n')):
+            print "%05d %s" % (i+1, codeline)
+
+    ast.init_llvm(basename)
 
     # Tokenize
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break
-        #print tok
+    if SHOW_TOKENS:
+        lexer.input(sourcecode)
+
+        while True:
+            tok = lexer.token()
+            if not tok:
+                break
+            print tok
+
 
     #print "parsing:"
-    #for linenum, line in enumerate(sourcecode.split('\n')):
-    #    print "%03d : %s " % (linenum+1, line)
 
     tree = yacc.parse(sourcecode)
 
@@ -461,10 +566,17 @@ def compile(filename, basename, outname, bc_name):
             #print "making decl for",tlt.name
             tlt.generateDecl()
         for tlt in tree:
-            obj = tlt.generateCode()
+            try:
+                obj = tlt.generateCode()
+            except TypeError:
+                n = str(tlt)
+                if 'name' in dir(tlt):
+                    n = tlt.name
+                print "error making code for",n
+                raise
             if not (obj is None):
                 topLevelObjs.append(obj)
-            print
+            #print
 
     #for tlo in topLevelObjs:
     #    print "tlo:",tlo.name
@@ -517,4 +629,10 @@ if __name__ == '__main__':
             print_usage()
             sys.exit(-1)
 
-    compile(input_filename, module_name, obj_filename, bc_filename)
+    try:
+        compile(input_filename, module_name, obj_filename, bc_filename)
+    except RuntimeError:
+        raise
+        exit(-1)
+
+    exit(0)

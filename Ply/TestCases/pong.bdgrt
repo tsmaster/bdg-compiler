@@ -87,7 +87,7 @@ int perturb(int milliradians) {
   return 0;
 }
 
-int reflect_ball_y() {
+void reflect_ball_y() {
   ball_angle = TWOPI - ball_angle;
   if (ball_angle < 0) {
     ball_angle = ball_angle + TWOPI;
@@ -95,10 +95,9 @@ int reflect_ball_y() {
     ball_angle = ball_angle - TWOPI;
   }
   set_velocity_from_angle();
-  return 0;
 }
 
-int reflect_ball_x() {
+void reflect_ball_x() {
   ball_angle = PI - ball_angle;
   if (ball_angle < 0) {
     ball_angle = ball_angle + TWOPI;
@@ -277,7 +276,7 @@ int normalize_angle() {
   return 0;
 }
 
-int calc_deflection_left() {
+void calc_deflection_left() {
   normalize_angle();
   ball_angle = ball_angle + (2 * (ball_y - paddle_y_left) * MAX_DEFLECTION) / PADDLE_SIZE;
   normalize_angle();
@@ -289,7 +288,7 @@ int calc_deflection_left() {
   set_velocity_from_angle();
 }
 
-int calc_deflection_right() {
+void calc_deflection_right() {
   ball_angle = ball_angle + (2 * (paddle_y_right - ball_y) * MAX_DEFLECTION) / PADDLE_SIZE;
   normalize_angle();
   if (ball_angle < PI - MAX_ANGLE) {
