@@ -26,13 +26,13 @@ int main() {
 
   Vec2f newpos;
 
-  #newpos.x = pos.x + vel.x;
-  #newpos.y = pos.y + vel.y;
+  newpos.x = pos.x + vel.x;
+  newpos.y = pos.y + vel.y;
 
-  #print_float(pos.x);
-  #print_line();
-  #print_float(pos.y);
-  #print_line();
+  print_float(newpos.x);
+  print_line();
+  print_float(newpos.y);
+  print_line();
   
   return 0;
 }

@@ -22,17 +22,13 @@ def isIntType(ty):
     return isinstance(ty, ir.IntType)
 
 def isFloatType(ty):
+    if ty.is_pointer:
+        return isinstance(ty.pointee, ir.FloatType)
     return isinstance(ty, ir.FloatType)
 
 def isVariableType(ty):
     return (isinstance(ty, ir.instructions.AllocaInstr) or
             isinstance(ty, ir.GlobalVariable))
-
-def maybeDerefCode(c):
-    if (isinstance(c, ir.GlobalVariable) or 
-        isinstance(c, ir.instructions.AllocaInstr)):
-        return gLlvmBuilder.load(c)
-    return c
 
 def init_llvm(basename):
     llvm.initialize()
@@ -134,6 +130,7 @@ class FuncDeclNode(ASTNode):
 
     def generateCode(self, breakBlock=None):
         #print "generating code for funcdecl",self.name, self.arglist
+
         argtypelist = []
         argnamelist = []
         for arg in self.arglist:
@@ -353,8 +350,6 @@ class AssignStatement(ASTNode):
         self.rvalue = rvalue
 
     def generateCode(self, breakBlock=None):
-        #print "lval:", self.lvalue
-
         lValIsAggregate = False
 
         if isinstance(self.lvalue, str):
@@ -377,22 +372,13 @@ class AssignStatement(ASTNode):
         #print "rval:", rval
         #print "rval type:", rval.type
 
-        rval = maybeDerefCode(rval)
-        #print "dr rval:", rval
-        #print "rval type:", rval.type
-
-        if lValIsAggregate:
-            offset = 1 # var.bdg_offset
-            gLlvmBuilder.insert_value(var, rval, offset, name='insagg')
-        else:
-            try:
-                gLlvmBuilder.store(rval, var)
-            except RuntimeError:
-                print "can't assign expression of type %s to variable %s of type %s" % (rval.type,
+        try:
+            gLlvmBuilder.store(rval, var)
+        except RuntimeError:
+            print "can't assign expression of type %s to variable %s of type %s" % (rval.type,
                                                                                     self.lvalue,
-                                                                                    self.lvalue.type
-                                                                                        )
-                raise RuntimeError
+                                                                                    self.lvalue.type)
+            raise RuntimeError
 
     def __str__(self):
         return "%s := %s" % (self.varname, str(self.value))
@@ -506,9 +492,6 @@ class IfElse:
     def generateCode(self, breakBlock=None):
         funcObj = gLlvmBuilder.basic_block.function
 
-        #print "generating code for condition"
-        #print self.conditions
-
         condCount = len(self.conditions)
         thenBlocks = []
         testBlocks = [gLlvmBuilder.basic_block]
@@ -577,7 +560,6 @@ class ReturnStatement(ASTNode):
         else:
             #print "making a return",self.expr
             code = self.expr.generateCode(None)
-            code = maybeDerefCode(code)
             gLlvmBuilder.ret(code)
 
 class BreakStatement:
@@ -606,7 +588,7 @@ class LoopStatement:
         frame = pushFrame("loop")
         gLlvmBuilder.branch(loopBlock)
         gLlvmBuilder.position_at_end(loopBlock)
-        self.statements.generateCode(breakBlock=endOfLoopBlock)
+        self.statements.generateCode(endOfLoopBlock)
         gLlvmBuilder.branch(loopBlock)
         gLlvmBuilder.position_at_end(endOfLoopBlock)
         popFrame(frame)
@@ -645,7 +627,9 @@ class MemberRef(ASTNode):
 
         #print "member name:", self.membername
 
+        baseptr = None
         if base.type.is_pointer:
+            baseptr = base
             t = base.type.pointee
 
         #print t, t.name
@@ -671,15 +655,10 @@ class MemberRef(ASTNode):
             print self.linenum
             raise RuntimeError
 
-        #print "offset:",offset
+        wrappedIndex = ir.Constant(ir.IntType(32), 0)
+        wrappedOffset = ir.Constant(ir.IntType(32), offset)
 
-        #print base.type
-        #print base.name
-        #print dir(base)
-
-        base.bdg_offset = offset
-        var = gLlvmBuilder.load(base)
-        return var
+        return gLlvmBuilder.gep(baseptr, [wrappedIndex, wrappedOffset], inbounds=True, name='member_%d_%s' % (offset, self.membername))
 
     def getPtr(self):
         base = self.base.generateCode(None)
@@ -723,7 +702,8 @@ class FunctionCall(ASTNode):
             print "error in call to",self.name 
             raise RuntimeError('Incorrect number of arguments in call to '+self.name)
 
-        evaluatedArguments = map(lambda x: x.generateCode(None), self.arglist)
+        evaluatedArguments = map(lambda x: x.generateCode(None), 
+                                 self.arglist)
         
         for i, x in enumerate(evaluatedArguments):
             #print "arg #%d " % i , x
@@ -733,6 +713,9 @@ class FunctionCall(ASTNode):
                 evaluatedArguments[i] = gLlvmBuilder.load(x)
             elif isinstance(x, ir.instructions.AllocaInstr):
                 #print "is a local"
+                evaluatedArguments[i] = gLlvmBuilder.load(x)
+            elif x.type.is_pointer:
+                #print "is a pointer"
                 evaluatedArguments[i] = gLlvmBuilder.load(x)
             else:
                 #print x.type
@@ -813,9 +796,19 @@ class BinaryExprNode(ASTNode):
             if isIntType(code0.type):
                 return gLlvmBuilder.add(code0, code1, "addtmp")
             elif isFloatType(code0.type):
-                return gLlvmBuilder.fadd(code0, code1, "faddtmp")
+                code0val = code0
+                if code0.type.is_pointer:
+                    code0val = gLlvmBuilder.load(code0)
+                code1val = code1
+                if code1.type.is_pointer:
+                    code1val = gLlvmBuilder.load(code1)
+                return gLlvmBuilder.fadd(code0val, code1val, "faddtmp")
             else:
                 print code0.type,"is unknown type in",code0
+                print "code0:",code0
+                print code0.type
+                print "code1:",code1
+                print code1.type
                 raise RuntimeError
         elif self.opstr == '-':
             if isIntType(code0.type):
