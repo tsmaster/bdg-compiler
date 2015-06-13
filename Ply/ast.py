@@ -181,7 +181,7 @@ class FuncDeclNode(ASTNode):
 
 
 class GlobalVarDeclNode(ASTNode):
-    def __init__(self, linenum, qualifiers, typeName, name, initializer):
+    def __init__(self, linenum, qualifiers, typeName, name, initializer, arraysize=None):
         super(GlobalVarDeclNode, self).__init__(linenum, "GlobalVarDeclNode")
         self.typeName = typeName
         self.name = name
@@ -192,6 +192,7 @@ class GlobalVarDeclNode(ASTNode):
             self.qualifiers = []
         #print "made global var decl:", self.typeName, name
         #print "qualifiers:", qualifiers
+        self.arraysize = arraysize
 
     def generateCode(self, breakBlock=None):
         typeObj = makeType(self.typeName)
@@ -200,20 +201,37 @@ class GlobalVarDeclNode(ASTNode):
             print 'var already declared:',self.name
             raise RuntimeError
 
-        var = ir.GlobalVariable(gLlvmModule, typeObj, self.name)
-        #print "var initializer:",typeObj
-        if isinstance(typeObj, ir.IntType):
-            var.initializer = ir.Constant(typeObj, 0)
-        elif isFloatType(typeObj):
-            var.initializer = ir.Constant(typeObj, 0.0)
+        if self.arraysize is None:
+            var = ir.GlobalVariable(gLlvmModule, typeObj, self.name)
 
-        #var.initializer = ir.Constant(typeObj, ir.Undefined())
-        if not (self.initializer is None):
-            valueCode = self.initializer.generateCode(None)
-            var.initializer = valueCode
-        if 'const' in self.qualifiers:
-            #print "setting constant"
-            var.global_constant = True
+            #print "var initializer:",typeObj
+            if isinstance(typeObj, ir.IntType):
+                var.initializer = ir.Constant(typeObj, 0)
+            elif isFloatType(typeObj):
+                var.initializer = ir.Constant(typeObj, 0.0)
+
+            #var.initializer = ir.Constant(typeObj, ir.Undefined())
+            if not (self.initializer is None):
+                valueCode = self.initializer.generateCode(None)
+                var.initializer = valueCode
+            if 'const' in self.qualifiers:
+                #print "setting constant"
+                var.global_constant = True
+        else:
+            arraySize = self.arraysize.value
+            arrayType = ir.ArrayType(typeObj, arraySize)
+            var = ir.GlobalVariable(gLlvmModule, arrayType, self.name)
+            var.initializer = ir.Constant(arrayType, [ir.Constant(typeObj, 0)] * arraySize)
+            var.linkage='common'
+            if 'const' in self.qualifiers:
+                var.global_constant = True
+
+            #print "made an array"
+            #print arrayType
+            #print self.arraysize
+            #print var
+
+            # TODO initializer
 
         gGlobalVars[self.name] = var
 
@@ -222,10 +240,13 @@ class GlobalVarDeclNode(ASTNode):
         #print
 
     def __str__(self):
-        return "(%s) %s" % (self.type, self.name)
+        try:
+            return "(%s) %s" % (self.type, self.name)
+        except AttributeError:
+            return "???"
 
 class LocalVarDeclNode(ASTNode):
-    def __init__(self, linenum, qualifiers, typeName, name, initializer):
+    def __init__(self, linenum, qualifiers, typeName, name, initializer, count):
         super(LocalVarDeclNode, self).__init__(linenum, "LocalVarDeclNode")
         self.typeName = typeName
         self.name = name
@@ -234,6 +255,7 @@ class LocalVarDeclNode(ASTNode):
             self.qualifiers = qualifiers
         else:
             self.qualifiers = []
+        self.count = count
         #print "made local var decl:", self.typeName, name
 
     def generateCode(self, breakBlock=None):
@@ -246,7 +268,16 @@ class LocalVarDeclNode(ASTNode):
             (self.name in frame.consts)):
             print "variable '%s' already declared in frame '%s'"%(self.name, frame.name)
             raise RuntimeError
-        var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
+        if self.count is None:
+            var = gLlvmBuilder.alloca(typeObj, size=sz, name=self.name)
+        else:
+            arraySize = self.count.value
+            arrayType = ir.ArrayType(typeObj, arraySize)
+            var = gLlvmBuilder.alloca(arrayType, size=arraySize, name=self.name)
+            var.initializer = ir.Constant(arrayType, [ir.Constant(typeObj, 0)] * arraySize)
+            if 'const' in self.qualifiers:
+                var.global_constant = True
+
         #metadata = {'type' : typeObj,
         #            'typeName' : self.typeName,
         #            'var' : var
@@ -304,6 +335,21 @@ def lookupVarByName(name):
     return None
 
 
+class ArrayRef(ASTNode):
+    def __init__(self, linenum, base, index):
+        super(ArrayRef, self).__init__(linenum, "ArrayRef")
+        self.base = base
+        self.index = index
+
+    def generateCode(self, breakBlock=None):
+        #print "making array reference:", (self.base, self.index)
+        b = self.base.generateCode(breakBlock)
+        wrappedPtr = ir.Constant(ir.IntType(32), 0)
+        i = self.index.generateCode(breakBlock)
+        p = gLlvmBuilder.gep(b, [wrappedPtr, i], inbounds=True, name='arrayref_%s' % (self.index))
+        return p
+
+
 class MemberDecl(ASTNode):
     def __init__(self, linenum, typename, membername):
         super(MemberDecl, self).__init__(linenum, "MemberDecl")
@@ -353,7 +399,6 @@ class AssignStatement(ASTNode):
         lValIsAggregate = False
 
         if isinstance(self.lvalue, str):
-            name = self.lvalue
             #print 'lval is a string:', name
             var = lookupVarByName(name)
         elif isinstance(self.lvalue, MemberRef):
@@ -362,15 +407,12 @@ class AssignStatement(ASTNode):
             lValIsAggregate = True
         else:
             var = self.lvalue.generateCode(breakBlock)
-            name = self.lvalue.name
 
         if not var:
             print "don't know how to deal with", self.name, self.linenum
             raise RuntimeError
 
         rval = self.rvalue.generateCode(breakBlock)
-        #print "rval:", rval
-        #print "rval type:", rval.type
 
         try:
             gLlvmBuilder.store(rval, var)
@@ -658,7 +700,11 @@ class MemberRef(ASTNode):
         wrappedIndex = ir.Constant(ir.IntType(32), 0)
         wrappedOffset = ir.Constant(ir.IntType(32), offset)
 
-        return gLlvmBuilder.gep(baseptr, [wrappedIndex, wrappedOffset], inbounds=True, name='member_%d_%s' % (offset, self.membername))
+        #print "thing:", wrappedIndex, wrappedOffset
+        ptr = gLlvmBuilder.gep(baseptr, [wrappedIndex, wrappedOffset], inbounds=True, name='member_%d_%s' % (offset, self.membername))
+
+        #print "ptr:", ptr
+        return ptr
 
     def getPtr(self):
         base = self.base.generateCode(None)

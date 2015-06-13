@@ -50,6 +50,9 @@ sdl_wrapper.o: sdl_wrapper.c
 support.o: support.c
 	gcc -g -c support.c
 
+test_array.o: TestCases/test_array.bdgrt
+	python compiler.py TestCases/test_array.bdgrt test_array.o
+
 test_class.o: TestCases/test_class.bdgrt
 	python compiler.py TestCases/test_class.bdgrt test_class.o
 
@@ -108,6 +111,9 @@ pong_adv.exe: pong_adv.o sdl_wrapper.o support.o
 
 precedence.exe: precedence.o support.o
 	gcc -o precedence.exe support.o precedence.o
+
+test_array.exe: test_array.o support.o
+	gcc -o test_array.exe support.o test_array.o
 
 test_class.exe: test_class.o support.o
 	gcc -o test_class.exe support.o test_class.o

@@ -1,0 +1,73 @@
+void print_float(float f);
+void print_integer(int x);
+void print_line();
+
+class Vec2f {
+  float x;
+  float y;
+}
+
+class Ship {
+  Vec2f pos;
+  Vec2f vel;
+}
+
+int intvals[3];
+float floatvals[10];
+
+int main() {
+  intvals[0] = 17;
+  intvals[1] = 19;
+  floatvals[0] = 3.14;
+  floatvals[1] = 1.5;
+
+  print_integer(intvals[0]);
+  print_line();
+  print_integer(intvals[1]);
+  print_line();
+  print_float(floatvals[0]);
+  print_line(); 
+  print_float(floatvals[1]);
+  print_line();
+
+  int locIntVals[3];
+  locIntVals[0] = 7;
+  locIntVals[1] = 8;
+  locIntVals[2] = 9;
+
+  print_integer(locIntVals[0]);
+  print_line();
+  print_integer(locIntVals[1]);
+  print_line();
+  print_integer(locIntVals[2]);
+  print_line();
+
+  float locFloatVals[3];
+  locFloatVals[0] = 3.1;
+  locFloatVals[1] = 4.1;
+  locFloatVals[2] = 5.9;
+
+  print_float(locFloatVals[0]);
+  print_line();
+  print_float(locFloatVals[1]);
+  print_line();
+  print_float(locFloatVals[2]);
+  print_line();
+
+  Ship ships[4];
+  ships[0].pos.x=1.0;
+  ships[0].pos.y=2.0;
+  ships[0].vel.x=0.5;
+  ships[0].vel.y=0.3;
+
+  ships[0].pos.x = ships[0].pos.x + ships[0].vel.x;
+  ships[0].pos.y = ships[0].pos.y + ships[0].vel.y;
+
+  print_float(ships[0].pos.x);
+  print_line();
+  print_float(ships[0].pos.y);
+  print_line();
+  
+  return 0;
+  #return intvals[0];   
+}

@@ -264,6 +264,10 @@ def p_globalvardecl_var(t):
     '''globalvardecl : type IDENTIFIER SEMICOLON'''
     t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
 
+def p_globalvardecl_array(t):
+    '''globalvardecl : type IDENTIFIER LBRACKET expression RBRACKET SEMICOLON'''
+    t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None, arraysize=t[4])
+
 def p_globalvardecl_constinitialized(t):
     '''globalvardecl : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
     t[0] = ast.GlobalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
@@ -307,15 +311,19 @@ def p_statement_emptyreturn(t):
 
 def p_statement_localvardecl(t):
     '''statement : type IDENTIFIER SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None)
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None, None)
 
 def p_statement_localvardecl_initialized(t):
     '''statement : type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], t[4], None)
 
 def p_statement_localvardecl_constinitialized(t):
     '''statement : CONST type IDENTIFIER ASSIGN expression SEMICOLON'''
-    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5])
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, t[1], t[2], t[3], t[5], None)
+
+def p_statement_localvardecl_array(t):
+    '''statement : type IDENTIFIER LBRACKET expression RBRACKET SEMICOLON'''
+    t[0] = ast.LocalVarDeclNode(t.lexer.lineno, None, t[1], t[2], None, t[4])
 
 def p_statement_loop(t):
     '''statement : LOOP LBRACE statement_list RBRACE'''
@@ -408,7 +416,7 @@ def p_postfix_expression_primaryexpression(t):
 
 def p_postfix_expression_arrayref(t):
     '''postfix_expression : postfix_expression LBRACKET expression RBRACKET'''
-    t[0] = ast.ArrayRef(t[1], t[3])
+    t[0] = ast.ArrayRef(t.lexer.lineno, t[1], t[3])
 
 def p_postfix_expression_emptyfunctioncall(t):
     '''postfix_expression : postfix_expression LPAREN RPAREN'''
