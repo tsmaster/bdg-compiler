@@ -1,0 +1,153 @@
+@include "math.bdgrt"
+int rand_int(int max);
+
+void draw_grid();
+void draw_ship(float interpX, float interpY, float angle);
+void set_phase(int new_phase, Game game);
+
+const float DEGREES_PER_SECOND = 45.0;
+const float BASE_SPEED = 2.5;
+
+void draw_target(Game game) {
+  gl_color3f(0.0, 1.0, 1.0);
+  gl_pushMatrix();
+  gl_translateF(game.target.x, game.target.y, 0.0);
+
+  float a = 0.0;
+  float sides = 16.0;
+  float degrees = 360.0 / sides;
+  float PI = 3.141592654;
+  float TAU = PI * 2.0;
+
+  float TARGET_RADIUS = 0.5;
+  
+  gl_begin(GL_LINE_LOOP);
+  while (a < 360.0) {
+    float radians = a * TAU / 360.0;
+    gl_vertex3f(TARGET_RADIUS * cos_f(radians), TARGET_RADIUS * sin_f(radians), 0.0);
+    a = a + degrees; 
+  }
+  gl_end();
+
+  gl_popMatrix();
+}
+
+void calc_delta(Game game, Vec2f delta) {
+  delta.x = game.target.x - game.ship.pos.x;
+  delta.y = game.target.y - game.ship.pos.y;
+}
+
+float get_angle(Vec2f delta) {
+  float radians = atan2_f(delta.y, delta.x);
+  float PI = 3.141592654;
+  float TAU = PI * 2.0;
+  return radians * 360.0 / TAU;
+}
+
+void pick_target(Game game) {
+  int rx = rand_int(16);
+  int ry = rand_int(12);
+  
+  game.target.x = 0.5 + rx;
+  game.target.y = 0.5 + ry;
+}
+
+float mag_sqr(Vec2f v) {
+  return v.x * v.x + v.y * v.y;
+}
+
+void init_phase_game(Game game) {
+  int rx = rand_int(16);
+  int ry = rand_int(12);
+  
+  game.ship.pos.x = 0.5 + rx;
+  game.ship.pos.y = 0.5 + ry;
+
+  int a = rand_int(4);
+
+  game.ship.vel.x = 0.0;
+  game.ship.vel.y = 0.0;
+  
+  if (a == 0) {
+    game.ship.vel.x = 2.0;
+    game.ship.angle = 0.0;
+  } elif (a == 1) {
+    game.ship.vel.y = 2.0;
+    game.ship.angle = 90.0;
+  } elif (a == 2) {
+    game.ship.vel.x = -2.0;
+    game.ship.angle = 180.0;
+  } else {
+    game.ship.vel.y = -2.0;
+    game.ship.angle = 270.0;
+  }
+
+  pick_target(game);
+}
+
+void draw_phase_game(float alpha, Game game) {
+  draw_grid();
+
+  float interpX = game.ship.pos.x + game.ship.vel.x * alpha;
+  float interpY = game.ship.pos.y + game.ship.vel.y * alpha;
+
+  draw_ship(interpX, interpY, game.ship.angle);
+  draw_target(game);
+}
+
+void update_phase_game(Game game) {
+  Vec2f delta;
+  calc_delta(game, delta);
+
+  float dist_sqr = mag_sqr(delta);
+
+  while (dist_sqr < 0.01) {
+    pick_target(game);
+    calc_delta(game, delta);
+    dist_sqr = mag_sqr(delta);
+  }
+
+  float targ_angle = get_angle(delta);
+
+  float rel_angle = game.ship.angle - targ_angle;
+  
+  while (rel_angle < -180.0) {
+    rel_angle = rel_angle + 360.0;
+  }
+  while (rel_angle > 180.0) {
+    rel_angle = rel_angle - 360.0;
+  }
+
+  game.ship.vel.x = 0.0;
+  game.ship.vel.y = 0.0;
+
+  float degrees_per_update = SECONDS_PER_UPDATE * DEGREES_PER_SECOND;
+  if (rel_angle > degrees_per_update) {
+    game.ship.angle = game.ship.angle - degrees_per_update;
+  } elif (rel_angle < 0.0 - degrees_per_update) {
+    game.ship.angle = game.ship.angle + degrees_per_update;
+  } else {
+    game.ship.angle = targ_angle;
+
+    float PI = 3.141592654;
+    float TAU = PI * 2.0;
+    float ship_radians = game.ship.angle * TAU / 360.0;
+    
+    game.ship.vel.x = BASE_SPEED * cos_f(ship_radians);
+    game.ship.vel.y = BASE_SPEED * sin_f(ship_radians);
+  }
+
+  game.ship.pos.x = game.ship.pos.x + game.ship.vel.x * SECONDS_PER_UPDATE;
+  game.ship.pos.y = game.ship.pos.y + game.ship.vel.y * SECONDS_PER_UPDATE;
+
+
+  if ((game.ship.pos.x > 16.0) ||
+      (game.ship.pos.y > 12.0) ||
+      (game.ship.pos.x < 0.0) ||
+      (game.ship.pos.y < 0.0)) {
+    # set_phase(PHASE_TITLE, game);
+    init_phase_game(game);
+  }
+}
+
+

@@ -1,0 +1,761 @@
+
+void draw_indexed_vertex(int index);
+
+float width_0() {
+  return 2.5;
+}
+
+float width_1() {
+  return 1.5;
+}
+
+float width_2() {
+  return 2.5;
+}
+
+float width_3() {
+  return 2.5;
+}
+
+float width_4() {
+  return 2.5;
+}
+
+float width_5() {
+  return 2.5;
+}
+
+float width_6() {
+  return 2.5;
+}
+
+float width_7() {
+  return 2.5;
+}
+
+float width_8() {
+  return 2.5;
+}
+
+float width_9() {
+  return 2.5;
+}
+
+float width_A() {
+  return 2.5;
+}
+
+float width_B() {
+  return 2.5;
+}
+
+float width_C() {
+  return 2.5;
+}
+
+float width_D() {
+  return 2.5;
+}
+
+float width_E() {
+  return 2.5;
+}
+
+float width_F() {
+  return 2.5;
+}
+
+float width_G() {
+  return 2.5;
+}
+
+float width_H() {
+  return 2.5;
+}
+
+float width_I() {
+  return 1.5;
+}
+
+float width_J() {
+  return 2.5;
+}
+
+float width_K() {
+  return 2.5;
+}
+
+float width_L() {
+  return 2.5;
+}
+
+float width_M() {
+  return 2.5;
+}
+
+float width_N() {
+  return 2.5;
+}
+
+float width_O() {
+  return 2.5;
+}
+
+float width_P() {
+  return 2.5;
+}
+
+float width_Q() {
+  return 2.5;
+}
+
+float width_R() {
+  return 2.5;
+}
+
+float width_S() {
+  return 2.5;
+}
+
+float width_T() {
+  return 2.5;
+}
+
+float width_U() {
+  return 2.5;
+}
+
+float width_V() {
+  return 2.5;
+}
+
+float width_W() {
+  return 2.5;
+}
+
+float width_X() {
+  return 2.5;
+}
+
+float width_Y() {
+  return 2.5;
+}
+
+float width_Z() {
+  return 2.5;
+}
+
+float width_SPACE() {
+  return 2.5;
+}
+
+
+
+float draw_A() {
+  # a,34 14 2 10 30 -1 20 24
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(14);
+  draw_indexed_vertex(2);
+  draw_indexed_vertex(10);
+  draw_indexed_vertex(30);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(20);
+  draw_indexed_vertex(24);
+  gl_end();
+  return 2.5;  
+}
+
+float draw_B() {
+  # b,15 18 14 9 3 0 30 33 29 24 18
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(18);
+  draw_indexed_vertex(14);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(24);
+  draw_indexed_vertex(18);
+  gl_end();
+  return 2.5;
+}
+
+float draw_C() {
+  # c,9 3 1 5 25 31 33 29
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  gl_end();
+  return 2.5;
+}
+
+float draw_D() {
+  # d,30 33 29 9 3 0 30,4
+  gl_begin(GL_LINE_LOOP);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(0);
+  gl_end();
+  return 2.5;
+}
+
+float draw_E() {
+  # e,4 0 30 34 -1 15 17,4
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  gl_end();
+  gl_begin(GL_LINES);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(17);
+  gl_end();
+  return 2.5;
+}
+
+float draw_F() {
+  # f,4 9 39 -1 15 17,4
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  gl_end();
+  gl_begin(GL_LINES);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(17);
+  gl_end();
+  return 2.5;
+}
+
+float draw_G() {
+  # g,9 3 1 5 25 31 33 29 19 17,4
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);  
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(17);
+  gl_end();
+  return 2.5;
+}
+
+float draw_H() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(19);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_H();
+}
+
+float draw_I() {
+  # i,0 2 -1 1 31 -1 30 32,2
+  gl_begin(GL_LINES);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(2);
+  
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(31);
+  
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(32);
+  gl_end();
+  return 1.5;
+}
+
+float draw_J() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(4);
+  gl_end();
+  return width_J();
+}
+
+float draw_K() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(16);
+  draw_indexed_vertex(4);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(16);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_K();
+}
+
+float draw_L() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_L();
+}
+
+float draw_M() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(12);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_M();
+}
+
+float draw_N() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(24);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(4);
+  gl_end();
+  return width_N();
+}
+
+float draw_O() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  gl_end();
+  return width_O();
+}
+
+float draw_P() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(14);
+  draw_indexed_vertex(18);
+  draw_indexed_vertex(15);
+  gl_end();
+  return width_P();
+}
+
+float draw_Q() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(22);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_Q();
+}
+
+float draw_R() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(14);
+  draw_indexed_vertex(18);
+  draw_indexed_vertex(15);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(16);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_R();
+}
+
+float draw_S() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(10);
+  draw_indexed_vertex(16);
+  draw_indexed_vertex(18);
+  draw_indexed_vertex(24);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(25);
+  gl_end();
+  return width_S();
+}
+
+float draw_T() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(2);
+  draw_indexed_vertex(32);
+  gl_end();
+  return width_T();
+}
+
+float draw_U() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(31);
+  draw_indexed_vertex(33);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(4);
+  gl_end();
+  return width_U();
+}
+
+float draw_V() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(32);
+  draw_indexed_vertex(4);
+  gl_end();
+  return width_V();
+}
+
+float draw_W() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(22);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(4);
+  gl_end();
+  return width_W();
+}
+
+float draw_X() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(34);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(30);
+  gl_end();
+  return width_X();
+}
+
+float draw_Y() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(5);
+  draw_indexed_vertex(17);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(4);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(17);
+  draw_indexed_vertex(32);
+  gl_end();
+  return width_Y();
+}
+
+float draw_Z() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(25);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_Z();
+}
+
+float draw_0() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  gl_end();
+  return width_0();
+}
+
+float draw_1() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(31);
+  gl_end();
+  return width_1();
+}
+
+float draw_2() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_2();
+}
+
+float draw_3() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(30);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(19);
+  gl_end();
+  return width_3();
+}
+
+float draw_4() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(19);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_4();
+}
+
+float draw_5() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(30);
+  gl_end();
+  return width_5();
+}
+
+float draw_6() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(15);
+  gl_end();
+  return width_6();
+}
+
+float draw_7() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_7();
+}
+
+float draw_8() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(30);
+  draw_indexed_vertex(34);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(0);
+  gl_end();
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(19);
+  gl_end();
+  return width_8();
+}
+
+float draw_9() {
+  gl_begin(GL_LINE_STRIP);
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(15);
+  draw_indexed_vertex(0);
+  draw_indexed_vertex(4);
+  draw_indexed_vertex(34);
+  gl_end();
+  return width_9();
+}
+
+float draw_SPACE() {
+  return width_SPACE();
+}
+
+float draw_UNKNOWN() {
+  # c,9 3 1 5 25 31 33 29
+  gl_begin(GL_LINES);
+  draw_indexed_vertex(1);
+  draw_indexed_vertex(5);
+  
+  draw_indexed_vertex(3);
+  draw_indexed_vertex(15);
+  
+  draw_indexed_vertex(9);
+  draw_indexed_vertex(25);
+  
+  draw_indexed_vertex(19);
+  draw_indexed_vertex(31);
+  
+  draw_indexed_vertex(29);
+  draw_indexed_vertex(33);
+  gl_end();
+  return 2.5;
+}
+
+
+void draw_indexed_vertex(int index) {
+  int x = index % 5;
+  int y = index / 5;
+
+  float xf = x * 0.5;
+  float yf = 3.0 - y * 0.5;
+  gl_vertex3f(xf, yf, 0.0);
+}
+
+float draw_char(int c, float x, float y, float scale, float r, float g, float b) {
+  gl_color3f(r,g,b);
+  gl_pushMatrix();
+  gl_translateF(x, y, 0.0);
+  gl_scaleF(scale);
+  float advance = 0.0;
+  if (c==65) {
+    advance = draw_A();
+  } elif (c == 66) {
+    advance = draw_B();
+  } elif (c == 67) {
+    advance = draw_C();
+  } elif (c == 68) {
+    advance = draw_D();    
+  } elif (c == 69) {
+    advance = draw_E();    
+  } elif (c == 70) {
+    advance = draw_F();    
+  } elif (c == 71) {  
+    advance = draw_G();
+  } elif (c == 72) {
+    advance = draw_H();
+  } elif (c == 73) {
+    advance = draw_I();
+  } elif (c == 74) {
+    advance = draw_J();
+  } elif (c == 75) {
+    advance = draw_K();
+  } elif (c == 76) {
+    advance = draw_L();
+  } elif (c == 77) {
+    advance = draw_M();
+  } elif (c == 78) {
+    advance = draw_N();
+  } elif (c == 79) {
+    advance = draw_O();
+  } elif (c == 80) {
+    advance = draw_P();
+  } elif (c == 81) {
+    advance = draw_Q();
+  } elif (c == 82) {
+    advance = draw_R();
+  } elif (c == 83) {
+    advance = draw_S();
+  } elif (c == 84) {
+    advance = draw_T();
+  } elif (c == 85) {
+    advance = draw_U();
+  } elif (c == 86) {
+    advance = draw_V();
+  } elif (c == 87) {
+    advance = draw_W();
+  } elif (c == 88) {
+    advance = draw_X();
+  } elif (c == 89) {
+    advance = draw_Y();
+  } elif (c == 90) {
+    advance = draw_Z();
+  } elif (c == 49) {
+    advance = draw_1();
+  } elif (c == 50) {
+    advance = draw_2();
+  } elif (c == 51) {
+    advance = draw_3();
+  } elif (c == 52) {
+    advance = draw_4();
+  } elif (c == 53) {
+    advance = draw_5();
+  } elif (c == 54) {
+    advance = draw_6();
+  } elif (c == 55) {
+    advance = draw_7();
+  } elif (c == 56) {
+    advance = draw_8();
+  } elif (c == 57) {
+    advance = draw_9();
+  } elif (c == 48) {
+    advance = draw_0();
+  } elif (c == 32) {
+    advance = width_SPACE();
+  } else {
+    advance = draw_UNKNOWN();
+  }
+  gl_popMatrix();
+
+  return advance * scale;
+}

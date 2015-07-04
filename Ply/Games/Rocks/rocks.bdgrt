@@ -1,0 +1,260 @@
+@include "math.bdgrt"
+@include "gl.bdgrt"
+@include "hand_font.bdgrt"
+@include "ship.bdgrt"
+@include "constants.bdgrt"
+@include "phase_bdg.bdgrt"
+@include "phase_game.bdgrt"
+
+void srand_from_time();
+int rand_int(int max);
+float get_current_time();
+void print_char(int c);
+void print_float(float f);
+void print_line();
+
+# Gameplay constants
+
+# Frame variables
+
+# Game variables (persist from frame-to-frame, not interesting outside gameplay)
+
+
+# Game options (variables that extend from outside gameplay)
+
+int phase;
+
+void draw_ship(float x, float y, float angle) {
+  gl_color3f(0.0, 1.0, 0.0);
+  gl_pushMatrix();
+  gl_translateF(x, y, 0.0);
+  gl_rotate(angle);
+
+  gl_begin(GL_LINE_LOOP);
+  gl_vertex3f( 0.5,  0.0, 0.0);
+  gl_vertex3f(-0.5, -0.33, 0.0);
+  gl_vertex3f(-0.33, 0.0, 0.0);
+  gl_vertex3f(-0.5,  0.33, 0.0);
+  gl_end();
+  
+  gl_popMatrix();
+}
+
+void draw_grid() {
+  float x = 0.0;
+  gl_color3f(0.0, 0.0, 0.5);
+  gl_begin(GL_LINES);
+  loop {
+    gl_vertex3f(x, 0.0, 0.0);
+    gl_vertex3f(x, 12.0, 0.0);
+    x = x + 1.0;
+    if (x > 16.0) {
+      break;
+    }
+  }
+  float y = 0.0;
+  loop {
+    gl_vertex3f(0.0, y, 0.0);
+    gl_vertex3f(16.0, y, 0.0);
+    y = y + 1.0;
+    if (y > 12.0) {
+      break;
+    }
+  }  
+  gl_end();
+}
+
+void init_title(Game g) {
+}
+
+void init_gameover() {
+}
+
+void init(Game game) {
+  if (phase == PHASE_BDG) {
+    init_phase_bdg(game);
+  } elif (phase == PHASE_TITLE) {
+    init_title(game);
+  } elif (phase == PHASE_GAMEPLAY) {
+    init_phase_game(game);
+  } elif (phase == PHASE_GAME_OVER) {
+    init_gameover();
+  }
+}
+
+
+void draw_title(float alpha, Game game) {
+  float scale = 0.375;
+
+  float r = 0.1;
+  float g = 1.0;
+  float b = 1.0;
+  
+  float x = 2.0;
+  float y = 7.0;
+  
+  x = x + draw_char(83, x, y, scale, r, g, b);
+  x = x + draw_char(80, x, y, scale, r, g, b);
+  x = x + draw_char(65, x, y, scale, r, g, b);
+  x = x + draw_char(67, x, y, scale, r, g, b);
+  x = x + draw_char(69, x, y, scale, r, g, b);
+  x = x + draw_char(32, x, y, scale, r, g, b);
+  x = x + draw_char(82, x, y, scale, r, g, b);
+  x = x + draw_char(79, x, y, scale, r, g, b);
+  x = x + draw_char(67, x, y, scale, r, g, b);
+  x = x + draw_char(75, x, y, scale, r, g, b);
+  x = x + draw_char(83, x, y, scale, r, g, b);
+
+  x = 2.0;
+  y = 2.0;
+  scale = 0.2;
+
+  x = x + draw_char(80, x, y, scale, r, g, b);
+  x = x + draw_char(82, x, y, scale, r, g, b);
+  x = x + draw_char(69, x, y, scale, r, g, b);
+  x = x + draw_char(83, x, y, scale, r, g, b);
+  x = x + draw_char(83, x, y, scale, r, g, b);
+  x = x + draw_char(32, x, y, scale, r, g, b);
+  x = x + draw_char(83, x, y, scale, r, g, b);
+  x = x + draw_char(80, x, y, scale, r, g, b);
+  x = x + draw_char(65, x, y, scale, r, g, b);
+  x = x + draw_char(67, x, y, scale, r, g, b);
+  x = x + draw_char(69, x, y, scale, r, g, b);
+}
+
+void draw_gameover(float alpha, Game game) {
+  ##draw_char(71, 128, 112, 16, 128, 128, 128);
+  ##draw_char(65, 224, 112, 16, 128, 128, 128);
+  ##draw_char(77, 320, 112, 16, 128, 128, 128);
+  ##draw_char(69, 416, 112, 16, 128, 128, 128);
+  ##draw_char(79, 128, 240, 16, 128, 128, 128);
+  ##draw_char(86, 224, 240, 16, 128, 128, 128);
+  ##draw_char(69, 320, 240, 16, 128, 128, 128);
+  ##draw_char(82, 416, 240, 16, 128, 128, 128);
+}
+
+void draw(float alpha, Game game) {
+  gl_clear(GL_COLOR_BUFFER_BIT + GL_DEPTH_BUFFER_BIT);
+
+  gl_viewport(0.0, 0.0, 800.0, 600.0);
+  gl_matrixMode(GL_PROJECTION);
+  gl_loadIdentity();
+  glu_ortho2d(0.0, 16.0, 0.0, 12.0);
+  gl_matrixMode(GL_MODELVIEW);
+  gl_loadIdentity();
+
+  if (phase == PHASE_BDG) {
+    draw_phase_bdg(alpha, game);
+  } elif (phase == PHASE_TITLE) {
+    draw_title(alpha, game);
+  } elif (phase == PHASE_GAMEPLAY) {
+    draw_phase_game(alpha, game);
+  } elif (phase == PHASE_GAME_OVER) {
+    draw_gameover(alpha, game);
+  }
+
+  gl_flip();
+}
+
+void set_phase(int new_phase, Game game) {
+  # any sort of cleanup?
+
+  # initialize phase
+  phase = new_phase;
+  init(game);
+}
+
+void update_title(Game game) {
+  if (sdl_keydown(44) == 1) {
+    # Space, start this thing
+    set_phase(PHASE_GAMEPLAY, game);
+  }
+}
+
+void update_gameover(Game game) {
+  float curTime = get_current_time();
+  # TODO
+  #if (elapsedTime > 2.0) {
+  #  set_phase(PHASE_TITLE, s);
+  #}
+}
+
+void update(Game game) {
+  if (phase == PHASE_BDG) {
+    update_phase_bdg(game);
+  } elif (phase == PHASE_TITLE) {
+    update_title(game);
+  } elif (phase == PHASE_GAMEPLAY) {
+    update_phase_game(game);
+  } elif (phase == PHASE_GAME_OVER) {
+    update_gameover(game);
+  }
+}
+
+int main() {
+  Game theGame;
+  
+  set_phase(PHASE_BDG, theGame);
+
+  srand_from_time();
+  gl_openWindow(800, 600);
+
+  float startTime = get_current_time();
+  float previousTime = startTime;
+  float lag = 0.0;
+
+  int renders = 0;
+  int updates = 0;
+
+  float frameSeconds = 1.0 / MAX_FPS;
+
+  loop {
+    float currentTime = get_current_time();
+    float elapsedTime = currentTime - previousTime;
+    previousTime = currentTime;
+    lag = lag + elapsedTime;
+    
+    sdl_tick_input();
+    if (sdl_quit_signalled() == 1) {
+      break;
+    }
+
+    while (lag >= SECONDS_PER_UPDATE) {
+      update(theGame);
+      lag = lag - SECONDS_PER_UPDATE;
+      updates = updates + 1;
+    }
+
+    draw(lag, theGame);
+
+    float endTime = get_current_time();
+    float elapsedFrameTime = endTime - currentTime;
+    float delayTime = frameSeconds - elapsedFrameTime;
+    if (delayTime < 0.001) {
+      delayTime = 0.001;
+    }
+    delay_f(delayTime);
+    renders = renders + 1;
+  }
+  float end_time = get_current_time();
+  float totalTime = end_time - startTime;
+  float rendersPerSecond = renders / totalTime;
+  float updatesPerSecond = updates / totalTime;
+
+  print_char(82);
+  print_char(80);
+  print_char(83);
+  print_char(32);
+  print_float(rendersPerSecond);
+  print_line();
+  print_char(85);
+  print_char(80);
+  print_char(83);
+  print_char(32);
+  print_float(updatesPerSecond);
+  print_line();
+
+  delay_f(0.1);
+
+  return 0;
+}

@@ -32,6 +32,7 @@ tokens = (
     'MINUS',
     'TIMES',
     'DIVIDE',
+    'MODULO',
     'INT',
     'FLOAT',
     'STRING',
@@ -66,6 +67,7 @@ t_PLUS = r'\+'
 t_MINUS = r'\-'
 t_TIMES = r'\*'
 t_DIVIDE = r'\/'
+t_MODULO = r'\%'
 t_COMMA = ','
 t_LOGICAND = r'\&\&'
 t_LOGICOR = r'\|\|'
@@ -136,7 +138,7 @@ precedence = (
     ('left', 'ISEQUAL', 'NOTEQUAL'),
     ('left', 'LESSTHAN', 'GREATERTHAN', 'LESSEQUAL', 'GREATEREQUAL'),
     ('left','PLUS','MINUS'),
-    ('left','TIMES','DIVIDE'),
+    ('left','TIMES','DIVIDE', 'MODULO'),
     #('right','UMINUS'),
     )
 
@@ -202,6 +204,7 @@ def p_funcdef(t):
   proto = ast.FuncDeclNode(typename, funcname, argdecllist, t.lexer.lineno)
   funcDefNode = ast.FuncDefNode(proto, funcname, statement_list, t.lexer.lineno)
   t[0] = funcDefNode
+
 
 def p_type(t):
   '''type : INT
@@ -284,12 +287,15 @@ def p_type_name(t):
     t[0] = t[1]
 
 def p_statement_list(t):
-    '''statement_list : statement
-                      | statement statement_list'''
+    '''statement_list : statement statement_list
+                      | empty'''
     if len(t) == 2:
         t[0] = ast.StatementList([t[1]])
+    elif len(t) == 0:
+        t[0] = ast.StatementList([])
     else:
         t[0] = ast.StatementList([t[1]] + t[2].statements)
+
 
 # statement (p 236, production 9)
 
@@ -369,6 +375,7 @@ def p_binary_expression(t):
     '''binary_expression : cast_expression
                          | binary_expression TIMES binary_expression
                          | binary_expression DIVIDE binary_expression
+                         | binary_expression MODULO binary_expression
                          | binary_expression PLUS binary_expression
                          | binary_expression MINUS binary_expression
                          | binary_expression LESSTHAN binary_expression
@@ -473,8 +480,6 @@ def p_error(t):
     print t
     print t.type
     print t.value
-    #print dir(t.lexer)
-    print "lex state:",t.lexer.lexstate
 
 yacc_debug = True
 yacc_optimize = False

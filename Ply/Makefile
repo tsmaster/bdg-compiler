@@ -1,7 +1,7 @@
 EMCC = /home/tsmaster/Dev/BDGRT/Emscripten/emsdk_portable/emscripten/master/emcc
 
 # all tests
-all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe test_mult_dbg.exe test_void_func.exe test_float_func.exe
+all: comments.exe fact.exe fact_decl.exe fib.exe include.exe many_call.exe num_output.exe parens.exe pong.exe precedence.exe vars.exe pong.html fact.html fib.html many_call.html num_output.html pong_adv.exe pong_adv.html test_const.exe test_mult.exe test_mult_dbg.exe test_void_func.exe test_float_func.exe rocks.exe
 
 #obj files (in alphabetical order, please)
 
@@ -16,6 +16,9 @@ fact_decl.o: TestCases/fact.bdgrt
 
 fib.o: TestCases/fib.bdgrt
 	python compiler.py TestCases/fib.bdgrt fib.o
+
+gl_tools.o: gl_tools.c
+	gcc -g -c gl_tools.c
 
 grm_dbg.o: TestCases/grm_dbg.bdgrt
 	python compiler.py TestCases/grm_dbg.bdgrt grm_dbg.o
@@ -40,6 +43,9 @@ pong_adv.o: TestCases/pong_adv.bdgrt
 
 precedence.o: TestCases/precedence.bdgrt
 	python compiler.py TestCases/precedence.bdgrt precedence.o
+
+rocks.o: Games/Rocks/rocks.bdgrt
+	python compiler.py Games/Rocks/rocks.bdgrt rocks.o
 
 sdl_main_loop.o: sdl_main_loop.c
 	gcc -g -c sdl_main_loop.c
@@ -112,6 +118,9 @@ pong_adv.exe: pong_adv.o sdl_wrapper.o support.o
 precedence.exe: precedence.o support.o
 	gcc -o precedence.exe support.o precedence.o
 
+rocks.exe: rocks.o gl_tools.o support.o
+	gcc -O0 -g -o rocks.exe rocks.o support.o gl_tools.o -lSDL2 -lm -lGL -lGLU `sdl-config --cflags --libs`
+
 test_array.exe: test_array.o support.o
 	gcc -o test_array.exe support.o test_array.o
 
@@ -143,6 +152,9 @@ fact.bc: TestCases/fact.bdgrt
 many_call.bc: TestCases/many_call.bdgrt
 	python compiler.py TestCases/many_call.bdgrt many_call.bc
 
+rocks.bc: Games/Rocks/rocks.bdgrt
+	python compiler.py Games/Rocks/rocks.bdgrt rocks.bc
+
 pong_web.bc: TestCases/pong_web.bdgrt
 	python compiler.py TestCases/pong_web.bdgrt pong_web.bc
 
@@ -159,7 +171,11 @@ pong.html: pong_web.bc sdl_main_loop.c support.c
 
 pong_adv.html: pong_adv.bc sdl_main_loop.c support.c
 	${EMCC} sdl_main_loop.c support.c pong_adv.bc \
-    -s USE_SDL=2 -s USE_SLD_IMAGE=2 -s LEGACY_GL_EMULATION=1 -o pong_adv.html
+    -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s LEGACY_GL_EMULATION=1 -o pong_adv.html
+
+rocks.html: rocks.bc sdl_main_loop.c support.c
+	${EMCC} sdl_main_loop.c support.c rocks.bc \
+    -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s LEGACY_GL_EMULATION=1 -o rocks.html
 
 # Clean
 clean:

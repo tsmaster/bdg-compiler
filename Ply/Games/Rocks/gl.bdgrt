@@ -1,0 +1,70 @@
+# See /usr/include/GL/gl.h
+
+# glbegin constants
+int GL_POINTS = 0;
+int GL_LINES = 1;
+int GL_LINE_LOOP = 2;
+int GL_LINE_STRIP = 3;
+int GL_TRIANGLES = 4;
+int GL_TRIANGLE_STRIP = 5;
+int GL_TRIANGLE_FAN = 6;
+int GL_QUADS = 7;
+int GL_QUAD_STRIP = 8;
+int GL_POLYGON = 9;
+
+# glclear constants
+int GL_DEPTH_BUFFER_BIT = 256;
+int GL_COLOR_BUFFER_BIT = 16384;
+
+# matrixmode constants
+int GL_MODELVIEW = 5888;
+int GL_PROJECTION = 5889;
+
+# shademodel constants
+int GL_SMOOTH = 7425;
+
+# enable/disable constants
+int GL_DEPTH_TEST = 2929;
+
+# depthfunc constants
+int GL_LEQUAL = 515;
+
+# glhint constants
+int GL_PERSPECTIVE_CORRECTION_HINT = 3152;
+int GL_NICEST = 4354;
+
+
+void gl_begin(int bits);
+void gl_clear(int bits);
+void gl_clearColor(float r, float g, float b, float a);
+void gl_clearDepth(float depth);
+void gl_color3f(float r, float g, float b);
+void gl_color4f(float r, float g, float b, float a);
+void gl_depthFunc(int depthFunc);
+void gl_enable(int bits);
+void gl_end();
+void gl_flip();
+void gl_hint(int hintKey, int hintVal);
+void gl_loadIdentity();
+void gl_matrixMode(int matrixMode);
+int gl_openWindow(int width, int height);
+void gl_popMatrix();
+void gl_pushMatrix();
+void gl_rotate(float angle);
+void gl_scaleF(float s);
+void gl_shadeModel(int shadeModel);
+void gl_translateF(float x, float y, float z);
+void gl_vertex2f(float x, float y);
+void gl_vertex3f(float x, float y, float z);
+void gl_viewport(float left, float top, float width, float height);
+
+void glu_ortho2d(float left, float right, float bottom, float top);
+void glu_perspective(float angle, float aspect, float near, float far);
+
+void sdl_tick_input();
+int sdl_keydown(int key);
+
+int sdl_quit_signalled();
+
+void delay_f(float seconds);
+

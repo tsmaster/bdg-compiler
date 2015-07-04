@@ -1,0 +1,15 @@
+class Vec2f {
+  float x;
+  float y;
+}
+
+class Ship {
+  Vec2f pos;
+  Vec2f vel;
+  float angle; # degrees, ccw from E
+}
+
+class Game {
+  Ship ship;
+  Vec2f target;
+}

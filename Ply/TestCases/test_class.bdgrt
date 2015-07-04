@@ -11,6 +11,10 @@ class Vec2f {
   float y;
 }
 
+float mag_sqr(Vec2f v) {
+  return v.x * v.x + v.y * v.y;
+}
+
 int main() {
   Vec2i scrpos;
   Vec2f pos;
@@ -32,6 +36,12 @@ int main() {
   print_float(newpos.x);
   print_line();
   print_float(newpos.y);
+  print_line();
+
+  Vec2f a;
+  a.x=3.0;
+  a.y=4.0;
+  print_float(mag_sqr(a));
   print_line();
   
   return 0;

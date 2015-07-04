@@ -1,0 +1,76 @@
+
+void draw_grid();
+void draw_ship(float interpX, float interpY, float angle);
+void set_phase(int new_phase, Game game);
+
+int g_ever_up;
+
+void init_phase_bdg(Game game) {
+  game.ship.pos.x = -0.5;
+  game.ship.pos.y = 2.5;
+
+  game.ship.vel.x = 1.0;
+  game.ship.vel.y = 0.0;
+
+  game.ship.angle = 0.0;
+
+  g_ever_up = 0;
+}
+
+void draw_phase_bdg(float alpha, Game game) {
+  draw_grid();
+
+  float interpX = game.ship.pos.x + game.ship.vel.x * alpha;
+  float interpY = game.ship.pos.y + game.ship.vel.y * alpha;
+
+  draw_ship(interpX, interpY, game.ship.angle);
+
+  gl_color3f(0.0, 1.0, 0.0);
+
+  float scale = 0.375;
+
+  float r = 0.1;
+  float g = 1.0;
+  float b = 0.1;
+   
+  float x = 2.0;
+  float y = 6.0;
+  
+  x = x + draw_char(66, x, y, scale, r, g, b);
+  x = x + draw_char(73, x, y, scale, r, g, b);
+  x = x + draw_char(71, x, y, scale, r, g, b);
+  x = x + draw_char(32, x, y, scale, r, g, b);
+  x = x + draw_char(68, x, y, scale, r, g, b);
+  x = x + draw_char(73, x, y, scale, r, g, b);
+  x = x + draw_char(67, x, y, scale, r, g, b);
+  x = x + draw_char(69, x, y, scale, r, g, b);
+  x = x + draw_char(32, x, y, scale, r, g, b);
+  x = x + draw_char(71, x, y, scale, r, g, b);
+  x = x + draw_char(65, x, y, scale, r, g, b);
+  x = x + draw_char(77, x, y, scale, r, g, b);
+  x = x + draw_char(69, x, y, scale, r, g, b);
+  x = x + draw_char(83, x, y, scale, r, g, b);
+}
+
+void update_phase_bdg(Game game) {
+  float curTime = get_current_time();
+
+  game.ship.pos.x = game.ship.pos.x + game.ship.vel.x * SECONDS_PER_UPDATE;
+  game.ship.pos.y = game.ship.pos.y + game.ship.vel.y * SECONDS_PER_UPDATE;
+
+  game.ship.angle = 180.0 * game.ship.pos.x / 16.0;
+
+  if (game.ship.pos.x > 16.0) {
+    set_phase(PHASE_TITLE, game);
+  }
+
+  if ((g_ever_up == 0) && (sdl_keydown(44) == 0)) {
+    g_ever_up = 1;
+  }
+
+  if ((g_ever_up == 1) &&  (sdl_keydown(44) == 1)) {
+    set_phase(PHASE_TITLE, game);
+  }
+}
+
+

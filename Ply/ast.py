@@ -100,6 +100,20 @@ def makeType(typedesc):
     print "making unknown type:",typedesc
     raise ValueError
 
+def makeArgumentType(typedesc):
+    if typedesc == 'int':
+        return ir.IntType(32)
+    if typedesc == 'void':
+        return ir.VoidType()
+    if typedesc == 'float':
+        return ir.FloatType()
+    if typedesc in classDict:
+        t = classDict[typedesc]['identifiedStruct']
+        return t.as_pointer()
+    print classDict.keys()
+    print "making unknown argument type:",typedesc
+    raise ValueError
+
 def pushFrame(name):
     frame = Frame(name)
     #print "made a new frame:",frame.name
@@ -134,19 +148,19 @@ class FuncDeclNode(ASTNode):
         argtypelist = []
         argnamelist = []
         for arg in self.arglist:
-            argtypelist.append(makeType(arg.typestr))
+            try:
+                argType = makeArgumentType(arg.typestr)
+            except ValueError:
+                print "in funcDecl", self.name
+                raise
+            argtypelist.append(argType)
             argnamelist.append(arg.name)
 
         functype = ir.FunctionType(self.rettype, argtypelist)
-        #print "functype:",functype
 
-        #print "module functions:"
         foundDup = False
         for f in gLlvmModule.functions:
-            #print f.name, f
-            #print dir(f)
             if self.name == f.name:
-                #print "found dup"
                 foundDup = True
                 funcobj = f
                 break
@@ -204,18 +218,17 @@ class GlobalVarDeclNode(ASTNode):
         if self.arraysize is None:
             var = ir.GlobalVariable(gLlvmModule, typeObj, self.name)
 
-            #print "var initializer:",typeObj
+            do_alloc = False
+
             if isinstance(typeObj, ir.IntType):
                 var.initializer = ir.Constant(typeObj, 0)
             elif isFloatType(typeObj):
                 var.initializer = ir.Constant(typeObj, 0.0)
 
-            #var.initializer = ir.Constant(typeObj, ir.Undefined())
             if not (self.initializer is None):
                 valueCode = self.initializer.generateCode(None)
                 var.initializer = valueCode
             if 'const' in self.qualifiers:
-                #print "setting constant"
                 var.global_constant = True
         else:
             arraySize = self.arraysize.value
@@ -226,18 +239,9 @@ class GlobalVarDeclNode(ASTNode):
             if 'const' in self.qualifiers:
                 var.global_constant = True
 
-            #print "made an array"
-            #print arrayType
-            #print self.arraysize
-            #print var
-
             # TODO initializer
 
         gGlobalVars[self.name] = var
-
-        #print "made var:",var
-        #print dir(var)
-        #print
 
     def __str__(self):
         try:
@@ -278,31 +282,16 @@ class LocalVarDeclNode(ASTNode):
             if 'const' in self.qualifiers:
                 var.global_constant = True
 
-        #metadata = {'type' : typeObj,
-        #            'typeName' : self.typeName,
-        #            'var' : var
-        #}
-        
-        #print "var:",var
-        #print "inserting into frame",frame.name
-        #print dir(var)
-        #print "var name:", var.name
-        #print "var type:", var.type
-
         if 'const' in self.qualifiers:
-            #print "inserting into consts"
             frame.consts[self.name] = var
-            #print frame.consts
-            #metadata['const'] = True
         else:
-            #print "inserting %s into vars" % self.name
             frame.locals[self.name] = var
-            #metadata['const'] = False
-        #print "made var:",var
-        #print
 
         if not(self.initializer is None):
             valueCode = self.initializer.generateCode(None)
+            if valueCode.type.is_pointer:
+                valueCode = gLlvmBuilder.load(valueCode)
+
             try:
                 gLlvmBuilder.store(valueCode, var)
             except RuntimeError:
@@ -365,11 +354,10 @@ class ClassDecl(ASTNode):
     def __init__(self, linenum, classname, memberlist):
         super(ClassDecl, self).__init__(linenum, "ClassDecl")
         self.classname = classname
+        self.name = classname
         self.memberlist = memberlist
 
     def generateCode(self, breakBlock=None):
-        #print "making class decl"
-        #print self.classname
         typelist = []
         namedtypelist = []
 
@@ -382,12 +370,22 @@ class ClassDecl(ASTNode):
         literalStructObj = ir.LiteralStructType(typelist)
         context = ircontext.global_context
         identifiedStructObj = context.get_identified_type(self.classname)
-        identifiedStructObj.set_body(*literalStructObj.elements)
-        
+        if identifiedStructObj.elements is None:
+            identifiedStructObj.set_body(*literalStructObj.elements)
+        else:
+            isoRepr = identifiedStructObj.structure_repr()
+            lsoRepr = literalStructObj.structure_repr()
+            if isoRepr != lsoRepr:
+                print "reprs are different:", self.className, isoRepr, lsoRepr
+                raise RuntimeError
+
         classObj = {'literalStruct': literalStructObj,
                     'identifiedStruct': identifiedStructObj,
                     'elements':namedtypelist}
         classDict[self.classname] = classObj
+
+    def generateDecl(self):
+        return self.generateCode(None)
 
 class AssignStatement(ASTNode):
     def __init__(self, linenum, lvalue, rvalue):
@@ -413,6 +411,8 @@ class AssignStatement(ASTNode):
             raise RuntimeError
 
         rval = self.rvalue.generateCode(breakBlock)
+        if rval.type.is_pointer:
+            rval = gLlvmBuilder.load(rval)
 
         try:
             gLlvmBuilder.store(rval, var)
@@ -473,6 +473,7 @@ class FuncDefNode(ASTNode):
         frame = pushFrame(self.name)
 
         try:
+            #print "defining func:", self.name
             retval = self.body.generateCode(breakBlock)
             #print "generated code for func def: %s" % self.name, retval
             #print funcobj
@@ -497,14 +498,6 @@ class IfElse:
         self.body = body
         self.eliflist = eliflist
         self.elsebody = elsebody
-
-        """
-        print "ifelse block"
-        print "conditional:", self.conditional
-        print "body:", self.body
-        print "eliflist:", self.eliflist
-        print "elsebody:", self.elsebody
-        """
 
         self.conditions = [conditional]
         self.bodies = [body]
@@ -546,14 +539,8 @@ class IfElse:
 
         testBlocks.append(funcObj.append_basic_block('finalelse'))
 
-        #print "thenBlocks:", thenBlocks
-        #print "testBlocks:", testBlocks
-        
         for i in range(condCount):
-            #print "about to make a branch"
-            #print i
             condition = self.conditions[i]
-            #print condition
             body = self.bodies[i]
             testBlock = testBlocks[i]
             thenBlock = thenBlocks[i]
@@ -636,6 +623,45 @@ class LoopStatement:
         popFrame(frame)
         return None
 
+class WhileLoop:
+    def __init__(self, condition, statementList):
+        self.condition = condition
+        self.statements = statementList
+
+    def __str__(self):
+        return "WHILE (%s) {\n" + str(self.statements) + "\n}" % str(self.condition)
+
+    def generateCondition(self, condition, funcObj):
+        condCode = condition.generateCode(None)
+        if isIntType(condCode.type):
+            condition_bool = condCode
+        elif isFloatType(condCode.type):
+            condition_bool = gLlvmBuilder.fcmp_ordered('!=',
+                                                       condCode,
+                                                       llvm.core.Constant.float(llvm.core.Type.double(), 0.0),
+                                                       'whilecond')
+        return condition_bool
+
+    def generateCode(self, breakBlock):
+        outsideBlock = gLlvmBuilder.basic_block
+        funcObj = gLlvmBuilder.basic_block.function
+        testBlock = funcObj.append_basic_block('whiletestblock')
+        whileBlock = funcObj.append_basic_block('whileblock')
+        endOfWhileBlock = funcObj.append_basic_block('endofwhileblock')
+
+        gLlvmBuilder.branch(testBlock)
+        gLlvmBuilder.position_at_end(testBlock)
+        condition_bool = self.generateCondition(self.condition, funcObj)
+        gLlvmBuilder.cbranch(condition_bool, whileBlock, endOfWhileBlock)
+
+        frame = pushFrame("while")
+        gLlvmBuilder.position_at_end(whileBlock)
+        self.statements.generateCode(endOfWhileBlock)
+        gLlvmBuilder.branch(testBlock)
+        gLlvmBuilder.position_at_end(endOfWhileBlock)
+        popFrame(frame)
+        return None
+
 class StatementList:
     def __init__(self, statements):
         self.statements = statements
@@ -650,7 +676,8 @@ class StatementList:
     def generateCode(self, breakBlock):
         retval = None
         for s in self.statements:
-            retval = s.generateCode(breakBlock)
+            if s:
+                retval = s.generateCode(breakBlock)
         return retval
 
 
@@ -700,7 +727,24 @@ class MemberRef(ASTNode):
         wrappedIndex = ir.Constant(ir.IntType(32), 0)
         wrappedOffset = ir.Constant(ir.IntType(32), offset)
 
-        #print "thing:", wrappedIndex, wrappedOffset
+        #print "index, offset:", wrappedIndex, wrappedOffset
+        #print baseptr
+        if baseptr is None:
+            print "baseptr is none"
+            print base, self.membername
+
+            print
+            print dir(base)
+            print base._name
+            print base.attributes
+            print base.descr
+            print base.name
+            print base.pos
+            print base.type
+            baseptr = base
+
+            raise RuntimeError
+        #print "about to GEP"
         ptr = gLlvmBuilder.gep(baseptr, [wrappedIndex, wrappedOffset], inbounds=True, name='member_%d_%s' % (offset, self.membername))
 
         #print "ptr:", ptr
@@ -736,7 +780,11 @@ class FunctionCall(ASTNode):
                 break
 
         if callee is None:
-            print "can't find function:",self.name
+            print "can't find function:", funcName
+            print "on line:", self.linenum
+            print "arglist:"
+            for a in self.arglist:
+                print a
             raise RuntimeError
 
         calleeArgLen = len(callee.args)
@@ -745,28 +793,25 @@ class FunctionCall(ASTNode):
 
         selfArgLen = len(self.arglist)
         if calleeArgLen != selfArgLen:
-            print "error in call to",self.name 
-            raise RuntimeError('Incorrect number of arguments in call to '+self.name)
+            print "error in call to", funcName
+            print "callee arg len: %d self arg len: %d" % (calleeArgLen, selfArgLen)
+            raise RuntimeError('Incorrect number of arguments in call to '+funcName)
 
         evaluatedArguments = map(lambda x: x.generateCode(None), 
                                  self.arglist)
-        
+
         for i, x in enumerate(evaluatedArguments):
             #print "arg #%d " % i , x
 
-            if isinstance(x, ir.GlobalVariable):
-                #print "is a global"
-                evaluatedArguments[i] = gLlvmBuilder.load(x)
-            elif isinstance(x, ir.instructions.AllocaInstr):
-                #print "is a local"
-                evaluatedArguments[i] = gLlvmBuilder.load(x)
-            elif x.type.is_pointer:
-                #print "is a pointer"
-                evaluatedArguments[i] = gLlvmBuilder.load(x)
-            else:
-                #print x.type
-                pass
-                
+            evaluatedArguments[i] = x
+
+            #print x, x.type
+            if x.type.is_pointer:
+                #print "a pointer"
+                pt = x.type.pointee
+                if (isinstance(pt, ir.FloatType) or
+                    isinstance(pt, ir.IntType)):
+                    evaluatedArguments[i] = gLlvmBuilder.load(x)
         try:
             return gLlvmBuilder.call(callee, evaluatedArguments)
         except TypeError:
@@ -813,30 +858,24 @@ class BinaryExprNode(ASTNode):
         return '['+str(self.nodes[0])+str(self.opstr)+str(self.nodes[1])+']'
 
     def generateCode(self, breakBlock=None):
-        #print "making binexpr", self.opstr
         code0 = self.nodes[0].generateCode(None)
         code1 = self.nodes[1].generateCode(None)
-        #print code0
-        #print code0.type
-        #print code1
-        #print code1.type
-        #print self.linenum
-
-        """
-        if not (code0.type == code1.type):
-            print "cannot convert types on line", self.linenum
-            print "code0 type:",code0.type
-            print "code0:", code0
-            print "op:",self.opstr
-            print "code1 type:",code1.type
-            print "code1:", code1
-            raise RuntimeError
-        """
 
         if isVariableType(code0):
             code0 = gLlvmBuilder.load(code0)
         if isVariableType(code1):
             code1 = gLlvmBuilder.load(code1)
+        if code0.type.is_pointer:
+            code0 = gLlvmBuilder.load(code0)
+        if code1.type.is_pointer:
+            code1 = gLlvmBuilder.load(code1)
+
+        if isIntType(code0.type) and isFloatType(code1.type):
+            #promote code0 to float
+            code0 = gLlvmBuilder.sitofp(code0, ir.FloatType(), 'floattmp')
+        if isFloatType(code0.type) and isIntType(code1.type):
+            #promote code1 to float
+            code1 = gLlvmBuilder.sitofp(code1, ir.FloatType(), 'floattmp')
 
         if self.opstr == '+':
             if isIntType(code0.type):
@@ -860,7 +899,6 @@ class BinaryExprNode(ASTNode):
             if isIntType(code0.type):
                 return gLlvmBuilder.sub(code0, code1, "subtmp")
             elif isFloatType(code0.type):
-                #print "subtracting", code0, code1
                 return gLlvmBuilder.fsub(code0, code1, "fsubtmp")
             else:
                 print code0.type,"is unknown type in",code0
@@ -925,9 +963,16 @@ class BinaryExprNode(ASTNode):
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError
+        elif self.opstr == '%':
+            if isIntType(code0.type):
+                return gLlvmBuilder.srem(code0, code1, "modtmp")
+            elif isFloatType(code0.type):
+                return gLlvmBuilder.frem(code0, code1, "fmodtmp")
+            else:
+                print code0.type, "is unknown type in",code0
+                raise RuntimeError
         else:
             print "invalid operator:", self.opstr
-            print "maybe?", dir(gLlvmBuilder)
             raise ValueError
 
 

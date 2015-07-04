@@ -1,0 +1,10 @@
+
+const int PHASE_BDG = 0;
+const int PHASE_TITLE = 1;
+const int PHASE_GAMEPLAY = 2;
+const int PHASE_GAME_OVER = 3;
+
+# TODO can't do arithmetic outside of a function
+# const float SECONDS_PER_UPDATE = 1.0 / 30.0;
+const float SECONDS_PER_UPDATE = 0.033333333;
+const float MAX_FPS = 200.0;
