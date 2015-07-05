@@ -720,7 +720,7 @@ class MemberRef(ASTNode):
                 offset = i
                 break
         if offset == -1:
-            print "can't find %s in %s" % (self.membername, btname)
+            print "can't find %s in %s" % (self.membername, t.name)
             print self.linenum
             raise RuntimeError
 
@@ -927,7 +927,7 @@ class BinaryExprNode(ASTNode):
             if isIntType(code0.type):
                 return gLlvmBuilder.icmp_signed('==', code0, code1, "cmptmp")
             elif isFloatType(code0.type):
-                return gLlvmBuilder.fcmp_ordered(llvm.core.FCMP_OEQ, code0, code1, "fcmptmp")
+                return gLlvmBuilder.fcmp_ordered('==', code0, code1, "fcmptmp")
             else:
                 print code0.type,"is unknown type in",code0
                 raise RuntimeError

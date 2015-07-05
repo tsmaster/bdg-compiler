@@ -7,6 +7,7 @@ class Ship {
   Vec2f pos;
   Vec2f vel;
   float angle; # degrees, ccw from E
+  Vec2f waypoint;
 }
 
 class Game {

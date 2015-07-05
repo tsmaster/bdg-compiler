@@ -32,24 +32,76 @@ void draw_target(Game game) {
   gl_popMatrix();
 }
 
-void calc_delta(Game game, Vec2f delta) {
-  delta.x = game.target.x - game.ship.pos.x;
-  delta.y = game.target.y - game.ship.pos.y;
+void draw_waypoint(Ship ship) {
+  gl_color3f(1.0, 0.0, 0.0);
+  gl_pushMatrix();
+  gl_translateF(ship.waypoint.x, ship.waypoint.y, 0.0);
+
+  float TARGET_RADIUS = 0.2;
+  
+  gl_begin(GL_LINES);
+  gl_vertex3f(TARGET_RADIUS, TARGET_RADIUS, 0.0);
+  gl_vertex3f(0.0 - TARGET_RADIUS, 0.0 - TARGET_RADIUS, 0.0);
+  gl_vertex3f(0.0 - TARGET_RADIUS, TARGET_RADIUS, 0.0);
+  gl_vertex3f(TARGET_RADIUS, 0.0 - TARGET_RADIUS, 0.0);
+  gl_end();
+
+  gl_popMatrix();
 }
 
-float get_angle(Vec2f delta) {
+
+void vec2f_sub(Vec2f a, Vec2f b, Vec2f out) {
+  out.x = a.x - b.x;
+  out.y = a.y - b.y;
+}
+
+float vec2f_to_degrees(Vec2f delta) {
   float radians = atan2_f(delta.y, delta.x);
   float PI = 3.141592654;
   float TAU = PI * 2.0;
   return radians * 360.0 / TAU;
 }
 
+void pick_waypoint(Game game) {
+  Vec2f delta;
+  vec2f_sub(game.target, game.ship.pos, delta);
+
+  float ax = delta.x;
+  if (ax < 0) {
+    ax = 0.0 - ax;
+  }
+  float ay = delta.y;
+  if (ay < 0) {
+    ay = 0.0 - ay;
+  }
+
+  if (ax > ay) {
+    game.ship.waypoint.y = game.target.y;
+    if (ay == 0.0) {
+      # to the left or right
+      game.ship.waypoint.x = game.target.x;
+    } else {
+      game.ship.waypoint.x = game.ship.pos.x;
+    }
+  } else { # ay > ax
+    game.ship.waypoint.x = game.target.x;
+    if (ax == 0.0) {
+      # above or below
+      game.ship.waypoint.y = game.target.y;
+    } else {
+      game.ship.waypoint.y = game.ship.pos.y;
+    }
+  }
+}
+
 void pick_target(Game game) {
   int rx = rand_int(16);
   int ry = rand_int(12);
-  
+
   game.target.x = 0.5 + rx;
   game.target.y = 0.5 + ry;
+
+  pick_waypoint(game);
 }
 
 float mag_sqr(Vec2f v) {
@@ -93,21 +145,40 @@ void draw_phase_game(float alpha, Game game) {
 
   draw_ship(interpX, interpY, game.ship.angle);
   draw_target(game);
+  draw_waypoint(game.ship);
 }
 
 void update_phase_game(Game game) {
-  Vec2f delta;
-  calc_delta(game, delta);
+  Vec2f delta_to_waypoint;
+  vec2f_sub(game.ship.waypoint, game.ship.pos, delta_to_waypoint);
+  float dist_sqr = mag_sqr(delta_to_waypoint);
 
-  float dist_sqr = mag_sqr(delta);
+  float frame_dist = BASE_SPEED * SECONDS_PER_UPDATE;
+  float frame_dist_sqr = frame_dist * frame_dist;
 
-  while (dist_sqr < 0.01) {
-    pick_target(game);
-    calc_delta(game, delta);
-    dist_sqr = mag_sqr(delta);
+  if (dist_sqr < frame_dist_sqr) {
+    game.ship.pos.x = game.ship.waypoint.x;
+    game.ship.pos.y = game.ship.waypoint.y;
+    game.ship.vel.x = 0.0;
+    game.ship.vel.y = 0.0;
+
+    pick_waypoint(game);
   }
 
-  float targ_angle = get_angle(delta);
+  Vec2f delta_to_target;
+  vec2f_sub(game.target, game.ship.pos, delta_to_target);
+  dist_sqr = mag_sqr(delta_to_target);
+
+  if (dist_sqr < frame_dist_sqr) {
+    game.ship.pos.x = game.target.x;
+    game.ship.pos.y = game.target.y;
+    game.ship.vel.x = 0.0;
+    game.ship.vel.y = 0.0;
+
+    pick_target(game);
+  }
+
+  float targ_angle = vec2f_to_degrees(delta_to_waypoint);
 
   float rel_angle = game.ship.angle - targ_angle;
   
@@ -139,15 +210,6 @@ void update_phase_game(Game game) {
 
   game.ship.pos.x = game.ship.pos.x + game.ship.vel.x * SECONDS_PER_UPDATE;
   game.ship.pos.y = game.ship.pos.y + game.ship.vel.y * SECONDS_PER_UPDATE;
-
-
-  if ((game.ship.pos.x > 16.0) ||
-      (game.ship.pos.y > 12.0) ||
-      (game.ship.pos.x < 0.0) ||
-      (game.ship.pos.y < 0.0)) {
-    # set_phase(PHASE_TITLE, game);
-    init_phase_game(game);
-  }
 }
 
 
